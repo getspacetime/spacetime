@@ -1,0 +1,55 @@
+﻿@page "/"
+
+@using Spacetime.Core
+@using Spacetime.Shared.Components
+@inject RequestService RequestService
+
+<div class="flex flex-row">
+    <div class="border-r border-zinc-700 mr-2 shrink-0">
+        @if (Requests == null)
+        {
+            <p><em>Loading...</em></p>
+        }
+        else
+        {
+            <div class="p-2 flex justify-between">
+                <strong>Requests</strong>
+                <Button OnClickCallback=@NewRequest >New</Button>
+            </div>
+            <ul>
+                @foreach (var req in Requests)
+                {
+                    <ListItem 
+                        OnClickCallback="@(e => CurrentRequest = req)" 
+                        ActionText="Delete"
+                        OnActionCallback="@(async e => await OnDelete(req))"><input class="px-4 py-2 hover:border border-zinc-700 bg-zinc-800" type="text" @bind="@req.Name"/></ListItem>
+                }
+            </ul>
+        }
+    </div>
+    <Spacetime.Shared.Components.Requestor Request="@CurrentRequest" />
+</div>
+@code {
+    private SpacetimeRequest CurrentRequest { get; set; } = new SpacetimeRequest();
+    private List<SpacetimeRequest> Requests { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        Requests = (await RequestService.GetRequests()).ToList();
+
+    }
+
+    private void NewRequest()
+    {
+        var req = new SpacetimeRequest();
+        req.Name = "New Request";
+        Requests.Add(req);
+        CurrentRequest = req;
+        RequestService.AddRequest(req);
+    }
+
+    private async Task OnDelete(SpacetimeRequest request)
+    {
+        Requests.Remove(request);
+        RequestService.DeleteRequest(request.Id);
+    }
+}

@@ -1,0 +1,34 @@
+﻿@inject IJSRuntime JS
+
+<div id='editor' @ref="_elementRef" style="height: 600px; width: 600px"></div>
+@code {
+    private bool _rendered;
+
+    [Parameter]
+    public string Data { get; set; }
+    private ElementReference _elementRef;
+
+    protected override async void OnAfterRender(bool firstRender)
+    {
+        if (_rendered)
+        {
+            return;
+        }
+
+        _rendered = true;
+        await JS.InvokeVoidAsync("editor", _elementRef, Data);
+    }
+
+    protected override async void OnParametersSet()
+    {
+        if (_rendered)
+        {
+            try
+            {
+                await JS.InvokeVoidAsync("updateEditor", _elementRef, Data);
+            }
+            catch (Exception ex) { }
+        }
+
+    }
+}

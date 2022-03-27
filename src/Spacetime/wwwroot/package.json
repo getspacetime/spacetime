@@ -1,0 +1,26 @@
+{
+  "name": "spacetime",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "monaco-editor": "^0.33.0",
+    "monaco-editor-webpack-plugin": "^7.0.1"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.4",
+    "css-loader": "^6.7.1",
+    "file-loader": "^6.2.0",
+    "postcss": "^8.4.12",
+    "postcss-loader": "^6.2.1",
+    "style-loader": "^3.3.1",
+    "tailwindcss": "^3.0.23",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2"
+  }
+}
