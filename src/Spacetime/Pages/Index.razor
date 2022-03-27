@@ -22,7 +22,7 @@
                 {
                     <ListItem OnClickCallback="@(e => CurrentRequest = req)"
                       OnActionCallback="@(async e => await OnDelete(req))">
-                        <Title><input class="px-4 py-2 hover:border border-zinc-700 bg-zinc-800" type="text" @bind="@req.Name" /></Title>
+                        <Title><input class="px-4 py-2 border border-zinc-700 hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" /></Title>
                         <ActionTemplate><DeleteIcon /></ActionTemplate>
                     </ListItem>
                 }
@@ -53,5 +53,17 @@
     {
         Requests.Remove(request);
         RequestService.DeleteRequest(request.Id);
+    }
+    
+    private async Task Save(SpacetimeRequest request)
+    {
+        try
+        {
+            await RequestService.UpdateRequest(request);
+        }
+        catch (Exception ex)
+        {
+            // todo: handle this?
+        }
     }
 }

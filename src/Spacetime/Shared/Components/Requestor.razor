@@ -6,10 +6,9 @@
 <div class="flex" style="overflow: hidden">
     <div class="basis-1/3 shrink-0">
         <div class="flex flex-row mb-2 shrink-0">
-            <select name="method" @bind="Request.Method" class=" bg-zinc-800">
-                <option>--select--</option>
-                <option value="get">GET</option>
-                <option value="post">POST</option>
+            <select name="method" @bind="Request.Method" class="bg-zinc-800" @onblur="Save">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
             </select>
             <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
             <Button OnClickCallback="@Execute">@ExecuteText</Button>
@@ -19,6 +18,14 @@
             <Button>Auth</Button>
             <Button>Query</Button>
             <Button>Header</Button>
+            <div class="flex flex-row ml-2">
+    <button
+    @onclick="() => SetGRPC(true)"
+    class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 @(gRPC == true ? "bg-green-600" : "")">gRPC</button>
+    <button 
+    @onclick="() => SetGRPC(false)"
+    class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-r-sm ml-0 @(gRPC == false ? "bg-gray-600" : "")">REST</button>
+</div>
         </div>
         <div>
             <Code Data="@string.Empty"></Code>
@@ -26,8 +33,8 @@
     </div>
     <div class="basis-2/3 ml-2">
         <div class="flex flex-row mb-2 border-bottom border-zinc-700">
-            <div class="bg-green-600 text-zinc-100 p-2">@Request.StatusCode</div>
-            <div class="bg-slate-600 text-zinc-100 p-2 ml-2">@Request.ResponseTimeText</div>
+                <div class="@StatusCodeBackground text-zinc-100 p-2">@Request.StatusCode</div>
+            <div class="bg-zinc-600 text-zinc-100 p-2 ml-2">@Request.ResponseTimeText</div>
         </div>
         <div class="flex flex-row mb-2">
             <Button OnClickCallback="@(() => Tab = "preview")">Preview</Button>
@@ -41,16 +48,21 @@
         }
         @if (Tab == "headers")
         {
-            <div class="border border-zinc-700" style="height: 600px; width: 600px">
-                <table class="table-auto">
+                <table class="table-fixed border border-zinc-700" style="height: 600px; width: 600px">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px">Header</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
                     @if (Request.Headers != null)
                     {
                         <tbody>
                             @foreach (var header in Request?.Headers)
                             {
                                 <tr>
-                                    <td>@header.Name</td>
-                                    <td>@header.Value</td>
+                                    <td class="p-2 border border-zinc-700">@header.Name</td>
+                                    <td class="p-2 border border-zinc-700">@header.Value</td>
                                 </tr>
                             }
                         </tbody>
@@ -62,13 +74,22 @@
                         </tbody>
                     }
                 </table>
-            </div>
         }
     </div>
 </div>
 @code {
+    private bool gRPC { get; set; } = false;
+
+    private void SetGRPC(bool value)
+    {
+        gRPC = value;
+        Request.Type = gRPC ? SpacetimeType.gRPC : SpacetimeType.REST;
+    }
+
     private string Tab { get; set; } = "preview";
     private bool Loading { get; set; }
+
+    private string StatusCodeBackground { get => Request?.Status == SpacetimeStatus.Ok ? "bg-green-600" : "bg-red-600"; }
 
     [Parameter]
     public SpacetimeRequest Request { get; set; }
@@ -98,14 +119,17 @@
 
         try
         {
+            // todo: move to DI configuration
+            ISpacetimeService svc = Request.Type == SpacetimeType.gRPC ? new SpacetimeGrpcService() : SpacetimeService;
             Loading = true;
 
-            var response = await SpacetimeService.Execute(Request);
+            var response = await svc.Execute(Request);
 
             Request.ResponseBody = response.ResponseBody;
             Request.ElapsedMs = response.ElapsedMs;
             Request.Headers = response.Headers;
-            //Request.StatusCode = response.Status;
+            Request.Status = response.Status;
+            Request.StatusCode = response.StatusCode;
         }
         catch (Exception ex)
         {

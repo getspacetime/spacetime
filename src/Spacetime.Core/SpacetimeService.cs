@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace Spacetime.Core
 {
-    public class SpacetimeService
+    public interface ISpacetimeService
+    {
+        Task<SpacetimeResponse> Execute(SpacetimeRequest request);
+    }
+
+    public class SpacetimeService : ISpacetimeService
     {
         public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
         {
@@ -16,13 +21,27 @@ namespace Spacetime.Core
 
             try
             {
-                var client = new HttpClient();
-                var httpResponse = await client.GetAsync(request.URL);
-                response.ResponseBody = await httpResponse.Content.ReadAsStringAsync();
-                response.Headers = httpResponse.Headers.Select(p => new HeaderDto { Name = p.Key, Value = string.Join(';', p.Value) });
+                HttpResponseMessage httpResponse;
+
+                switch (request.Method)
+                {
+                    case "GET":
+                        httpResponse = await Get(request);
+                        break;
+                    case "POST":
+                        httpResponse = await Post(request);
+                        break;
+                    default:
+                        httpResponse = await Get(request);
+                        break;
+                }
+                
                 timer.Stop();
 
-                response.Status = SpacetimeStatus.Ok;
+                response.ResponseBody = await httpResponse.Content.ReadAsStringAsync();
+                response.Headers = httpResponse.Headers.Select(p => new HeaderDto { Name = p.Key, Value = string.Join(';', p.Value) });
+                response.Status = httpResponse.IsSuccessStatusCode ? SpacetimeStatus.Ok : SpacetimeStatus.Error;
+                response.StatusCode = httpResponse.StatusCode.ToString();
             }
             catch (Exception ex)
             {
@@ -37,11 +56,51 @@ namespace Spacetime.Core
 
             return response;
         }
+
+        private async Task<HttpResponseMessage> Get(SpacetimeRequest request)
+        {
+            var client = new HttpClient();
+            var httpResponse = await client.GetAsync(request.URL);
+
+            return httpResponse;
+        }
+
+        private async Task<HttpResponseMessage> Post(SpacetimeRequest request)
+        {
+            var client = new HttpClient();
+
+            StringContent? content = null;
+
+            if (!string.IsNullOrWhiteSpace(request.RequestBody))
+            {
+                content = new StringContent(request.RequestBody);
+            }
+
+            var httpResponse = await client.PostAsync(request.URL, content);
+
+            return httpResponse;
+        }
+    }
+
+    public class SpacetimeGrpcService : ISpacetimeService
+    {
+        public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
+        {
+            return new SpacetimeResponse
+            {
+                ElapsedMs = 10,
+                Headers = new List<HeaderDto>(),
+                ResponseBody = "gRPC response",
+                Status = SpacetimeStatus.Ok,
+                StatusCode = "200 OK"
+            };
+        }
     }
 
     public class SpacetimeResponse
     {
         public IEnumerable<HeaderDto> Headers { get; set; }
+        public string StatusCode { get; set; }
         public SpacetimeStatus Status { get; set; }
         public string ResponseBody { get; set; }
         public long ElapsedMs { get; set; }
