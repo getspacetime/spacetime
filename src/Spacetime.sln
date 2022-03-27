@@ -4,7 +4,7 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime", "Spacetime\Spacetime.csproj", "{A0652C85-FC89-46DB-AD5F-8F44EE90BA4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacetime.Core", "Spacetime.Core\Spacetime.Core.csproj", "{E4720514-CC46-4B39-9231-029B0CCC589B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core", "Spacetime.Core\Spacetime.Core.csproj", "{E4720514-CC46-4B39-9231-029B0CCC589B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

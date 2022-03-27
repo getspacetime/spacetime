@@ -2,6 +2,7 @@
 
 @using Spacetime.Core
 @using Spacetime.Shared.Components
+@using Spacetime.Shared.Icons
 @inject RequestService RequestService
 
 <div class="flex flex-row">
@@ -14,15 +15,16 @@
         {
             <div class="p-2 flex justify-between">
                 <strong>Requests</strong>
-                <Button OnClickCallback=@NewRequest >New</Button>
+                <Button OnClickCallback=@NewRequest>New</Button>
             </div>
             <ul>
                 @foreach (var req in Requests)
                 {
-                    <ListItem 
-                        OnClickCallback="@(e => CurrentRequest = req)" 
-                        ActionText="Delete"
-                        OnActionCallback="@(async e => await OnDelete(req))"><input class="px-4 py-2 hover:border border-zinc-700 bg-zinc-800" type="text" @bind="@req.Name"/></ListItem>
+                    <ListItem OnClickCallback="@(e => CurrentRequest = req)"
+                      OnActionCallback="@(async e => await OnDelete(req))">
+                        <Title><input class="px-4 py-2 hover:border border-zinc-700 bg-zinc-800" type="text" @bind="@req.Name" /></Title>
+                        <ActionTemplate><DeleteIcon /></ActionTemplate>
+                    </ListItem>
                 }
             </ul>
         }

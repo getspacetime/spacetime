@@ -1,5 +1,6 @@
 ﻿@inject IJSRuntime JS
 
+<!-- figure out how to have dynamic sizes here -->
 <div id='editor' @ref="_elementRef" style="height: 600px; width: 600px"></div>
 @code {
     private bool _rendered;
@@ -12,6 +13,8 @@
     {
         if (_rendered)
         {
+            // we don't need to re-initialize the editor after it's been 
+            // rendered once
             return;
         }
 
@@ -23,11 +26,17 @@
     {
         if (_rendered)
         {
+            // update the editor whenever the parameter changes
+            // only update once it's been rendered, though
+
             try
             {
                 await JS.InvokeVoidAsync("updateEditor", _elementRef, Data);
             }
-            catch (Exception ex) { }
+            catch (Exception ex)
+            {
+                // todo: fall back to a basic editor?
+            }
         }
 
     }

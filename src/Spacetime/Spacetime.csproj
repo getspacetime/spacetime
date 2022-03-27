@@ -67,6 +67,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />
 	</ItemGroup>
 
