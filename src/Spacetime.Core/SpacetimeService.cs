@@ -7,12 +7,8 @@ using System.Threading.Tasks;
 
 namespace Spacetime.Core
 {
-    public interface ISpacetimeService
-    {
-        Task<SpacetimeResponse> Execute(SpacetimeRequest request);
-    }
 
-    public class SpacetimeService : ISpacetimeService
+    public class SpacetimeRestService : ISpacetimeService
     {
         public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
         {
@@ -80,42 +76,5 @@ namespace Spacetime.Core
 
             return httpResponse;
         }
-    }
-
-    public class SpacetimeGrpcService : ISpacetimeService
-    {
-        public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
-        {
-            return new SpacetimeResponse
-            {
-                ElapsedMs = 10,
-                Headers = new List<HeaderDto>(),
-                ResponseBody = "gRPC response",
-                Status = SpacetimeStatus.Ok,
-                StatusCode = "200 OK"
-            };
-        }
-    }
-
-    public class SpacetimeResponse
-    {
-        public IEnumerable<HeaderDto> Headers { get; set; }
-        public string StatusCode { get; set; }
-        public SpacetimeStatus Status { get; set; }
-        public string ResponseBody { get; set; }
-        public long ElapsedMs { get; set; }
-    }
-
-    public enum SpacetimeStatus
-    {
-        Unknown,
-        Ok,
-        Error
-    }
-
-    public class HeaderDto
-    {
-        public string Name { get; set; }
-        public string Value { get; set; }
     }
 }

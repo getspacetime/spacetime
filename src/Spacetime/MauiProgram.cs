@@ -18,7 +18,7 @@ public static class MauiProgram
 
 		builder.Services.AddBlazorWebView();
 		builder.Services.AddSingleton<RequestService>();
-		builder.Services.AddSingleton<SpacetimeService>();
+		builder.Services.AddSingleton<SpacetimeRestService>();
 
 		return builder.Build();
 	}

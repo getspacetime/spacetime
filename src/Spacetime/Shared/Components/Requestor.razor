@@ -1,6 +1,6 @@
 ﻿@using Spacetime.Core
 @using Spacetime.Shared.Components
-@inject SpacetimeService SpacetimeService
+@inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
 
 <div class="flex" style="overflow: hidden">
@@ -120,7 +120,7 @@
         try
         {
             // todo: move to DI configuration
-            ISpacetimeService svc = Request.Type == SpacetimeType.gRPC ? new SpacetimeGrpcService() : SpacetimeService;
+            ISpacetimeService svc = Request.Type == SpacetimeType.gRPC ? new SpacetimeGrpcService() : SpacetimeRestService;
             Loading = true;
 
             var response = await svc.Execute(Request);
