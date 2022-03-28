@@ -79,7 +79,7 @@ Coming soon
     - [ ] Security settings
     - [ ] Request history
 - [ ] Platform
-    - [ x ] Windows
+    - [x] Windows
     - [ ] Mac
     - [ ] Linux
     - [ ] iOS
