@@ -42,7 +42,12 @@
 </details>
 
 ## About The Project
-Spacetime aims to be a fully featured API Client, supporting multiple transports, platforms, and wormholes.
+A fully featured* cross-platform, cross-transport API Client, wormholes excluded. 
+
+Spacetime is proudly built with .NET MAUI Blazor.
+
+*not quite fully featured yet*
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -73,6 +78,12 @@ Coming soon
     - [ ] User settings
     - [ ] Security settings
     - [ ] Request history
+- [ ] Platform
+    - [ x ] Windows
+    - [ ] Mac
+    - [ ] Linux
+    - [ ] iOS
+    - [ ] Android
 - [ ] REST Client
     - [ ] Full support for basic REST operations
 - [ ] gRPC Client
