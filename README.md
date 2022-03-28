@@ -84,15 +84,15 @@ Coming soon
     - [ ] Linux
     - [ ] iOS
     - [ ] Android
-- [ ] REST Client
+- [ ] REST
     - [ ] Full support for basic REST operations
-- [ ] gRPC Client
+- [ ] gRPC
     - [ ] Unary support
     - [ ] Streaming support
-- [ ] Kafka Client
+- [ ] Kafka
     - [ ] Produce messages
     - [ ] Consume messages
-- [ ] Websockets Client
+- [ ] Websockets
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
