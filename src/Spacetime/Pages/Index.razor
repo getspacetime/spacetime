@@ -29,10 +29,16 @@
             </ul>
         }
     </div>
-    <Spacetime.Shared.Components.Requestor Request="@CurrentRequest" />
+    @if (CurrentRequest != null)
+    {
+        <Spacetime.Shared.Components.Requestor Request="@CurrentRequest" />
+    } else
+    {
+        <p>Select a request</p>
+    }
 </div>
 @code {
-    private SpacetimeRequest CurrentRequest { get; set; } = new SpacetimeRequest();
+    private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
     protected override async Task OnInitializedAsync()
     {

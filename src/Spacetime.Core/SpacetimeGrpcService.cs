@@ -1,6 +1,7 @@
 ﻿using Grpc.Net.Client;
 using Grpc.Core;
 using grpc = global::Grpc.Core;
+using Spacetime.Core.gRPC;
 
 namespace Spacetime.Core
 {
@@ -8,6 +9,14 @@ namespace Spacetime.Core
     {
         public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
         {
+            try
+            {
+                var curl = new GrpcHelper();
+                curl.Test(request.ImportPath, request.ProtoFile);
+            }catch (Exception ex)
+            {
+
+            }
             var response = new SpacetimeResponse
             {
                 ElapsedMs = 10,

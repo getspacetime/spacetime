@@ -29,6 +29,10 @@ namespace Spacetime.Core
 
             return Name;
         }
+
+        // grpc fields
+        public string ImportPath { get; set; } = @"C:\Users\Cody\Documents\GitHub\spacetime\src\Spacetime\wwwroot\protos";
+        public string ProtoFile { get; set; } = "greet.proto";
     }
 
     public enum SpacetimeType
