@@ -61,7 +61,7 @@ Spacetime is proudly built with .NET MAUI Blazor.
 * [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/vs/preview/)
 * [.NET MAUI Workload](https://docs.microsoft.com/en-us/dotnet/maui/get-started/installation
 * Until the library is stable, you must clone [grpc-wrapper](https://github.com/spacetimedotnet/grpc-wrapper) for the project reference.
-)
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Installation
@@ -78,14 +78,15 @@ Coming soon
     - [ ] Request history
 - [ ] Platform
     - [x] Windows
-    - [ ] Mac
+    - [ ] Mac _(in progress)_
     - [ ] Linux
     - [ ] iOS
     - [ ] Android
 - [ ] REST
-    - [ ] Full support for basic REST operations
+    - [ ] Full support for basic REST operations _(in progress)_
 - [ ] gRPC
-    - [ ] Unary support
+    - [ ] GRPC Explorer _(in progress)_
+    - [ ] Unary support _(in progress)_
     - [ ] Streaming support
 - [ ] Kafka
     - [ ] Produce messages
