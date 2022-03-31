@@ -1,0 +1,46 @@
+﻿@using Spacetime.Shared.Components.Display
+@using Spacetime.Shared.Icons
+
+<div class="relative">
+    <button @onclick="OnClick"
+            class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-sm">
+        @ChildContent
+    </button>
+    @if (IsVisible)
+    {
+        <!-- todo: positioning needs work, this isn't dynamic. probably using wrong positioning-->
+        <div class="absolute -bottom-32 -left-28 bg-zinc-200 text-black">
+            <ul>
+                <DropdownItem OnClickCallback="@(e => {})">
+                    <Title>
+                        Dropdown Item 1
+                    </Title>
+                </DropdownItem>
+                <DropdownItem OnClickCallback="@(e => {})">
+                    <Title>
+                        Dropdown Item 2
+                    </Title>
+                </DropdownItem>
+                <DropdownItem OnClickCallback="@(e => {})">
+                    <Title>
+                        Dropdown Item 3
+                    </Title>
+                </DropdownItem>
+            </ul>
+        </div>
+    }
+</div>
+@code {
+    private bool IsVisible { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    private void OnClick()
+    {
+        IsVisible = !IsVisible;
+    }
+}

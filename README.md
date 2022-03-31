@@ -71,7 +71,9 @@ Coming soon
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Roadmap
-
+- [ ] UX
+    - [ ] Responsive design
+    - [ ] Keyboard shortcuts
 - [ ] Core
     - [ ] User settings
     - [ ] Security settings

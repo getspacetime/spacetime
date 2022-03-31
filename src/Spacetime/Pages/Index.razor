@@ -25,8 +25,14 @@
                 {
                     <ListItem OnClickCallback="@(e => CurrentRequest = req)"
                       OnActionCallback="@(async e => await OnDelete(req))">
-                        <Title><input class="px-4 py-2 border border-zinc-700 hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" /></Title>
-                        <ActionTemplate><DeleteIcon /></ActionTemplate>
+                        <Title>
+                            <input class="px-4 py-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" />
+                        </Title>
+                        <Prefix><span class="text-xs px-2 py-1">GET</span></Prefix>
+                        <ActionTemplate>
+                                    <Spacetime.Shared.Components.Inputs.Dropdown><DotsVerticalIcon /></Spacetime.Shared.Components.Inputs.Dropdown>
+    
+                        </ActionTemplate>
                     </ListItem>
                 }
             </ul>
@@ -35,7 +41,8 @@
     @if (CurrentRequest != null)
     {
         <Spacetime.Shared.Components.Requestor Request="@CurrentRequest" />
-    } else
+    }
+    else
     {
         <p>Select a request</p>
     }
@@ -49,6 +56,25 @@
 
     }
 
+    private string GetRequestPrefix(SpacetimeRequest req)
+    {
+        var str = string.Empty;
+        switch (req.Type)
+        {
+            case SpacetimeType.REST:
+                str = req.Method;
+                break;
+            case SpacetimeType.gRPC:
+                str = "gRPC";
+                break;
+            default:
+                str = req.Method;
+                break;
+        }
+
+        return str;
+    }
+
     private void NewRequest()
     {
         var req = new SpacetimeRequest();
@@ -60,10 +86,11 @@
 
     private async Task OnDelete(SpacetimeRequest request)
     {
-        Requests.Remove(request);
-        RequestService.DeleteRequest(request.Id);
+        //todo: re-add later
+       // Requests.Remove(request);
+       // RequestService.DeleteRequest(request.Id);
     }
-    
+
     private async Task Save(SpacetimeRequest request)
     {
         try
