@@ -7,7 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spacetime.GRPCurl.Wrapper" Version="1.0.0" />
+    <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Spacetime.gRPC.Wrapper">
+      <HintPath>..\..\..\grpc-wrapper\src\Spacetime.gRPC.Wrapper\bin\Debug\net6.0\Spacetime.gRPC.Wrapper.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

@@ -17,9 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj" />
+    <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
   </ItemGroup>
-	<ItemGroup>
-		<Protobuf Include="Protos\greet.proto" GrpcServices="Client" />
-	</ItemGroup>
 </Project>

@@ -1,0 +1,33 @@
+﻿@using Spacetime.Core
+
+<table class="table-fixed border border-zinc-700" style="height: 600px; width: 600px">
+    <thead>
+        <tr>
+            <th style="width: 200px">Header</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    @if (Request.Headers != null)
+    {
+        <tbody>
+            @foreach (var header in Request?.Headers)
+            {
+                <tr>
+                    <td class="p-2 border border-zinc-700">@header.Name</td>
+                    <td class="p-2 border border-zinc-700">@header.Value</td>
+                </tr>
+            }
+        </tbody>
+    }
+    else
+    {
+        <tbody>
+            <tr><td>These aren't the headers you're looking for</td></tr>
+        </tbody>
+    }
+</table>
+
+@code {
+    [Parameter]
+    public SpacetimeRequest Request { get; set; }
+}

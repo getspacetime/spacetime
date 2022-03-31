@@ -1,7 +1,14 @@
 ﻿@using Spacetime.Core
+@using Spacetime.Core.Services
+@using Spacetime.Core.gRPC
 @using Spacetime.Shared.Components
+@using Spacetime.Shared.Components.Inputs
+@using Spacetime.Shared.Components.Display
+@using Spacetime.Shared.Icons
+@using Spacetime.Shared.Components.Panes
 @inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
+@inject IGrpcExplorer GrpcExplorer
 
 <div class="flex" style="overflow: hidden">
     <div class="basis-1/3 shrink-0">
@@ -19,27 +26,20 @@
             <Button>Query</Button>
             <Button>Header</Button>
             <div class="flex flex-row ml-2">
-                <button @onclick="() => SetGRPC(true)"
-                        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 @(gRPC == true ? "bg-green-600" : "")">
+                <button @onclick="() => SetGRPC(SpacetimeType.gRPC)"
+                        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 @(Request.Type == SpacetimeType.gRPC ? "bg-green-600" : "")">
                     gRPC
                 </button>
-                <button @onclick="() => SetGRPC(false)"
-                        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-r-sm ml-0 @(gRPC == false ? "bg-gray-600" : "")">
+                <button @onclick="() => SetGRPC(SpacetimeType.REST)"
+                        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-r-sm ml-0 @(Request.Type != SpacetimeType.gRPC ? "bg-gray-600" : "")">
                     REST
                 </button>
             </div>
         </div>
         <div class="ml-2">
-            @if (gRPC)
+            @if (Request.Type == SpacetimeType.gRPC)
             {
-                <div>
-                    <strong>Proto Import Path</strong>
-                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ImportPath" @onblur="Save" />
-                </div>
-                <div>
-                    <strong>Proto File Name</strong>
-                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ProtoFile" @onblur="Save" />
-                </div>
+                <GrpcPane Request="@Request"/>
             }
             else
             {
@@ -64,42 +64,16 @@
         }
         @if (Tab == "headers")
         {
-            <table class="table-fixed border border-zinc-700" style="height: 600px; width: 600px">
-                <thead>
-                    <tr>
-                        <th style="width: 200px">Header</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                @if (Request.Headers != null)
-                {
-                    <tbody>
-                        @foreach (var header in Request?.Headers)
-                        {
-                            <tr>
-                                <td class="p-2 border border-zinc-700">@header.Name</td>
-                                <td class="p-2 border border-zinc-700">@header.Value</td>
-                            </tr>
-                        }
-                    </tbody>
-                }
-                else
-                {
-                    <tbody>
-                        <tr><td>These aren't the headers you're looking for</td></tr>
-                    </tbody>
-                }
-            </table>
+            <HeadersPane Request="@Request"/>
         }
     </div>
 </div>
 @code {
-    private bool gRPC { get; set; } = false;
-
-    private void SetGRPC(bool value)
+    private async void SetGRPC(SpacetimeType type)
     {
-        gRPC = value;
-        Request.Type = gRPC ? SpacetimeType.gRPC : SpacetimeType.REST;
+        Request.Type = type;
+
+        await Save();
     }
 
     private string Tab { get; set; } = "preview";
@@ -110,7 +84,13 @@
     [Parameter]
     public SpacetimeRequest Request { get; set; }
 
+    public GrpcExploreResult GrpcExploreResult { get; set; }
     private string ExecuteText => !Loading ? "Execute" : "Loading...";
+
+    private void ValidateGrpc()
+    {
+        GrpcExploreResult = GrpcExplorer.GetExplorer(Request.ImportPath, Request.ProtoFile);
+    }
 
     private async Task Save()
     {
@@ -120,7 +100,7 @@
         }
         catch (Exception ex)
         {
-            // todo: handle this?
+            // todo: handle this? :-)
         }
     }
 

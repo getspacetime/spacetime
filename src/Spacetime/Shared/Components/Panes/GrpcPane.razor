@@ -1,0 +1,64 @@
+﻿@using Spacetime.Core
+@using Spacetime.Core.Services
+@using Spacetime.Core.gRPC
+@using Spacetime.Shared.Components.Display
+@using Spacetime.Shared.Icons
+
+@inject IGrpcExplorer GrpcExplorer
+@inject RequestService RequestService
+
+<div class="mb-2">
+    <strong>Proto Import Path</strong>
+    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ImportPath" @onblur="Save" />
+</div>
+<div class="mb-2">
+    <strong>Proto File Name</strong>
+    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ProtoFile" @onblur="Save" />
+</div>
+<div class="mb-2">
+    <button @onclick="ValidateGrpc"
+            class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 bg-green-600">
+        Validate Proto
+    </button>
+</div>
+@if (GrpcExploreResult != null)
+{
+    <div>
+        @foreach (var s in GrpcExploreResult.Services)
+        {
+            <div class="text-bold text-lg mb-2">@s</div>
+            @foreach (var method in s.Methods)
+            {
+                <ListItem OnActionCallback="@(() => {})" OnClickCallback="@(() => {})">
+                    <Title>@method.Name</Title>
+                    <ActionTemplate><DotsVerticalIcon /></ActionTemplate>
+                </ListItem>
+            }
+        }
+    </div>
+}
+
+@code {
+    [Parameter]
+    public SpacetimeRequest Request { get; set; }
+    public GrpcExploreResult GrpcExploreResult { get; set; }
+
+    private void ValidateGrpc()
+    {
+        GrpcExploreResult = GrpcExplorer.GetExplorer(Request.ImportPath, Request.ProtoFile);
+    }
+
+    private async Task Save()
+    {
+        // todo: figure out how to better handle these common things
+        // e.g., bubble these up, use a "redux" pattern, etc.
+        try
+        {
+            await RequestService.UpdateRequest(Request);
+        }
+        catch (Exception ex)
+        {
+            // todo: handle this? :-)
+        }
+    }
+}

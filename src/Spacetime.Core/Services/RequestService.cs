@@ -1,6 +1,6 @@
 ﻿using LiteDB;
 
-namespace Spacetime.Core;
+namespace Spacetime.Core.Services;
 
 public class RequestService
 {
