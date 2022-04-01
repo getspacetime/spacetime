@@ -5,6 +5,7 @@
 @using Spacetime.Shared.Components
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
+@using Spacetime.Shared.Components.Containers.Alert
 @using Spacetime.Shared.Icons
 @inject RequestService RequestService
 
@@ -30,7 +31,7 @@
                         </Title>
                         <Prefix><span class="text-xs px-2 py-1">@GetRequestPrefix(req)</span></Prefix>
                         <ActionTemplate>
-                            <Dropdown Items="@RequestDropdown" OnClickCallback="@(async () => await OnDelete(req))"><DotsVerticalIcon /></Dropdown>
+                            <Dropdown Items="@RequestDropdown" OnClickCallback="@(() => ConfirmDelete(req))"><DotsVerticalIcon /></Dropdown>
                         </ActionTemplate>
                     </ListItem>
                 }
@@ -46,10 +47,15 @@
         <p>Select a request</p>
     }
     <NewRequestModal @bind-IsVisible="@ModalVisible" OnCloseCallback="(e => OnModalClose())" />
+    <Alert Title="Are you sure?" OnConfirmCallback="(e => OnConfirmDeleteCallback(e, null))" IsVisible="AlertVisible">
+        <!-- todo: be more specific in wording -->
+        <p>Are you sure you want to delete this request?</p>
+    </Alert>
 </div>
 @code {
+    public bool AlertVisible { get; set; }
     public bool ModalVisible { get; set; }
-    private List<string> RequestDropdown { get => new List<string> { "Duplicate", "Copy as cURL", "Delete" }; }
+    private List<string> RequestDropdown { get => new List<string> { "Delete" }; }
     private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
     protected override async Task OnInitializedAsync()
@@ -60,6 +66,19 @@
             CurrentRequest = Requests.First();
         }
 
+    }
+
+    public void ConfirmDelete(SpacetimeRequest request)
+    {
+        AlertVisible = true;
+    }
+
+    public async void OnConfirmDeleteCallback(bool delete, SpacetimeRequest request)
+    {
+        if (delete)
+        {
+            await OnDelete(request);
+        }
     }
 
     private string GetRequestPrefix(SpacetimeRequest req)

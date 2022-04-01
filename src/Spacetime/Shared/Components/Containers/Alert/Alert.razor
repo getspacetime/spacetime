@@ -1,0 +1,40 @@
+﻿@using Spacetime.Shared.Components.Inputs
+@using Spacetime.Shared.Icons
+@if (IsVisible)
+{
+    <div class="top-0 h-screen w-screen absolute flex justify-center items-center">
+        <div class="border rounded border-zinc-700 w-96 h-48 bg-zinc-900 shadow-xl p-5 divide-y divide-zinc-800 divide-solid text-white flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between">
+                    <h3 class="font-semibold text-2xl pb-3">@Title</h3>
+                    <span @onclick="Close"><CloseIcon Css="cursor-pointer"/></span>
+                </div>
+                <div>@ChildContent</div>
+            </div>
+            <div class="pt-3"><Button OnClickCallback="@Close">Cancel</Button></div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnConfirmCallback { get; set; }
+
+    public async void Close()
+    {
+        IsVisible = false;
+        await IsVisibleChanged.InvokeAsync(IsVisible);
+    }
+}

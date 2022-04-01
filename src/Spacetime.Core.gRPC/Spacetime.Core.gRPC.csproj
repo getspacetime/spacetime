@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <Reference Include="Spacetime.gRPC.Wrapper">
-      <HintPath>..\..\..\grpc-wrapper\src\Spacetime.gRPC.Wrapper\bin\Debug\net6.0\Spacetime.gRPC.Wrapper.dll</HintPath>
+      <HintPath>..\..\lib\grpc-wrapper\Spacetime.gRPC.Wrapper.dll</HintPath>
     </Reference>
   </ItemGroup>
 
