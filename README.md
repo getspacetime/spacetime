@@ -52,7 +52,7 @@ Spacetime is proudly built with .NET MAUI Blazor.
 
 * [.NET MAUI Blazor](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-6.0)
 * [LiteDB](https://www.litedb.org/)
-
+* [TailwindCSS](https://tailwindcss.com/)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Getting started
@@ -60,7 +60,6 @@ Spacetime is proudly built with .NET MAUI Blazor.
 ### Prerequisites
 * [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/vs/preview/)
 * [.NET MAUI Workload](https://docs.microsoft.com/en-us/dotnet/maui/get-started/installation
-* Until the library is stable, you must clone [grpc-wrapper](https://github.com/spacetimedotnet/grpc-wrapper) for the project reference.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
