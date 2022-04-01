@@ -9,29 +9,25 @@
     @if (IsVisible)
     {
         <!-- todo: positioning needs work, this isn't dynamic. probably using wrong positioning-->
-        <div class="absolute -bottom-32 -left-28 bg-zinc-200 text-black">
+        <div class="absolute top-8 right-0 bg-zinc-200 text-black w-48 z-10">
             <ul>
-                <DropdownItem OnClickCallback="@(e => {})">
-                    <Title>
-                        Dropdown Item 1
-                    </Title>
-                </DropdownItem>
-                <DropdownItem OnClickCallback="@(e => {})">
-                    <Title>
-                        Dropdown Item 2
-                    </Title>
-                </DropdownItem>
-                <DropdownItem OnClickCallback="@(e => {})">
-                    <Title>
-                        Dropdown Item 3
-                    </Title>
-                </DropdownItem>
+                @foreach (var item in Items)
+                {
+                    <DropdownItem OnClickCallback="@(e => OnClick())">
+                        <Title>
+                            @item
+                        </Title>
+                    </DropdownItem>
+                }
             </ul>
         </div>
     }
 </div>
 @code {
     private bool IsVisible { get; set; }
+
+    [Parameter]
+    public List<string> Items { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

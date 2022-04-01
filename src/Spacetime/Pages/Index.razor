@@ -28,9 +28,9 @@
                         <Title>
                             <input class="px-4 py-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" />
                         </Title>
-                        <Prefix><span class="text-xs px-2 py-1">GET</span></Prefix>
+                        <Prefix><span class="text-xs px-2 py-1">@GetRequestPrefix(req)</span></Prefix>
                         <ActionTemplate>
-                                    <Spacetime.Shared.Components.Inputs.Dropdown><DotsVerticalIcon /></Spacetime.Shared.Components.Inputs.Dropdown>
+                                    <Dropdown Items="@RequestDropdown"><DotsVerticalIcon /></Dropdown>
     
                         </ActionTemplate>
                     </ListItem>
@@ -44,10 +44,12 @@
     }
     else
     {
+        @*<Spacetime.Shared.Components.Containers.Modal.Modal/>*@
         <p>Select a request</p>
     }
 </div>
 @code {
+    private List<string> RequestDropdown { get => new List<string> { "Duplicate", "Copy as cURL", "Delete" }; }
     private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
     protected override async Task OnInitializedAsync()
