@@ -30,8 +30,8 @@
                         </Title>
                         <Prefix><span class="text-xs px-2 py-1">@GetRequestPrefix(req)</span></Prefix>
                         <ActionTemplate>
-                                    <Dropdown Items="@RequestDropdown"><DotsVerticalIcon /></Dropdown>
-    
+                            <Dropdown Items="@RequestDropdown"><DotsVerticalIcon /></Dropdown>
+
                         </ActionTemplate>
                     </ListItem>
                 }
@@ -44,7 +44,6 @@
     }
     else
     {
-        @*<Spacetime.Shared.Components.Containers.Modal.Modal/>*@
         <p>Select a request</p>
     }
 </div>
@@ -89,8 +88,8 @@
     private async Task OnDelete(SpacetimeRequest request)
     {
         //todo: re-add later
-       // Requests.Remove(request);
-       // RequestService.DeleteRequest(request.Id);
+        // Requests.Remove(request);
+        // RequestService.DeleteRequest(request.Id);
     }
 
     private async Task Save(SpacetimeRequest request)
