@@ -6,7 +6,9 @@
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Shared.Components.Containers.Alert
+@using Spacetime.Shared.Components.Containers.Modal
 @using Spacetime.Shared.Icons
+@using Spacetime.Shared.Components.Typography
 @inject RequestService RequestService
 
 <div class="flex flex-row">
@@ -18,7 +20,7 @@
         else
         {
             <div class="p-2 flex justify-between">
-                <strong>Requests</strong>
+                <SmallCaps>Requests</SmallCaps>
                 <Button OnClickCallback=@NewRequest>New</Button>
             </div>
             <ul>
@@ -46,10 +48,27 @@
     {
         <p>Select a request</p>
     }
-    <NewRequestModal @bind-IsVisible="@ModalVisible" OnCloseCallback="(e => OnModalClose())" />
-    <Alert Title="Are you sure?" OnConfirmCallback="(e => OnConfirmDeleteCallback(e, null))" IsVisible="AlertVisible">
-        <!-- todo: be more specific in wording -->
-        <p>Are you sure you want to delete this request?</p>
+    <Modal Title="New Request" @bind-IsVisible="@ModalVisible">
+        <div class="flex justify-center gap-4">
+            <Card OnClickCallback="CreateNewRequest" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
+                <span class="font-semibold text-xl">REST</span>
+                <p class="text-sm">Make an HTTP request using REST</p>
+                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
+            </Card>
+            <Card OnClickCallback="CreateNewRequest" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
+                <span class="font-semibold text-xl">gRPC</span>
+                <p class="text-sm">Make a request using gRPC</p>
+                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
+            </Card>
+        </div>
+    </Modal>
+    <Alert Title="Are you sure?"
+           Data="SelectedRequest"
+           ConfirmText="Delete request"
+           ConfirmType="ButtonType.Danger"
+           OnConfirmCallback="OnConfirmDeleteCallback"
+           @bind-IsVisible="AlertVisible">
+        <p>Are you sure you want to delete request <span class="italic font-bold">@SelectedRequest.GetName()</span>?</p>
     </Alert>
 </div>
 @code {
@@ -57,6 +76,7 @@
     public bool ModalVisible { get; set; }
     private List<string> RequestDropdown { get => new List<string> { "Delete" }; }
     private SpacetimeRequest CurrentRequest { get; set; }
+    private SpacetimeRequest SelectedRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
     protected override async Task OnInitializedAsync()
     {
@@ -70,12 +90,15 @@
 
     public void ConfirmDelete(SpacetimeRequest request)
     {
+        SelectedRequest = request;
         AlertVisible = true;
     }
 
-    public async void OnConfirmDeleteCallback(bool delete, SpacetimeRequest request)
+    public async void OnConfirmDeleteCallback(AlertCallbackArgs<object> args)
     {
-        if (delete)
+        var request = args.Data as SpacetimeRequest;
+
+        if (args.Confirm && request != null)
         {
             await OnDelete(request);
         }
@@ -105,7 +128,7 @@
         ModalVisible = true;
     }
 
-    private void OnModalClose()
+    private void CreateNewRequest()
     {
         ModalVisible = false;
         var req = new SpacetimeRequest();

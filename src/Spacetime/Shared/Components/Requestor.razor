@@ -14,7 +14,7 @@
 
 <div class="flex" style="overflow: hidden">
     <div class="basis-1/3 shrink-0">
-        <div class="flex flex-row mb-2 shrink-0">
+        <div class="flex flex-row mb-2 shrink-0 p-2">
             @if (Request.Type == SpacetimeType.REST)
             {
                 <select name="method" @bind="Request.Method" class="bg-zinc-800" @onblur="Save">
@@ -27,7 +27,7 @@
                 <span class="text-xs px-2 py-1">gRPC</span>
             }
             <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
-            <Button OnClickCallback="@Execute">@ExecuteText</Button>
+            <Button ButtonType="ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
         </div>
         <Tabs>
             <Tab Key="Body" CurrentTab="@RequestTab" OnClickCallback="@(() => RequestTab = "Body")">Body</Tab>
@@ -102,9 +102,9 @@
         </TabContent>
     </div>
     <div class="basis-2/3 ml-2">
-        <div class="flex flex-row mb-2 border-bottom border-zinc-700 @(string.IsNullOrWhiteSpace(Request.StatusCode) ? "invisible" : "")">
-            <div class="@StatusCodeBackground text-zinc-100 p-2">@Request.StatusCode</div>
-            <div class="bg-zinc-600 text-zinc-100 p-2 ml-2">@Request.ResponseTimeText</div>
+        <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.StatusCode) ? "invisible" : "")">
+            <Badge BadgeType="StatusCodeBadge">@Request.StatusCode</Badge>
+            <Badge Css="ml-2">@Request.ResponseTimeText</Badge>
         </div>
         <Tabs>
             <Tab Key="Preview" CurrentTab="@ResponseTab" OnClickCallback="@(() => ResponseTab = "Preview")">Preview</Tab>
@@ -132,7 +132,7 @@
     private string ResponseTab { get; set; } = "Preview";
     private bool Loading { get; set; }
 
-    private string StatusCodeBackground { get => Request?.Status == SpacetimeStatus.Ok ? "bg-green-600" : "bg-red-600"; }
+    private BadgeType StatusCodeBadge { get => Request?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
 
     [Parameter]
     public SpacetimeRequest Request { get; set; }

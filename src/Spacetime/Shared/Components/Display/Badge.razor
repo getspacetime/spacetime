@@ -1,0 +1,31 @@
+﻿<div class="text-zinc-100 p-2 rounded @BadgeCss @Css">@ChildContent</div>
+
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public BadgeType BadgeType { get; set; } = BadgeType.Default;
+
+    [Parameter]
+    public string Css { get; set; }
+
+    public string BadgeCss { get => GetBadgeTypeCss(); }
+    private string GetBadgeTypeCss()
+    {
+        var css = "bg-zinc-600";
+
+        switch (BadgeType)
+        {
+            case BadgeType.Success:
+                css = "bg-green-600";
+                break;
+            case BadgeType.Danger:
+                css = "bg-red-600";
+                break;
+        }
+
+        return css;
+    }
+}

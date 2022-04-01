@@ -7,11 +7,21 @@
             <div>
                 <div class="flex justify-between">
                     <h3 class="font-semibold text-2xl pb-3">@Title</h3>
-                    <span @onclick="Close"><CloseIcon Css="cursor-pointer"/></span>
+                    <span @onclick="Close"><CloseIcon Css="cursor-pointer" /></span>
                 </div>
                 <div>@ChildContent</div>
             </div>
-            <div class="pt-3"><Button OnClickCallback="@Close">Cancel</Button></div>
+            <div class="pt-3">
+                <Button ButtonType="ConfirmType"
+                    ButtonSize="ButtonSize.Large"
+                    OnClickCallback="@(() => OnConfirm(true))">
+                    @(string.IsNullOrWhiteSpace(ConfirmText) ? "Confirm" : ConfirmText)
+                </Button>
+                <Button ButtonSize="ButtonSize.Large"
+                    OnClickCallback="@(() => OnConfirm(false))">
+                    Cancel
+                </Button>
+            </div>
         </div>
     </div>
 }
@@ -19,6 +29,9 @@
 @code {
     [Parameter]
     public string Title { get; set; }
+
+    [Parameter]
+    public object Data { get; set; }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
@@ -30,7 +43,20 @@
     public EventCallback<bool> IsVisibleChanged { get; set; }
 
     [Parameter]
-    public EventCallback<bool> OnConfirmCallback { get; set; }
+    public EventCallback<AlertCallbackArgs<object>> OnConfirmCallback { get; set; }
+
+    // optional params
+    [Parameter]
+    public string? ConfirmText { get; set; }
+
+    [Parameter]
+    public ButtonType ConfirmType { get; set; } = ButtonType.Default;
+
+    public async void OnConfirm(bool result)
+    {
+        Close();
+        await OnConfirmCallback.InvokeAsync(new AlertCallbackArgs<object>(result, Data));
+    }
 
     public async void Close()
     {

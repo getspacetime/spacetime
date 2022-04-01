@@ -1,5 +1,5 @@
 ﻿<button @onclick="OnClickCallback"
-        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-sm @Css">
+        class="font-semibold border ring-offset-2 focus:outline-none focus:ring-2 rounded-sm @Css @ButtonCss">
     @ChildContent
 </button>
 @code {
@@ -7,8 +7,57 @@
     public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
-    public string? Css { get; set; }
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    // optional parameters
+    [Parameter]
+    public ButtonType ButtonType { get; set; } = ButtonType.Default;
 
     [Parameter]
-    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+    public ButtonSize ButtonSize { get; set; } = ButtonSize.Medium;
+
+    [Parameter]
+    public string? Css { get; set; }
+
+    private string ButtonCss => $"{GetButtonTypeCss()} {GetButtonSizeCss()}";
+
+    private string GetButtonTypeCss()
+    {
+        var css = string.Empty;
+        switch (ButtonType)
+        {
+            case ButtonType.Default:
+                css = "border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600";
+                break;
+            case ButtonType.Danger:
+                css = "border-red-800 ring-red-300 hover:border-red-700 hover:bg-red-700 bg-red-800";
+                break;
+            case ButtonType.Primary:
+                css = "border-sky-700 ring-sky-500 hover:border-sky-600 hover:bg-sky-600 bg-sky-700";
+                break;
+            case ButtonType.Link:
+                break;
+        }
+
+        return css;
+    }
+
+    private string GetButtonSizeCss()
+    {
+        var css = string.Empty;
+        switch (ButtonSize)
+        {
+            case ButtonSize.Small:
+                css = "px-2 py-1 text-sm";
+                break;
+            case ButtonSize.Medium:
+                css = "px-2 py-1";
+                break;
+            case ButtonSize.Large:
+                css = "px-4 py-2";
+                break;
+        }
+
+        return css;
+    }
 }
