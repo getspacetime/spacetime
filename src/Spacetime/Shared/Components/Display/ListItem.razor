@@ -1,7 +1,7 @@
 ﻿@using Spacetime.Shared.Components.Inputs
 <li @onclick="OnClickCallback"
     style="width: 300px"
-    class="flex justify-between items-center pl-2 pr-2 pt-1 pb-1 first:border-t border-b border-zinc-700 hover:bg-zinc-700 cursor-pointer">
+    class="flex justify-between items-center pl-2 pr-2 pt-1 pb-1 first:border-t border-b border-zinc-700 hover:bg-zinc-700 cursor-pointer @Css">
     
     @if (Prefix != null)
     {
@@ -24,7 +24,8 @@
     public RenderFragment? Prefix { get; set; }
     [Parameter]
     public RenderFragment? ActionTemplate { get; set; }
-
+    [Parameter]
+    public string? Css { get; set; }
     [Parameter]
     public EventCallback<MouseEventArgs> OnActionCallback { get; set; }
 

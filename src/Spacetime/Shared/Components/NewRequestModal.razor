@@ -1,0 +1,32 @@
+﻿@using Spacetime.Shared.Components.Containers.Modal
+@using Spacetime.Shared.Components.Display
+@if (IsVisible)
+{
+    <Modal Title="New Request" @bind-IsVisible="@IsVisible">
+        <div @onclick="OnCloseCallback" class="flex justify-center gap-4">
+            <Card Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
+                <span class="font-semibold text-xl">REST</span>
+                <p class="text-sm">Make an HTTP request using REST</p>
+                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
+            </Card>
+            <Card Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
+                <span class="font-semibold text-xl">gRPC</span>
+                <p class="text-sm">Make a request using gRPC</p>
+                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
+            </Card>
+        </div>
+    </Modal>
+}
+@code {
+    [Parameter]
+    public bool IsVisible { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    // todo: right now we'll just return a single close (the whole div)
+    // need to specify this
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnCloseCallback { get; set; }
+
+}

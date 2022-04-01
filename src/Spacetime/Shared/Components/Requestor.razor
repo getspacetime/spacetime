@@ -14,10 +14,16 @@
 <div class="flex" style="overflow: hidden">
     <div class="basis-1/3 shrink-0">
         <div class="flex flex-row mb-2 shrink-0">
-            <select name="method" @bind="Request.Method" class="bg-zinc-800" @onblur="Save">
-                <option value="GET">GET</option>
+            @if (Request.Type == SpacetimeType.REST)
+            {
+                <select name="method" @bind="Request.Method" class="bg-zinc-800" @onblur="Save">
+                    <option value="GET">GET</option>
                 <option value="POST">POST</option>
-            </select>
+                </select>
+            } else if (Request.Type == SpacetimeType.gRPC)
+            {
+                <span class="text-xs px-2 py-1">gRPC</span>
+            }
             <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
             <Button OnClickCallback="@Execute">@ExecuteText</Button>
         </div>
@@ -26,16 +32,6 @@
             <Tab>Auth</Tab>
             <Tab>Query</Tab>
             <Tab>Header</Tab>
-            <div class="flex flex-row ml-2">
-                <button @onclick="() => SetGRPC(SpacetimeType.gRPC)"
-                        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 @(Request.Type == SpacetimeType.gRPC ? "bg-green-600" : "")">
-                    gRPC
-                </button>
-                <button @onclick="() => SetGRPC(SpacetimeType.REST)"
-                        class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-r-sm ml-0 @(Request.Type != SpacetimeType.gRPC ? "bg-gray-600" : "")">
-                    REST
-                </button>
-            </div>
         </div>
         <div class="ml-2">
             @if (Request.Type == SpacetimeType.gRPC)

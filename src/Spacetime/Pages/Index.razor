@@ -23,15 +23,14 @@
             <ul>
                 @foreach (var req in Requests)
                 {
-                    <ListItem OnClickCallback="@(e => CurrentRequest = req)"
+                    <ListItem OnClickCallback="@(e => CurrentRequest = req)" Css="@(CurrentRequest?.Id == req.Id ? "bg-zinc-700" : "")"
                       OnActionCallback="@(async e => await OnDelete(req))">
                         <Title>
                             <input class="px-4 py-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" />
                         </Title>
                         <Prefix><span class="text-xs px-2 py-1">@GetRequestPrefix(req)</span></Prefix>
                         <ActionTemplate>
-                            <Dropdown Items="@RequestDropdown"><DotsVerticalIcon /></Dropdown>
-
+                            <Dropdown Items="@RequestDropdown" OnClickCallback="@(async () => await OnDelete(req))"><DotsVerticalIcon /></Dropdown>
                         </ActionTemplate>
                     </ListItem>
                 }
@@ -46,8 +45,10 @@
     {
         <p>Select a request</p>
     }
+    <NewRequestModal @bind-IsVisible="@ModalVisible" OnCloseCallback="(e => OnModalClose())" />
 </div>
 @code {
+    public bool ModalVisible { get; set; }
     private List<string> RequestDropdown { get => new List<string> { "Duplicate", "Copy as cURL", "Delete" }; }
     private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
@@ -78,8 +79,16 @@
 
     private void NewRequest()
     {
+        ModalVisible = true;
+    }
+
+    private void OnModalClose()
+    {
+        ModalVisible = false;
         var req = new SpacetimeRequest();
         req.Name = "New Request";
+        req.Type = SpacetimeType.REST;
+        req.Method = "GET";
         Requests.Add(req);
         CurrentRequest = req;
         RequestService.AddRequest(req);
@@ -87,9 +96,8 @@
 
     private async Task OnDelete(SpacetimeRequest request)
     {
-        //todo: re-add later
-        // Requests.Remove(request);
-        // RequestService.DeleteRequest(request.Id);
+        Requests.Remove(request);
+        RequestService.DeleteRequest(request.Id);
     }
 
     private async Task Save(SpacetimeRequest request)
