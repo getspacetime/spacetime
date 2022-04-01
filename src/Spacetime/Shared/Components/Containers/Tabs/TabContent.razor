@@ -1,0 +1,20 @@
+﻿@if (CurrentTab == Key)
+{
+    <div class="border border-zinc-700 @Css">
+        @ChildContent
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string Key { get; set; }
+
+    [Parameter]
+    public string CurrentTab { get; set; }
+
+    [Parameter]
+    public string? Css { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

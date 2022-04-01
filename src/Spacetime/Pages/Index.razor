@@ -55,6 +55,10 @@
     protected override async Task OnInitializedAsync()
     {
         Requests = (await RequestService.GetRequests()).ToList();
+        if (CurrentRequest == null && Requests.Any())
+        {
+            CurrentRequest = Requests.First();
+        }
 
     }
 
