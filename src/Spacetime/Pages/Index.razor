@@ -21,7 +21,7 @@
         {
             <div class="p-2 flex justify-between">
                 <SmallCaps>Requests</SmallCaps>
-                <Button OnClickCallback=@NewRequest>New</Button>
+                <Button OnClickCallback=@NewRequest><PlusCircle /></Button>
             </div>
             <ul>
                 @foreach (var req in Requests)
@@ -48,7 +48,8 @@
     {
         <p>Select a request</p>
     }
-    <Modal Title="New Request" @bind-IsVisible="@ModalVisible">
+    <Modal Title="New Request" @bind-IsVisible="@ModalVisible"
+        CancelText="Cancel">
         <div class="flex justify-center gap-4">
             <Card OnClickCallback="CreateNewRequest" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
                 <span class="font-semibold text-xl">REST</span>

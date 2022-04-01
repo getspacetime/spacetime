@@ -27,7 +27,7 @@
 
     @if (SettingsModalVisible)
     {
-        <Modal Title="Settings" @bind-IsVisible="@SettingsModalVisible">
+        <Modal Title="Settings" @bind-IsVisible="@SettingsModalVisible" CancelText="Cancel" ConfirmText="Apply settings">
             <h4 class="text-xl font-semibold pb-2">Security</h4>
             <div class="p-3 flex flex-col">
                 <label class="py-2"> <input type="checkbox" />Validate SSL Certificates</label>
@@ -35,8 +35,8 @@
             </div>
             <h4 class="text-xl font-semibold text-red-500 pb-2">Danger Zone</h4>
             <div class="p-3 border border-red-500 rounded flex flex-col">
-                <Button Css="w-40 mb-5" OnClickCallback="@(() => {})">Reset All Settings</Button>
-                <Button Css="w-40 mb-5" OnClickCallback="@(() => {})">Reset Local Database</Button>
+                <Button ButtonSize="ButtonSize.Large" ButtonType="ButtonType.Danger" Css="w-48 mb-5" OnClickCallback="@(() => {})">Reset All Settings</Button>
+                <Button ButtonSize="ButtonSize.Large" ButtonType="ButtonType.Danger" Css="w-48 mb-5" OnClickCallback="@(() => {})">Reset Local Database</Button>
             </div>
         </Modal>
     }

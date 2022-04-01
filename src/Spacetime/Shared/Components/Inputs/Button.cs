@@ -31,7 +31,7 @@ namespace Spacetime.Shared.Components.Inputs
         /// <summary>
         /// Link button: this button looks like a link (not Zelda Link).
         /// </summary>
-        Link
+        Link,
     }
 
     public enum ButtonSize

@@ -3,21 +3,55 @@
 @if (IsVisible)
 {
     <div class="top-0 h-screen w-screen absolute flex justify-center items-center">
-        <div class="border rounded border-zinc-700 w-1/2 h-1/2 bg-zinc-900 shadow-xl p-5 divide-y divide-zinc-800 divide-solid text-white flex flex-col justify-between">
+        <div class="border rounded border-zinc-700 w-1/2 h-fit bg-zinc-900 shadow-xl p-5 divide-y divide-zinc-800 divide-solid text-white flex flex-col justify-between">
             <div>
                 <div class="flex justify-between">
                     <h3 class="font-semibold text-2xl pb-3">@Title</h3>
-                    <span @onclick="Close"><CloseIcon Css="cursor-pointer"/></span>
+                    <span @onclick="Close"><CloseIcon Css="cursor-pointer" /></span>
                 </div>
                 <div>@ChildContent</div>
             </div>
-            <div class="pt-3"><Button ButtonType="ButtonType.Primary" ButtonSize="ButtonSize.Large" OnClickCallback="@Close">Cancel</Button></div>
+            @if (ShowFooter)
+            {
+                <div class="mt-3 flex justify-end">
+                    <div class="mt-3">
+                        @if (ShowCancel)
+                        {
+                            <Button ButtonType="ButtonType.Default"
+                        ButtonSize="ButtonSize.Large"
+                        OnClickCallback="@Close">
+                                @CancelText
+                            </Button>
+                        }
+
+                        @if (ShowConfirm)
+                        {
+                            <Button Css="ml-3" ButtonType="ButtonType.Primary"
+                        ButtonSize="ButtonSize.Large"
+                        OnClickCallback="@Close">
+                                @ConfirmText
+                            </Button>
+                        }
+                    </div>
+
+                </div>
+            }
         </div>
     </div>
 }
 @code {
     [Parameter]
     public string Title { get; set; }
+
+    [Parameter]
+    public string CancelText { get; set; }
+
+    [Parameter]
+    public string ConfirmText { get; set; }
+    private bool ShowCancel => !string.IsNullOrWhiteSpace(CancelText);
+    private bool ShowConfirm => !string.IsNullOrWhiteSpace(ConfirmText);
+
+    private bool ShowFooter => ShowCancel || ShowConfirm;
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

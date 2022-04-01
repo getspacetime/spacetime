@@ -11,15 +11,15 @@
                 </div>
                 <div>@ChildContent</div>
             </div>
-            <div class="pt-3">
-                <Button ButtonType="ConfirmType"
-                    ButtonSize="ButtonSize.Large"
-                    OnClickCallback="@(() => OnConfirm(true))">
-                    @(string.IsNullOrWhiteSpace(ConfirmText) ? "Confirm" : ConfirmText)
-                </Button>
+            <div class="pt-3 flex justify-end">
                 <Button ButtonSize="ButtonSize.Large"
                     OnClickCallback="@(() => OnConfirm(false))">
                     Cancel
+                </Button>
+                <Button Css="ml-3" ButtonType="ConfirmType"
+                    ButtonSize="ButtonSize.Large"
+                    OnClickCallback="@(() => OnConfirm(true))">
+                    @(string.IsNullOrWhiteSpace(ConfirmText) ? "Confirm" : ConfirmText)
                 </Button>
             </div>
         </div>

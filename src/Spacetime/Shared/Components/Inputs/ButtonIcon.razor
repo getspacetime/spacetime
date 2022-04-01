@@ -1,0 +1,19 @@
+﻿<button @onclick="OnClickCallback">
+    @*<DynamicComponent Type="@typeof(PlusCircle)" @ref="dc" />*@
+</button>
+
+@code {
+    // THIS COMPONENT DOES NOT WORK YET
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+        private DynamicComponent? dc;
+
+    //private Task Refresh()
+    //{
+    //    return (dc?.Instance as IRefreshable)?.Refresh();
+    //}
+}
