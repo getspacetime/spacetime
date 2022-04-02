@@ -8,15 +8,9 @@ window.something = () => {
 window._editor = undefined;
 
 window.editor = (element, data) => {
-  console.log('initialize editor', element);
-  const initialValue = `{
-	"userId": 1,
-	"id": 2,
-	"title": "quis ut nam facilis et officia qui",
-	"completed": false
-}`;
+  console.log('initialize editor', element);;
   window._editor = monaco.editor.create(element, {
-    value: initialValue,
+    value: data,
     language: 'json',
     automaticLayout: true,
     theme: 'vs-dark'

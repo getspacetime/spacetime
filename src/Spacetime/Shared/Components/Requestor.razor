@@ -45,66 +45,16 @@
             }
         </TabContent>
         <TabContent Key="Query" CurrentTab="@RequestTab" Css="p-2">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="text-left"><SmallCaps>Query Param</SmallCaps></th>
-                        <th class="text-left"><SmallCaps>Value</SmallCaps></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <QueryParams />
         </TabContent>
         <TabContent Key="Headers" CurrentTab="@RequestTab" Css="p-2">
-            <table>
-                <thead>
-                    <tr>
-                        <th class="text-left"><SmallCaps>Header</SmallCaps></th>
-                        <th class="text-left"><SmallCaps>Value</SmallCaps></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                        <td class="py-2">
-                            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <RequestHeaders />
         </TabContent>
     </div>
     <div class="basis-2/3 ml-2">
-        <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.StatusCode) ? "invisible" : "")">
-            <Badge BadgeType="StatusCodeBadge">@Request.StatusCode</Badge>
-            <Badge Css="ml-2">@Request.ResponseTimeText</Badge>
+        <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
+            <Badge BadgeType="StatusCodeBadge">@Request.Response?.StatusCode</Badge>
+            <Badge Css="ml-2">@Request.Response?.ResponseTimeText</Badge>
         </div>
         <Tabs>
             <Tab Key="Preview" CurrentTab="@ResponseTab" OnClickCallback="@(() => ResponseTab = "Preview")">Preview</Tab>
@@ -112,7 +62,7 @@
         </Tabs>
         <TabContent Key="Preview" CurrentTab="@ResponseTab">
             <div class="border border-zinc-700">
-                <Code Data="@Request.ResponseBody"></Code>
+                <Code Data="@Request.Response?.ResponseBody"></Code>
             </div>
         </TabContent>
         <TabContent Key="Headers" CurrentTab="@ResponseTab">
@@ -132,7 +82,7 @@
     private string ResponseTab { get; set; } = "Preview";
     private bool Loading { get; set; }
 
-    private BadgeType StatusCodeBadge { get => Request?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
+    private BadgeType StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
 
     [Parameter]
     public SpacetimeRequest Request { get; set; }
@@ -174,15 +124,11 @@
 
             var response = await svc.Execute(Request);
 
-            Request.ResponseBody = response.ResponseBody;
-            Request.ElapsedMs = response.ElapsedMs;
-            Request.Headers = response.Headers;
-            Request.Status = response.Status;
-            Request.StatusCode = response.StatusCode;
+            Request.Response = response;
         }
         catch (Exception ex)
         {
-            Request.ResponseBody = $"Unknown error {ex.Message}";
+            // todo: add logging / toasts
         }
         finally
         {
@@ -202,6 +148,6 @@
 
     private void ClearResponse()
     {
-        Request.ResponseBody = "No response.";
+        Request.Response = new SpacetimeResponse();
     }
 }
