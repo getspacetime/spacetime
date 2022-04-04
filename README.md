@@ -98,7 +98,7 @@ While we work on an MSIX for alpha builds, the recommended way to use the API Cl
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-<li><a href="#contributing">Contributing</a></li>
+## Contributing
 Open an issue or tweet me on Twitter!
 
 <p align="right">(<a href="#top">back to top</a>)</p>
