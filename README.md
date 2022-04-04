@@ -65,7 +65,9 @@ Spacetime is proudly built with .NET MAUI Blazor.
 
 ### Installation
 
-Coming soon
+[Help wanted!](https://github.com/spacetimedotnet/spacetime/issues/3)
+
+While we work on an MSIX for alpha builds, the recommended way to use the API Client is by running it in Visual Studio. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

@@ -14,7 +14,7 @@ namespace Spacetime.Core
         public string URL { get; set; }
         public string? RequestBody { get; set; }
         public SpacetimeResponse? Response { get; set; }
-        public IEnumerable<HeaderDto> Headers { get; set; }
+        public List<HeaderDto> Headers { get; set; } = new List<HeaderDto>();
         public string Method { get; set; } = "get";
         
         public string GetName()
