@@ -1,4 +1,6 @@
 ﻿@using Spacetime.Shared.Components.Typography
+@using Spacetime.Shared.Components.Inputs
+@using Spacetime.Core
 
 <table>
     <thead>
@@ -8,25 +10,37 @@
         </tr>
     </thead>
     <tbody>
-        <tr>
+        @foreach (var param in Query)
+        {
+       <tr>
             <td class="py-2">
-                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
+                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Name" />
             </td>
             <td class="py-2">
-                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-            </td>
-        </tr>
-        <tr>
-            <td class="py-2">
-                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
-            </td>
-            <td class="py-2">
-                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
+                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Value"/>
             </td>
         </tr>
+        }
     </tbody>
 </table>
+<Button OnClickCallback="Add" ButtonType="ButtonType.Primary">Add header</Button>
 
 @code {
+    [Parameter]
+    public List<QueryParamDto> Query { get; set; }
 
+    [Parameter]
+    public EventCallback<List<QueryParamDto>> QueryChanged { get; set; }
+
+        public async void Remove(QueryParamDto param)
+    {
+        Query.Remove(param);
+        await QueryChanged.InvokeAsync(Query);
+    }
+
+    public async void Add()
+    {
+        Query.Add(new QueryParamDto());
+        await QueryChanged.InvokeAsync(Query);
+    }
 }

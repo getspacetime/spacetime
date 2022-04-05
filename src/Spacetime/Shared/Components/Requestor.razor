@@ -12,8 +12,9 @@
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
 
-<div class="flex" style="overflow: hidden">
-    <div class="basis-1/3 shrink-0">
+<div class="flex">
+    <!-- todo: make this responsive / resizable -->
+    <div style="width: 600px; height: 600px">
         <div class="flex flex-row mb-2 shrink-0 p-2">
             @if (Request.Type == SpacetimeType.REST)
             {
@@ -45,13 +46,13 @@
             }
         </TabContent>
         <TabContent Key="Query" CurrentTab="@RequestTab" Css="p-2">
-            <QueryParams />
+            <QueryParams @bind-Query="Request.QueryParams"/>
         </TabContent>
         <TabContent Key="Headers" CurrentTab="@RequestTab" Css="p-2">
-            <RequestHeaders Headers="@Request.Headers" />
+            <RequestHeaders @bind-Headers="@Request.Headers" />
         </TabContent>
     </div>
-    <div class="basis-2/3 ml-2">
+    <div  style="width: 600px; height: 600px" class="ml-2">
         <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
             <Badge BadgeType="StatusCodeBadge">@Request.Response?.StatusCode</Badge>
             <Badge Css="ml-2">@Request.Response?.ResponseTimeText</Badge>

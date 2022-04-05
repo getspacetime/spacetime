@@ -1,10 +1,11 @@
 ﻿@using Spacetime.Core
+@using Spacetime.Shared.Components.Typography
 
 <table class="table-fixed border border-zinc-700" style="height: 600px; width: 600px">
     <thead>
         <tr>
-            <th style="width: 200px">Header</th>
-            <th>Value</th>
+            <th style="width: 200px" class="text-left pl-2"><SmallCaps>Header</SmallCaps></th>
+            <th class="text-left pl-2"><SmallCaps>Value</SmallCaps></th>
         </tr>
     </thead>
     @if (Request.Headers != null)

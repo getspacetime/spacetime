@@ -1,10 +1,12 @@
 ﻿@using Spacetime.Core
 @using Spacetime.Shared.Components.Typography
+@using Spacetime.Shared.Components.Inputs
+@using Spacetime.Shared.Icons
 <table>
     <thead>
         <tr>
             <th class="text-left"><SmallCaps>Header</SmallCaps></th>
-            <th class="text-left"><SmallCaps>Value</SmallCaps></th>
+            <th colspan="2" class="text-left"><SmallCaps>Value</SmallCaps></th>
         </tr>
     </thead>
     <tbody>
@@ -12,18 +14,37 @@
         {
             <tr>
                 <td class="py-2">
-                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
+                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Name" />
                 </td>
                 <td class="py-2">
-                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" />
+                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Value" />
+                </td>
+                <td class="py-2">
+                    <Button OnClickCallback="() => Remove(header)">
+                        <DeleteIcon />
+                    </Button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<Button OnClickCallback="Add" ButtonType="ButtonType.Primary">Add header</Button>
 
 @code {
 
     [Parameter]
     public List<HeaderDto> Headers { get; set; }
+    [Parameter]
+    public EventCallback<List<HeaderDto>> HeadersChanged { get; set; }
+    public async void Remove(HeaderDto header)
+    {
+        Headers.Remove(header);
+        await HeadersChanged.InvokeAsync(Headers);
+    }
+
+    public async void Add()
+    {
+        Headers.Add(new HeaderDto());
+        await HeadersChanged.InvokeAsync(Headers);
+    }
 }

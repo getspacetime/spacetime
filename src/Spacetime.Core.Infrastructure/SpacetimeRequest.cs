@@ -14,6 +14,7 @@ namespace Spacetime.Core
         public string URL { get; set; }
         public string? RequestBody { get; set; }
         public SpacetimeResponse? Response { get; set; }
+        public List<QueryParamDto> QueryParams { get; set; } = new List<QueryParamDto>();
         public List<HeaderDto> Headers { get; set; } = new List<HeaderDto>();
         public string Method { get; set; } = "get";
         
