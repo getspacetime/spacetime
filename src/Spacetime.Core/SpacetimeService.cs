@@ -55,7 +55,7 @@ namespace Spacetime.Core
 
         private async Task<HttpResponseMessage> Get(SpacetimeRequest request)
         {
-            var client = new HttpClient();
+            var client = GetClient(request);
             var httpResponse = await client.GetAsync(request.URL);
 
             return httpResponse;
@@ -63,7 +63,7 @@ namespace Spacetime.Core
 
         private async Task<HttpResponseMessage> Post(SpacetimeRequest request)
         {
-            var client = new HttpClient();
+            var client = GetClient(request);
 
             StringContent? content = null;
 
@@ -75,6 +75,19 @@ namespace Spacetime.Core
             var httpResponse = await client.PostAsync(request.URL, content);
 
             return httpResponse;
+        }
+
+        private HttpClient GetClient(SpacetimeRequest request)
+        {
+            // todo: use ioc container/factory extensions
+            var client = new HttpClient();
+
+            foreach (var header in request.Headers)
+            {
+                client.DefaultRequestHeaders.Add(header.Name, header.Value);
+            }
+
+            return client;
         }
     }
 }
