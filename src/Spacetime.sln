@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.gRPC", "Spac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.Infrastructure", "Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj", "{B2B16B29-C4A8-471D-85AE-4A9B6FD417EA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacetime.Core.Tests", "Spacetime.Core.Tests\Spacetime.Core.Tests.csproj", "{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{B2B16B29-C4A8-471D-85AE-4A9B6FD417EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2B16B29-C4A8-471D-85AE-4A9B6FD417EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B2B16B29-C4A8-471D-85AE-4A9B6FD417EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

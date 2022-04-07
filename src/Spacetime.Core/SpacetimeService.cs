@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Spacetime.Core
 {
 
     public class SpacetimeRestService : ISpacetimeService
     {
+        // todo: move to IoC container
+        private readonly UrlBuilder _urlBuilder = new UrlBuilder();
         public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
         {
             var response = new SpacetimeResponse();
@@ -56,7 +53,8 @@ namespace Spacetime.Core
         private async Task<HttpResponseMessage> Get(SpacetimeRequest request)
         {
             var client = GetClient(request);
-            var httpResponse = await client.GetAsync(request.URL);
+            var url = _urlBuilder.GetUrl(request);
+            var httpResponse = await client.GetAsync(url);
 
             return httpResponse;
         }
@@ -72,7 +70,8 @@ namespace Spacetime.Core
                 content = new StringContent(request.RequestBody);
             }
 
-            var httpResponse = await client.PostAsync(request.URL, content);
+            var url = _urlBuilder.GetUrl(request);
+            var httpResponse = await client.PostAsync(url, content);
 
             return httpResponse;
         }

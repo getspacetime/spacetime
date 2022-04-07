@@ -53,6 +53,7 @@ Spacetime is proudly built with .NET MAUI Blazor.
 * [.NET MAUI Blazor](https://docs.microsoft.com/en-us/aspnet/core/blazor/hybrid/tutorials/maui?view=aspnetcore-6.0)
 * [LiteDB](https://www.litedb.org/)
 * [TailwindCSS](https://tailwindcss.com/)
+* [Flurl](https://flurl.dev/)
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ## Getting started
