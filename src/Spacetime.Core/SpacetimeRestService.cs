@@ -5,8 +5,13 @@ namespace Spacetime.Core
 
     public class SpacetimeRestService : ISpacetimeService
     {
-        // todo: move to IoC container
-        private readonly UrlBuilder _urlBuilder = new UrlBuilder();
+        private readonly UrlBuilder _urlBuilder;
+
+        public SpacetimeRestService(UrlBuilder urlBuilder)
+        {
+            _urlBuilder = urlBuilder;
+        }
+
         public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
         {
             var response = new SpacetimeResponse();

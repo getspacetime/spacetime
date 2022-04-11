@@ -20,8 +20,15 @@ public static class MauiProgram
 
 		builder.Services.AddBlazorWebView();
 		builder.Services.AddSingleton<RequestService>();
+		builder.Services.AddSingleton<SettingsService>();
 		builder.Services.AddSingleton<SpacetimeRestService>();
+		builder.Services.AddSingleton<UrlBuilder>();
 		builder.Services.AddSingleton<IGrpcExplorer, GrpcExplorer>();
+
+		//builder.Services.AddHttpClient("", client =>
+		//{
+
+		//});
 
 		return builder.Build();
 	}

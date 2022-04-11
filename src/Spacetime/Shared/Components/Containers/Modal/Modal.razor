@@ -1,5 +1,6 @@
 ﻿@using Spacetime.Shared.Components.Inputs
 @using Spacetime.Shared.Icons
+
 @if (IsVisible)
 {
     <div class="top-0 h-screen w-screen absolute flex justify-center items-center">
@@ -19,7 +20,7 @@
                         {
                             <Button ButtonType="ButtonType.Default"
                         ButtonSize="ButtonSize.Large"
-                        OnClickCallback="@Close">
+                        OnClickCallback="@Cancel">
                                 @CancelText
                             </Button>
                         }
@@ -48,6 +49,13 @@
 
     [Parameter]
     public string ConfirmText { get; set; }
+
+    [Parameter]
+    public EventCallback OnConfirmCallback { get; set; }
+
+    [Parameter]
+    public EventCallback OnCloseCallback { get; set; }
+
     private bool ShowCancel => !string.IsNullOrWhiteSpace(CancelText);
     private bool ShowConfirm => !string.IsNullOrWhiteSpace(ConfirmText);
 
@@ -66,5 +74,14 @@
     {
         IsVisible = false;
         await IsVisibleChanged.InvokeAsync(IsVisible);
+        await OnConfirmCallback.InvokeAsync();
+    }
+
+    public async void Cancel()
+    {
+        IsVisible = false;
+        await IsVisibleChanged.InvokeAsync(IsVisible);
+        await OnCloseCallback.InvokeAsync();
+
     }
 }
