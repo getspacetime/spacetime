@@ -80,6 +80,7 @@ While we work on an MSIX for alpha builds, the recommended way to use the API Cl
     - [ ] User settings
     - [ ] Security settings
     - [ ] Request history
+    - [ ] Data Freedom (Exports)
 - [ ] Platform
     - [x] Windows
     - [ ] Mac _(in progress)_
