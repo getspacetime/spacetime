@@ -1,51 +1,33 @@
-  on: 
-  workflow_dispatch:
-    inputs:
-      logLevel:
-        description: 'Log level'     
-        required: true
-        default: 'warning' 
-        type: choice
-        options:
-        - info
-        - warning
-        - debug 
-      tags:
-        description: 'Test scenario tags'
-        required: false 
-        type: boolean
-      environment:
-        description: 'Environment to run tests against'
-        type: environment
-        required: true 
-        
-  build-windows:
-    runs-on: windows-2022
-    name: Windows Build
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+  on: push
+  name: build project
+  jobs:      
+    build-windows:
+      runs-on: windows-2022
+      name: Windows Build
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
 
-      - name: Setup .NET 6
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 6.0.x
-          include-prerelease: true
+        - name: Setup .NET 6
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: 6.0.x
+            include-prerelease: true
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v1.1
-        with:
-          vs-prerelease: true
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1.1
+          with:
+            vs-prerelease: true
 
-      - name: Install MAUI Workloads
-        run: |
-          dotnet workload install maui --ignore-failed-sources
+        - name: Install MAUI Workloads
+          run: |
+            dotnet workload install maui --ignore-failed-sources
 
-      - name: Restore Dependencies
-        run: dotnet restore src/Spacetime/Spacetime.csproj
+        - name: Restore Dependencies
+          run: dotnet restore src/Spacetime/Spacetime.csproj
 
-      - name: Build MAUI Windows
-        run: msbuild src/Spacetime/Spacetime.csproj -r -p:Configuration=Release -p:RestorePackages=false -p:TargetFramework=net6.0-windows10.0.19041 /p:GenerateAppxPackageOnBuild=true
+        - name: Build MAUI Windows
+          run: msbuild src/Spacetime/Spacetime.csproj -r -p:Configuration=Release -p:RestorePackages=false -p:TargetFramework=net6.0-windows10.0.19041 /p:GenerateAppxPackageOnBuild=true
 
       # - name: Upload Windows Artifact
       #   uses: actions/upload-artifact@v2.3.1
