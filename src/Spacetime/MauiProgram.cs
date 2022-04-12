@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.WebView.Maui;
-using Spacetime.Core;
+﻿using Spacetime.Core;
 using Spacetime.Core.gRPC;
 using Spacetime.Core.Services;
 
@@ -11,13 +10,13 @@ public static class MauiProgram
 	{
 		var builder = MauiApp.CreateBuilder();
 		builder
-			.RegisterBlazorMauiWebView()
 			.UseMauiApp<App>()
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
 			});
 
+		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddBlazorWebView();
 		builder.Services.AddSingleton<RequestService>();
 		builder.Services.AddSingleton<SettingsService>();

@@ -18,7 +18,7 @@
 		<ApplicationId>com.companyname.spacetime</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>1</ApplicationVersion>
+		<ApplicationVersion>1.0.0</ApplicationVersion>
 
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
@@ -28,6 +28,8 @@
 		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
+		<FileVersion>1.0.0.1</FileVersion>
+		<AssemblyVersion>1.0.0.1</AssemblyVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -45,12 +47,6 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-
-	<ItemGroup Condition="$(TargetFramework.Contains('-windows'))">
-		<!-- Required - WinUI does not yet have buildTransitive for everything -->
-		<PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
-		<PackageReference Include="Microsoft.Graphics.Win2D" Version="1.0.0.30" />
 	</ItemGroup>
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-windows'))">
@@ -75,5 +71,9 @@
 	  <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />
 	</ItemGroup>
-
+	<Target Name="_RemoveStaticWebAssetsDevelopmentManifest" BeforeTargets="GetCopyToOutputDirectoryItems">
+		<ItemGroup>
+			<ContentWithTargetPath Remove="$(StaticWebAssetDevelopmentManifestPath)" />
+		</ItemGroup>
+	</Target>
 </Project>

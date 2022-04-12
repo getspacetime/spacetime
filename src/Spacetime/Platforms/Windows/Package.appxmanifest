@@ -9,7 +9,7 @@
   <Identity
     Name="4E06626E-0B14-40DD-8051-BC0A5F5992FB"
     Publisher="CN=Spacetime"
-    Version="1.0.0.0" />
+    Version="1.0.0.1" />
 
   <Properties>
     <DisplayName>Spacetime</DisplayName>
