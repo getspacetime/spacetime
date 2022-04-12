@@ -1,9 +1,12 @@
 ﻿@inject IJSRuntime JS
 
 <!-- figure out how to have dynamic sizes here -->
-<div id='editor' @ref="_elementRef" style="height: 590px" ></div>
+<div id='editor' name="@Name" @ref="_elementRef" style="height: 590px" ></div>
 @code {
     private bool _rendered;
+
+    [Parameter]
+    public string Name { get; set; }
 
     [Parameter]
     public string Data { get; set; }
@@ -19,7 +22,7 @@
         }
 
         _rendered = true;
-        await JS.InvokeVoidAsync("editor", _elementRef, Data);
+        await JS.InvokeVoidAsync("editor", _elementRef, Name, Data);
     }
 
     protected override async void OnParametersSet()
@@ -31,7 +34,7 @@
 
             try
             {
-                await JS.InvokeVoidAsync("updateEditor", _elementRef, Data);
+                await JS.InvokeVoidAsync("updateEditor", _elementRef, Name, Data);
             }
             catch (Exception ex)
             {

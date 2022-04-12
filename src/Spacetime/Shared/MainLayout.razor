@@ -51,7 +51,6 @@
     protected override async Task OnInitializedAsync()
     {
         Settings = await SettingsService.GetSettings();
-        await JS.InvokeVoidAsync("something");
     }
 
     public async void OpenSettings()

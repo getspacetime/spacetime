@@ -43,7 +43,7 @@
             }
             else
             {
-                <Code Data="@string.Empty"></Code>
+                <Code Data="@Request.RequestBody" Name="RequestEditor"></Code>
             }
         </TabContent>
         <TabContent Key="Query" CurrentTab="@RequestTab" Css="p-2">
@@ -64,7 +64,7 @@
         </Tabs>
         <TabContent Key="Preview" CurrentTab="@ResponseTab">
             <div class="border border-zinc-700">
-                <Code Data="@Request.Response?.ResponseBody"></Code>
+                <Code Data="@Request.Response?.ResponseBody" Name="ResponseEditor"></Code>
             </div>
         </TabContent>
         <TabContent Key="Headers" CurrentTab="@ResponseTab">
