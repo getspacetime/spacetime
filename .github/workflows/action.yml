@@ -11,7 +11,7 @@
         - name: Setup .NET 6
           uses: actions/setup-dotnet@v1
           with:
-            dotnet-version: 6.0.300-preview.22204.3
+            dotnet-version: 6.0.x
             include-prerelease: true
 
         - name: Setup MSBuild
