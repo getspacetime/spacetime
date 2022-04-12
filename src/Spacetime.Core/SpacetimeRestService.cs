@@ -5,10 +5,17 @@ namespace Spacetime.Core
 
     public class SpacetimeRestService : ISpacetimeService
     {
+        private readonly HttpClient _client;
         private readonly UrlBuilder _urlBuilder;
-
-        public SpacetimeRestService(UrlBuilder urlBuilder)
+        private readonly Dictionary<string, HttpMethod> _methods = new Dictionary<string, HttpMethod>
         {
+            {"GET", HttpMethod.Get },
+            {"POST", HttpMethod.Post }
+        };
+
+        public SpacetimeRestService(HttpClient client, UrlBuilder urlBuilder)
+        {
+            _client = client;
             _urlBuilder = urlBuilder;
         }
 
@@ -19,21 +26,9 @@ namespace Spacetime.Core
 
             try
             {
-                HttpResponseMessage httpResponse;
+                var message = BuildHttpRequest(request);
+                var httpResponse = await _client.SendAsync(message);
 
-                switch (request.Method)
-                {
-                    case "GET":
-                        httpResponse = await Get(request);
-                        break;
-                    case "POST":
-                        httpResponse = await Post(request);
-                        break;
-                    default:
-                        httpResponse = await Get(request);
-                        break;
-                }
-                
                 timer.Stop();
 
                 response.ResponseBody = await httpResponse.Content.ReadAsStringAsync();
@@ -55,43 +50,29 @@ namespace Spacetime.Core
             return response;
         }
 
-        private async Task<HttpResponseMessage> Get(SpacetimeRequest request)
+        private HttpRequestMessage BuildHttpRequest(SpacetimeRequest request)
         {
-            var client = GetClient(request);
             var url = _urlBuilder.GetUrl(request);
-            var httpResponse = await client.GetAsync(url);
+            var message = new HttpRequestMessage
+            {
+                RequestUri = new Uri(url),
 
-            return httpResponse;
-        }
-
-        private async Task<HttpResponseMessage> Post(SpacetimeRequest request)
-        {
-            var client = GetClient(request);
-
-            StringContent? content = null;
+                // will fail if we add more methods without updating map
+                // maybe just switch to storing HttpMethod or another enum later
+                Method = _methods[request.Method],
+            };
 
             if (!string.IsNullOrWhiteSpace(request.RequestBody))
             {
-                content = new StringContent(request.RequestBody);
+                message.Content = new StringContent(request.RequestBody);
             }
-
-            var url = _urlBuilder.GetUrl(request);
-            var httpResponse = await client.PostAsync(url, content);
-
-            return httpResponse;
-        }
-
-        private HttpClient GetClient(SpacetimeRequest request)
-        {
-            // todo: use ioc container/factory extensions
-            var client = new HttpClient();
 
             foreach (var header in request.Headers)
             {
-                client.DefaultRequestHeaders.Add(header.Name, header.Value);
+                message.Headers.Add(header.Name, header.Value);
             }
 
-            return client;
+            return message;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Spacetime.Core;
 using Spacetime.Core.gRPC;
 using Spacetime.Core.Services;
+using Spacetime.Core.Infrastructure;
 
 namespace Spacetime;
 
@@ -23,12 +24,8 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SpacetimeRestService>();
 		builder.Services.AddSingleton<UrlBuilder>();
 		builder.Services.AddSingleton<IGrpcExplorer, GrpcExplorer>();
+		builder.Services.AddHttpClient<ISpacetimeService, SpacetimeRestService>();
 
-		//builder.Services.AddHttpClient("", client =>
-		//{
-
-		//});
-
-		return builder.Build();
+        return builder.Build();
 	}
 }
