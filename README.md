@@ -78,10 +78,18 @@ Once you have run the above npm command, you can start debugging in Visual Studi
 
 ### Installation
 
-There are currently two ways to install: by running in Visual Studio, or by using the [MSIX Installer](https://github.com/spacetimedotnet/spacetime/releases). As the installer is Windows only, your options become more limited for other platforms. 
+#### Windows
 
-Installing on platforms besides Windows are currently unsupported, but feel free to try it out and submit issues and/or pull requests.
+Use the [MSIX Installer](https://github.com/spacetimedotnet/spacetime/releases)
 
+#### Mac
+[TBD](https://github.com/spacetimedotnet/spacetime/issues/5)
+
+#### iOS
+[TBD](https://github.com/spacetimedotnet/spacetime/issues/6)
+
+#### Android
+[TBD](https://github.com/spacetimedotnet/spacetime/issues/7)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
