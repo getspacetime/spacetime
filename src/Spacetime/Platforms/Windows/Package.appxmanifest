@@ -8,12 +8,12 @@
 
   <Identity
     Name="4E06626E-0B14-40DD-8051-BC0A5F5992FB"
-    Publisher="CN=User Name"
+    Publisher="CN=Spacetime"
     Version="1.0.0.0" />
 
   <Properties>
     <DisplayName>Spacetime</DisplayName>
-    <PublisherDisplayName>Microsoft</PublisherDisplayName>
+    <PublisherDisplayName>Spacetime Software</PublisherDisplayName>
     <Logo>appiconStoreLogo.png</Logo>
   </Properties>
 

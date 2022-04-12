@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Spacetime.Core
+namespace Spacetime.Core.Infrastructure
 {
     public class SpacetimeRequest
     {

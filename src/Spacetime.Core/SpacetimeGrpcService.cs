@@ -1,4 +1,6 @@
-﻿namespace Spacetime.Core
+﻿using Spacetime.Core.Infrastructure;
+
+namespace Spacetime.Core
 {
     public class SpacetimeGrpcService : ISpacetimeService
     {
