@@ -25,6 +25,16 @@
                 <Button OnClickCallback=@NewRequest><PlusCircle /></Button>
             </div>
             <ul>
+                @if (!Requests.Any())
+                {
+                    <ListItem OnClickCallback=@NewRequest>
+                        <Title>
+                            <div class="px-4 py-2">
+                            No requests
+                            </div>
+                        </Title>
+                    </ListItem>
+                }
                 @foreach (var req in Requests)
                 {
                     <ListItem OnClickCallback="@(e => CurrentRequest = req)" Css="@(CurrentRequest?.Id == req.Id ? "bg-zinc-700" : "")"
@@ -47,10 +57,10 @@
     }
     else
     {
-        <p>Select a request</p>
+        <div class="mx-4 my-4">Select a request or create a new one to get started.</div>
     }
     <Modal Title="New Request" @bind-IsVisible="@ModalVisible"
-        CancelText="Cancel">
+           CancelText="Cancel">
         <div class="flex justify-center gap-4">
             <Card OnClickCallback="CreateNewRequest" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
                 <span class="font-semibold text-xl">REST</span>
@@ -144,6 +154,22 @@
 
     private async Task OnDelete(SpacetimeRequest request)
     {
+        var index = Requests.IndexOf(request);
+        if (index > 0)
+        {
+            // set the current request to the preceding
+            CurrentRequest = Requests[index - 1];
+        } 
+        else if (Requests.TakeLast(1).First() != request)
+        {
+            // if this isn't the last one, set current request to the next one
+            CurrentRequest = Requests[index + 1];
+        } 
+        else
+        {
+            CurrentRequest = null;
+        }
+
         Requests.Remove(request);
         RequestService.DeleteRequest(request.Id);
     }
