@@ -8,9 +8,9 @@
     <a href="https://github.com/spacetimedotnet/spacetime"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/spacetimedotnet/spacetime/issues">Report Bug</a>
+    <a href="https://github.com/spacetimedotnet/spacetime/issues/new?assignees=&labels=&template=bug_report.md&title=">Report Bug</a>
     ·
-    <a href="https://github.com/spacetimedotnet/spacetime/issues">Request Feature</a>
+    <a href="https://github.com/spacetimedotnet/spacetime/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
   </p>
 </div>
 <details>
