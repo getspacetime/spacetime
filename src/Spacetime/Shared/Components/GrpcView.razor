@@ -9,6 +9,7 @@
 @using Spacetime.Shared.Components.Panes
 @using Spacetime.Core.Infrastructure;
 @using Spacetime.Shared.Components.Typography
+@using Spacetime.Shared.Components.Containers.Modal
 @inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
@@ -18,7 +19,8 @@
     <div style="width: 600px; height: 600px">
         <div class="flex flex-row mb-2 shrink-0 p-2">
             <span class="text-xs px-2 py-2">gRPC</span>
-            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
+            <input class="px-4 py-2 w-1/2 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
+            <Button ButtonType="ButtonType.Default" OnClickCallback="() => SelectProtoVisible = true">Select Proto</Button>
             <Button ButtonType="ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
         </div>
         <Tabs>
@@ -27,7 +29,7 @@
             <Tab Key="Query" CurrentTab="@RequestTab" OnClickCallback="@(() => RequestTab = "Query")">Query</Tab>
         </Tabs>
         <TabContent Key="Body" CurrentTab="@RequestTab">
-            <GrpcPane Request="@Request" />
+            gRPC support not yet available.
         </TabContent>
         <TabContent Key="Query" CurrentTab="@RequestTab" Css="p-2">
             <QueryParams @bind-Query="Request.QueryParams" />
@@ -55,18 +57,24 @@
         </TabContent>
     </div>
 </div>
+
+@if (SelectProtoVisible)
+{
+    <Modal Title="Select Proto" @bind-IsVisible="@SelectProtoVisible" CancelText="Cancel" ConfirmText="Set proto" OnConfirmCallback="() => {}">
+        <GrpcPane Request="@Request" />
+    </Modal>
+}
 @code {
-    private string RequestTab { get; set; } = "Body";
-    private string ResponseTab { get; set; } = "Preview";
-    private bool Loading { get; set; }
-
-    private BadgeType StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
-
     [Parameter]
     public SpacetimeRequest Request { get; set; }
 
-    public GrpcExploreResult GrpcExploreResult { get; set; }
+    private string RequestTab { get; set; } = "Body";
+    private string ResponseTab { get; set; } = "Preview";
     private string ExecuteText => !Loading ? "Execute" : "Loading...";
+    private bool Loading { get; set; }
+    private bool SelectProtoVisible { get; set; }
+    public GrpcExploreResult GrpcExploreResult { get; set; }
+    private BadgeType StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
 
     private void ValidateGrpc()
     {

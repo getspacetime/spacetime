@@ -4,41 +4,68 @@
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Icons
 @using Spacetime.Core.Infrastructure;
+@using Spacetime.Shared.Components.Typography
+@using Spacetime.Shared.Components.Display.Table
 
 @inject IGrpcExplorer GrpcExplorer
 @inject RequestService RequestService
 
 <div class="p-2">
-<div class="mb-2">
-    <strong>Proto Import Path</strong>
-    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ImportPath" @onblur="Save" />
-</div>
-<div class="mb-2">
-    <strong>Proto File Name</strong>
-    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ProtoFile" @onblur="Save" />
-</div>
-<div class="mb-2">
-    <button @onclick="ValidateGrpc"
-            class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 bg-green-600">
-        Validate Proto
-    </button>
-</div>
-@if (GrpcExploreResult != null)
-{
-    <div>
-        @foreach (var s in GrpcExploreResult.Services)
-        {
-            <div class="text-bold text-lg mb-2">@s</div>
-            @foreach (var method in s.Methods)
-            {
-                <ListItem OnActionCallback="@(() => {})" OnClickCallback="@(() => {})">
-                    <Title>@method.Name</Title>
-                    <ActionTemplate><DotsVerticalIcon /></ActionTemplate>
-                </ListItem>
-            }
-        }
+    <h2>Protos</h2>
+    <table>
+        <thead>
+            <tr>
+                <TableHeader>Service</TableHeader>
+                <TableHeader>Method</TableHeader>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>greet.Greeter1</td>
+                <td>sayHello1</td>
+            </tr>
+            <tr>
+                <td>greet.Greeter2</td>
+                <td>sayHello2</td>
+            </tr>
+            <tr>
+                <td>greet.Greeter3</td>
+                <td>sayHello3</td>
+            </tr>
+        </tbody>
+    </table>
+    <h2>Add Proto</h2>
+    <div class="mb-2">
+        <strong>Proto Import Path</strong>
+        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ImportPath" @onblur="Save" />
     </div>
-}
+    <div class="mb-2">
+        <strong>Proto File Name</strong>
+        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="Request.ProtoFile" @onblur="Save" />
+    </div>
+    <div class="mb-2">
+        <button @onclick="ValidateGrpc"
+                class="border border-zinc-700 hover:border-zinc-600 hover:bg-zinc-600 px-2 py-1 rounded-l-sm mr-0 bg-green-600">
+            Validate Proto
+        </button>
+    </div>
+    @if (GrpcExploreResult != null)
+    {
+        <div>
+            @foreach (var s in GrpcExploreResult.Services)
+            {
+                <div class="text-bold mb-2"><SmallCaps>Service</SmallCaps> @s.Name</div>
+                @foreach (var method in s.Methods)
+                {
+                    <ListItem OnActionCallback="@(() => {})" OnClickCallback="@(() => {})">
+                        <Prefix><SmallCaps>Method</SmallCaps></Prefix>
+                        <Title>@method.Name</Title>
+                        <ActionTemplate><DotsVerticalIcon /></ActionTemplate>
+                    </ListItem>
+                }
+            }
+        </div>
+    }
 
 </div>
 

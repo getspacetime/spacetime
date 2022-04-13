@@ -1,0 +1,8 @@
+﻿@using Spacetime.Shared.Components.Typography
+
+<th class="text-left pl-2"><SmallCaps>@ChildContent</SmallCaps></th>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
