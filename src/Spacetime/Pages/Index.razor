@@ -51,9 +51,13 @@
             </ul>
         }
     </div>
-    @if (CurrentRequest != null)
+    @if (CurrentRequest?.Type == SpacetimeType.REST)
     {
-        <Spacetime.Shared.Components.Requestor Request="@CurrentRequest" />
+        <RestView Request="@CurrentRequest" />
+    }
+    else if (CurrentRequest?.Type == SpacetimeType.gRPC)
+    {
+        <GrpcView Request="@CurrentRequest" />
     }
     else
     {
@@ -62,12 +66,12 @@
     <Modal Title="New Request" @bind-IsVisible="@ModalVisible"
            CancelText="Cancel">
         <div class="flex justify-center gap-4">
-            <Card OnClickCallback="CreateNewRequest" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
+            <Card OnClickCallback="() => CreateNewRequest(SpacetimeType.REST)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
                 <span class="font-semibold text-xl">REST</span>
                 <p class="text-sm">Make an HTTP request using REST</p>
                 <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
             </Card>
-            <Card OnClickCallback="CreateNewRequest" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
+            <Card OnClickCallback="() => CreateNewRequest(SpacetimeType.gRPC)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
                 <span class="font-semibold text-xl">gRPC</span>
                 <p class="text-sm">Make a request using gRPC</p>
                 <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
@@ -140,12 +144,12 @@
         ModalVisible = true;
     }
 
-    private void CreateNewRequest()
+    private void CreateNewRequest(SpacetimeType type)
     {
         ModalVisible = false;
         var req = new SpacetimeRequest();
         req.Name = "New Request";
-        req.Type = SpacetimeType.REST;
+        req.Type = type;
         req.Method = "GET";
         Requests.Add(req);
         CurrentRequest = req;

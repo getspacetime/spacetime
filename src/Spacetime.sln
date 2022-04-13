@@ -6,11 +6,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime", "Spacetime\Spac
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.Tests", "Spacetime.Core.Tests\Spacetime.Core.Tests.csproj", "{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacetime.Core", "Spacetime.Core\Spacetime.Core.csproj", "{723C26F4-2ECB-47D7-B783-E4055C42615E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core", "Spacetime.Core\Spacetime.Core.csproj", "{723C26F4-2ECB-47D7-B783-E4055C42615E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacetime.Core.gRPC", "Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj", "{59E4197B-63DA-4190-988D-25810A2E91E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.gRPC", "Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj", "{59E4197B-63DA-4190-988D-25810A2E91E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacetime.Core.Infrastructure", "Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj", "{8AE0AAC1-F3DF-4E02-B4D2-E6AB69FB7DA9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.Infrastructure", "Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj", "{8AE0AAC1-F3DF-4E02-B4D2-E6AB69FB7DA9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

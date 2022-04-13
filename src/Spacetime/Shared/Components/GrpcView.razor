@@ -17,17 +17,7 @@
     <!-- todo: make this responsive / resizable -->
     <div style="width: 600px; height: 600px">
         <div class="flex flex-row mb-2 shrink-0 p-2">
-            @if (Request.Type == SpacetimeType.REST)
-            {
-                <select name="method" @bind="Request.Method" class="bg-zinc-800" @onblur="Save">
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                </select>
-            }
-            else if (Request.Type == SpacetimeType.gRPC)
-            {
-                <span class="text-xs px-2 py-1">gRPC</span>
-            }
+            <span class="text-xs px-2 py-2">gRPC</span>
             <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
             <Button ButtonType="ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
         </div>
@@ -37,23 +27,16 @@
             <Tab Key="Query" CurrentTab="@RequestTab" OnClickCallback="@(() => RequestTab = "Query")">Query</Tab>
         </Tabs>
         <TabContent Key="Body" CurrentTab="@RequestTab">
-            @if (Request.Type == SpacetimeType.gRPC)
-            {
-                <GrpcPane Request="@Request" />
-            }
-            else
-            {
-                <Code Data="@Request.RequestBody" Name="RequestEditor"></Code>
-            }
+            <GrpcPane Request="@Request" />
         </TabContent>
         <TabContent Key="Query" CurrentTab="@RequestTab" Css="p-2">
-            <QueryParams @bind-Query="Request.QueryParams"/>
+            <QueryParams @bind-Query="Request.QueryParams" />
         </TabContent>
         <TabContent Key="Headers" CurrentTab="@RequestTab" Css="p-2">
             <RequestHeaders @bind-Headers="@Request.Headers" />
         </TabContent>
     </div>
-    <div  style="width: 600px; height: 600px" class="ml-2">
+    <div style="width: 600px; height: 600px" class="ml-2">
         <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
             <Badge BadgeType="StatusCodeBadge">@Request.Response?.StatusCode</Badge>
             <Badge Css="ml-2">@Request.Response?.ResponseTimeText</Badge>
@@ -73,13 +56,6 @@
     </div>
 </div>
 @code {
-    private async void SetGRPC(SpacetimeType type)
-    {
-        Request.Type = type;
-
-        await Save();
-    }
-
     private string RequestTab { get; set; } = "Body";
     private string ResponseTab { get; set; } = "Preview";
     private bool Loading { get; set; }
