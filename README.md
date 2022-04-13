@@ -1,4 +1,5 @@
 <div align="center">
+![build](https://github.com/getspacetime/spacetime/actions/workflows/actions.yml/badge.svg)
 
 <h3 align="center">spacetime</h3>
 
