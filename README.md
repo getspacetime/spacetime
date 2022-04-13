@@ -1,5 +1,5 @@
 <div align="center">
-[![Build Status](https://github.com/getspacetime/spacetime/actions/workflows/actions.yml/badge.svg)]
+[![Windows](https://github.com/getspacetime/spacetime/actions/workflows/windows/badge.svg)]
 
 <h3 align="center">spacetime</h3>
 
