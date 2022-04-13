@@ -1,5 +1,5 @@
   on: push
-  name: build project
+  name: windows
   jobs:      
     build-windows:
       runs-on: windows-2022

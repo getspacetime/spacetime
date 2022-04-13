@@ -1,5 +1,5 @@
+[![windows](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml/badge.svg?branch=main)](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml)
 <div align="center">
-
 <h3 align="center">spacetime</h3>
 
   <p align="center">
