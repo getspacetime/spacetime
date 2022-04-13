@@ -83,6 +83,13 @@ Once you have run the above npm command, you can start debugging in Visual Studi
 Use the [MSIX Installer](https://github.com/spacetimedotnet/spacetime/releases)
 
 #### Mac
+Clone the repository and run the `dotnet` command in the Spacetime project folder. **Note**: don't forget to run `npm run build` inside the `wwwroot` folder.
+
+```
+dotnet build -t:Run -f net6.0-maccatalyst
+```
+
+**Installer*
 [TBD](https://github.com/spacetimedotnet/spacetime/issues/5)
 
 #### iOS
