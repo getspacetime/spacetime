@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text.Json;
 using Spacetime.Core.Infrastructure;
 namespace Spacetime.Core
 {
@@ -32,6 +33,11 @@ namespace Spacetime.Core
                 timer.Stop();
 
                 response.ResponseBody = await httpResponse.Content.ReadAsStringAsync();
+                response.ResponseBody = (JsonSerializer.Serialize(
+                  JsonSerializer.Deserialize<object>(response.ResponseBody), options: new JsonSerializerOptions
+                  {
+                      WriteIndented = true
+                  }));
                 response.Headers = httpResponse.Headers.Select(p => new HeaderDto { Name = p.Key, Value = string.Join(';', p.Value) });
                 response.Status = httpResponse.IsSuccessStatusCode ? SpacetimeStatus.Ok : SpacetimeStatus.Error;
                 response.StatusCode = httpResponse.StatusCode.ToString();
