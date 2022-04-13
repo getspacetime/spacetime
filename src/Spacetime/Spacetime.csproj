@@ -18,7 +18,7 @@
 		<ApplicationId>com.companyname.spacetime</ApplicationId>
 
 		<!-- Versions -->
-		<ApplicationVersion>1.0.0</ApplicationVersion>
+		<ApplicationVersion>1</ApplicationVersion>
 
 		<!-- Required for C# Hot Reload -->
 		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
@@ -64,7 +64,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
