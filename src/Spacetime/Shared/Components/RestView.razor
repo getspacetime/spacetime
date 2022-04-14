@@ -13,9 +13,8 @@
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
 
-<div class="flex">
-    <!-- todo: make this responsive / resizable -->
-    <div style="width: 600px; height: 600px">
+<div class="grid gap-2 grid-cols-12">
+    <div class="lg:col-span-6 sm:col-span-full">
         <div class="flex flex-row mb-2 shrink-0 p-2">
             <select name="method" @bind="Request.Method" class="bg-zinc-800" @onblur="Save">
                 <option value="GET">GET</option>
@@ -39,7 +38,7 @@
             <RequestHeaders @bind-Headers="@Request.Headers" />
         </TabContent>
     </div>
-    <div style="width: 600px; height: 600px" class="ml-2">
+    <div class="lg:col-span-6 sm:col-span-full">
         <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
             <Badge BadgeType="StatusCodeBadge">@Request.Response?.StatusCode</Badge>
             <Badge Css="ml-2">@Request.Response?.ResponseTimeText</Badge>
