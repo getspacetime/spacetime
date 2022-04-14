@@ -1,4 +1,5 @@
 ﻿using Spacetime.gRPC.Wrapper;
+using Spacetime.Core.Infrastructure;
 
 namespace Spacetime.Core.gRPC
 {

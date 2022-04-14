@@ -24,6 +24,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<SpacetimeRestService>();
 		builder.Services.AddSingleton<UrlBuilder>();
 		builder.Services.AddSingleton<IGrpcExplorer, GrpcExplorer>();
+		builder.Services.AddSingleton<IProtobufService, LiteDbProtobufService>();
 		builder.Services.AddHttpClient<ISpacetimeService, SpacetimeRestService>();
 
         return builder.Build();

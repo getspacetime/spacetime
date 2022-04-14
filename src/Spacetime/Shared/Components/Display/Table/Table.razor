@@ -1,0 +1,10 @@
+﻿<div class="shadow-sm overflow-hidden col-span-4">
+    <table class="border-collapse table-auto w-full text-sm">
+        @ChildContent
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

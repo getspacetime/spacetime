@@ -1,5 +1,6 @@
 ﻿<button @onclick="OnClickCallback"
         title="@Tooltip"
+        disabled="@Disabled"
         class="font-semibold border ring-inset ring-offset-2 focus:outline-none focus:ring-2 rounded-sm @Css @ButtonCss">
     @ChildContent
 </button>
@@ -12,6 +13,9 @@
     public string? Tooltip { get; set; }
 
     [Parameter]
+    public bool Active { get; set; }
+
+    [Parameter]
     public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
 
     // optional parameters
@@ -22,9 +26,17 @@
     public ButtonSize ButtonSize { get; set; } = ButtonSize.Medium;
 
     [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
     public string? Css { get; set; }
 
-    private string ButtonCss => $"{GetButtonTypeCss()} {GetButtonSizeCss()}";
+    private string ButtonCss => $"{GetButtonTypeCss()} {GetButtonSizeCss()} {GetDisabledCss()}";
+
+    private string GetDisabledCss()
+    {
+        return Disabled ? "disabled:opacity-75" : "";
+    }
 
     private string GetButtonTypeCss()
     {
@@ -40,7 +52,16 @@
             case ButtonType.Primary:
                 css = "border-sky-700 ring-sky-500 hover:border-sky-600 hover:bg-sky-600 bg-sky-700";
                 break;
+            case ButtonType.Success:
+                css = "border-green-700 ring-green-500 hover:border-green-600 hover:bg-green-500 bg-green-600";
+                break;
             case ButtonType.Link:
+                css = "bg-transparent border-transparent hover:underline hover:text-black dark:hover:text-white decoration-2 underline-offset-2";
+
+                if (Active)
+                {
+                    css = $"{css} underline";
+                }
                 break;
         }
 

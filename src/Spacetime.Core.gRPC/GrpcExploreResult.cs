@@ -1,4 +1,6 @@
-﻿namespace Spacetime.Core.gRPC
+﻿using Spacetime.Core.Infrastructure;
+
+namespace Spacetime.Core.gRPC
 {
     public class GrpcExploreResult
     {

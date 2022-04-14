@@ -1,0 +1,97 @@
+﻿@using Spacetime.Core
+@using Spacetime.Core.Services
+@using Spacetime.Core.gRPC
+@using Spacetime.Shared.Components.Display
+@using Spacetime.Shared.Icons
+@using Spacetime.Core.Infrastructure;
+@using Spacetime.Shared.Components.Typography
+@using Spacetime.Shared.Components.Display.Table
+@using Spacetime.Shared.Components.Inputs
+
+@inject IGrpcExplorer GrpcExplorer
+@inject IProtobufService ProtobufService
+
+<div class="grid grid-cols-12">
+    <div class="col-span-6">
+        <div class="mb-2">
+            <strong>Proto Import Path</strong>
+            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="ImportPath" />
+        </div>
+        <div class="mb-2">
+            <strong>Proto File Name</strong>
+            <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="ProtoFile" />
+        </div>
+        <div class="mb-2">
+            <Button
+                OnClickCallback="ValidateGrpc"
+                ButtonSize="ButtonSize.Small"
+                ButtonType="ButtonType.Success">Validate Proto</Button>
+
+            <Button OnClickCallback="SaveProto"
+                Disabled="@(!CanSave())"
+                ButtonSize="ButtonSize.Small" 
+                ButtonType="ButtonType.Primary">Save Proto</Button>
+        </div>
+    </div>
+    <div class="col-span-6">
+        @if (GrpcExploreResult != null)
+        {
+            <!-- todo: pagination -->
+            <!-- todo: filtering -->
+            <!-- todo: sorting -->
+            <Table>
+                <thead>
+                    <tr>
+                        <TableHeader>Service</TableHeader>
+                        <TableHeader>Method</TableHeader>
+                    </tr>
+                </thead>
+                <TableBody>
+                    @foreach (var svc in FlattenedServiceMap)
+                    {
+                        <TableRow>
+                            <TableCell>@svc.ServiceName</TableCell>
+                            <TableCell>@svc.MethodName</TableCell>
+                        </TableRow>
+                    }
+                </TableBody>
+            </Table>
+        }
+    </div>
+</div>
+
+@code {
+    public string ProtoFile { get; set; }
+    public string ImportPath { get; set; }
+
+    public GrpcExploreResult GrpcExploreResult { get; set; }
+    private List<FlattenedService> FlattenedServiceMap { get; set; } = new List<FlattenedService>();
+
+    private void ValidateGrpc()
+    {
+        FlattenedServiceMap.Clear();
+        GrpcExploreResult = GrpcExplorer.GetExplorer(ImportPath, ProtoFile);
+        foreach (var svc in GrpcExploreResult.Services)
+        {
+            foreach (var method in svc.Methods)
+            {
+                FlattenedServiceMap.Add(new FlattenedService { ServiceName = svc.Name, MethodName = method.Name });
+            }
+        }
+    }
+
+    private async void SaveProto()
+    {
+        await ProtobufService.Save(GrpcExploreResult.Services);
+    }
+
+    private bool CanSave() {
+        return GrpcExploreResult != null && GrpcExploreResult.Services.Count > 0;
+    }
+
+    private class FlattenedService
+    {
+        public string ServiceName { get; set; }
+        public string MethodName { get; set; }
+    }
+}

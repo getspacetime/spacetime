@@ -2,7 +2,7 @@
 using Spacetime.Core.Infrastructure;
 namespace Spacetime.Core.Services;
 
-public class RequestService
+public class RequestService : LiteDbService
 {
     public Task<IEnumerable<SpacetimeRequest>> GetRequests()
     {
@@ -59,12 +59,6 @@ public class RequestService
     private ILiteCollection<SpacetimeRequest> GetCollection(LiteDatabase db)
     {
         return db.GetCollection<SpacetimeRequest>("requests");
-    }
-
-    private LiteDatabase WithDatabase()
-    {
-        var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MyData.db");
-        return new LiteDatabase(path);
     }
 }
 

@@ -1,0 +1,8 @@
+﻿<tr class="dark:hover:bg-zinc-700 cursor-pointer">
+    @ChildContent
+</tr>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

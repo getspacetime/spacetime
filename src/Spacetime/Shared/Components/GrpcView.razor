@@ -60,7 +60,7 @@
 @if (SelectProtoVisible)
 {
     <Modal Title="Select Proto" @bind-IsVisible="@SelectProtoVisible" CancelText="Cancel" ConfirmText="Set proto" OnConfirmCallback="() => {}">
-        <GrpcPane Request="@Request" />
+        <GrpcPane />
     </Modal>
 }
 @code {
