@@ -1,5 +1,9 @@
 [![windows](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml/badge.svg?branch=main)](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml)
 <div align="center">
+  <a href="https://github.com/getspacetime/spacetime">
+    <img src="https://user-images.githubusercontent.com/1738479/163629084-536529ef-0e5c-4a4c-abde-eb471082d02d.png" alt="Logo" width="80" height="80">
+  </a>
+
 <h3 align="center">spacetime</h3>
 
   <p align="center">
