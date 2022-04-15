@@ -101,9 +101,14 @@ dotnet build -t:Run -f net6.0-maccatalyst
 [TBD](https://github.com/spacetimedotnet/spacetime/issues/5)
 
 #### iOS
+
+Completely untested. Theoretically should work, but may need tweaks to configuration and/or a developer account.
+
 [TBD](https://github.com/spacetimedotnet/spacetime/issues/6)
 
 #### Android
+
+Has an error during compilation. Needs investigation. 
 [TBD](https://github.com/spacetimedotnet/spacetime/issues/7)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
