@@ -2,11 +2,14 @@ const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
-    entry: './index.js',
+	mode: 'development',
+	entry: {
+		index: './index.js',
+		editor: './editor.js'
+    },
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'foo.bundle.js',
+		filename: '[name].bundle.js',
     },
 	module: {
 		rules: [
@@ -21,5 +24,7 @@ module.exports = {
 
 		]
 	},
-	plugins: [new MonacoWebpackPlugin()]
+	plugins: [
+		new MonacoWebpackPlugin(),
+	]
 };

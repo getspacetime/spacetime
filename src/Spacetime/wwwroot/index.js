@@ -1,32 +1,25 @@
-import './main.css';
 import * as monaco from 'monaco-editor';
+import './main.css';
 
-window._editors = []
-
-function findEditor(name) {
-    return window._editors.find(editor => editor.name === name);
-}
-
-window.editor = (element, name, data) => {
-    console.log('initialize editor', element);
-    const editor = monaco.editor.create(element, {
-        value: data,
-        language: 'json',
-        automaticLayout: true,
-        theme: 'vs-dark'
-    });
-
-    window._editors.push({ name: name, editor });
-}
-
-window.updateEditor = (element, name, data) => {
-    const editor = findEditor(name)
-    console.log('editor', editor);
-    if (editor != null) {
-        const model = editor.editor.getModel();
-        console.log('model', model);
-        if (model != null) {
-            model.setValue(data);
-        }
-    }
-}
+/**
+ * Add Monaco to the window
+ * 
+ * Long story short: I can't seem to get Monaco, or any npm package really,
+ * to work with isolated scopes / loading scripts as modules. I beat my head
+ * on this for several hours and found little documentation or any good examples
+ * on other projects using npm packages and JS isolation with Blazor interop.
+ * 
+ * So, in our isolated module used in editor.js, we'll just grab this from the window scope.
+ * 
+ * I'd love to get this working in a cleaner way, but honestly I just want to move 
+ * on with my life. If anyone smarter than me can figure this out, would love assistance.
+ * 
+ * Otherwise, this is the way we are going to live for now. 
+ * 
+ * Maybe I'll revisit this in a few months.
+ * 
+ * Maybe I won't.
+ * 
+ * Hours wasted: 4
+ **/
+window.monaco = monaco
