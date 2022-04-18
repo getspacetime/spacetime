@@ -2,6 +2,8 @@
 using Spacetime.Core.gRPC;
 using Spacetime.Core.Services;
 using Spacetime.Core.Infrastructure;
+using Spacetime.Blazor.Sortable;
+using Spacetime.Helpers;
 
 namespace Spacetime;
 
@@ -20,6 +22,7 @@ public static class MauiProgram
 		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Services.AddBlazorWebView();
+
 		builder.Services.AddSingleton<RequestService>();
 		builder.Services.AddSingleton<SettingsService>();
 		builder.Services.AddSingleton<SpacetimeRestService>();
@@ -27,6 +30,9 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IGrpcExplorer, GrpcExplorer>();
 		builder.Services.AddSingleton<IProtobufService, LiteDbProtobufService>();
 		builder.Services.AddHttpClient<ISpacetimeService, SpacetimeRestService>();
+
+		builder.Services.AddScoped<ScriptUtils>();
+		builder.Services.AddBlazorSortable();
 
         return builder.Build();
 	}

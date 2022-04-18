@@ -1,0 +1,99 @@
+﻿@using Spacetime.Helpers
+@using Spacetime.Shared.Components.Inputs
+@inject ScriptUtils ScriptUtils
+
+<ul @ref="_ref" @onmousemove="OnMouseMove" class="p-3 border select-none">
+    @foreach (var item in Items)
+    {
+        <ListItem OnMouseUp="@OnMouseUp"
+              OnMouseDown="@OnMouseDown"
+              Offset="item.Offset">
+            <Title>@item.Value</Title>
+        </ListItem>
+        @if (item == ShowDisplayUX && IsMouseDown)
+        {
+            <li style="height: 4px" class="drop-shadow-2xl ring-2 ring-blue-500 ring-inset border border-gray-800 bg-white opacity-50"></li>
+        }
+    }
+</ul>
+@if (Debug)
+{
+    <div class="bg-red-800 drop-shadow-2xl" style="height: 4px; width: 100px; position: fixed; top:@(CurrentMouseY)px; left: @(CurrentMouseX + 25)px">X: @CurrentMouseX Y: @CurrentMouseY</div>
+}
+@code {
+    private List<ListItem> Items { get; set; } = new List<ListItem>
+    {
+        new ListItem{ Value = "One" },
+        new ListItem{ Value = "Two" },
+        new ListItem{ Value = "Three" },
+        new ListItem{ Value = "Four" },
+    };
+
+    // todo: rename this when my brain starts working again
+    private ListItem ShowDisplayUX { get; set; }
+    private ListItem ItemBeingDragged { get; set; }
+    private double CurrentMouseX { get; set; }
+    private double CurrentMouseY { get; set; }
+    private bool Debug { get; set; } = false;
+    private ElementReference _ref;
+
+    private bool IsMouseDown { get; set; }
+
+    public async void OnMouseDown(MouseEventArgs args)
+    {
+        IsMouseDown = true;
+        ItemBeingDragged = CheckPosition(args);
+
+        await ScriptUtils.Log("on mouse down", args);
+    }
+
+    public async void OnMouseUp(MouseEventArgs args)
+    {
+        IsMouseDown = false;
+        ItemBeingDragged = null;
+        ShowDisplayUX = null;
+        await ScriptUtils.Log("on mouse up", args);
+
+    }
+
+    public async void OnMouseMove(MouseEventArgs args)
+    {
+        CurrentMouseX = args.ClientX;
+        CurrentMouseY = args.ClientY;
+
+        if (IsMouseDown)
+        {
+            var item = CheckPosition(args);
+
+            if (item != null)
+            {
+                ShowDisplayUX = item;
+                await ScriptUtils.Log($"best item found: mouse position: {args.ClientY} item position: {item.Offset.Top}", item);
+            }
+        }
+    }
+
+    private ListItem CheckPosition(MouseEventArgs args)
+    {
+        ListItem currentItem = null;
+        var sortedItems = Items.OrderByDescending(p => p.Offset.Top);
+        foreach (var item in sortedItems)
+        {
+            // todo: this "75" is just a magic number
+            // figure out the size of the element and use that instead
+            if (item.Offset.Top + 40 >= args.ClientY)
+            {
+                currentItem = item;
+            }
+        }
+
+        return currentItem;
+    }
+
+    private class ListItem
+    {
+        public HtmlOffset Offset { get; set; } = new HtmlOffset();
+        public string Value { get; set; }
+    }
+}
+

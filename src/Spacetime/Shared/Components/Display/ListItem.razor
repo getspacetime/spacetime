@@ -1,7 +1,13 @@
-﻿@using Spacetime.Shared.Components.Inputs
+﻿@using Spacetime.Helpers
+@using Spacetime.Shared.Components.Inputs
+@inject ScriptUtils ScriptUtils
+
 <li @onclick="OnClickCallback"
-    class="flex justify-between items-center pl-2 pr-2 pt-1 pb-1 first:border-t border-b border-zinc-700 hover:bg-zinc-700 cursor-pointer @Css">
-    
+    @onmousedown="OnMouseDown"
+    @onmouseup="OnMouseUp"
+    @ref="ElementReference"
+    class="flex justify-between items-center p-1 first:border-t border-b border-zinc-700 hover:bg-zinc-700 cursor-pointer @Css">
+
     @if (Prefix != null)
     {
         @Prefix
@@ -15,14 +21,31 @@
     }
 </li>
 
-
 @code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (Offset != null)
+        {
+            var offset = await ScriptUtils.GetOffset(ElementReference);
+            Offset.Left = offset.Left;
+            Offset.Top = offset.Top;
+        }
+    }
+
+    [Parameter]
+    public HtmlOffset Offset { get; set; }
+    [Parameter]
+    public EventCallback<HtmlOffset> OffsetChanged { get; set; }
     [Parameter]
     public RenderFragment? Title { get; set; }
     [Parameter]
     public RenderFragment? Prefix { get; set; }
     [Parameter]
     public RenderFragment? ActionTemplate { get; set; }
+
+    private ElementReference ElementReference;
+    [Parameter]
+    public EventCallback<ElementReference> ElementReferenceChanged { get; set; }
     [Parameter]
     public string? Css { get; set; }
     [Parameter]
@@ -30,4 +53,10 @@
 
     [Parameter]
     public EventCallback<MouseEventArgs> OnClickCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnMouseDown { get; set; }
+
+    [Parameter]
+    public EventCallback<MouseEventArgs> OnMouseUp { get; set; }
 }

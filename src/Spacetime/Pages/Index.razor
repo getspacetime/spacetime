@@ -1,5 +1,5 @@
 ﻿@page "/"
-
+@using Spacetime.Blazor.Sortable
 @using Spacetime.Core
 @using Spacetime.Core.Services
 @using Spacetime.Core.Infrastructure;
@@ -11,6 +11,7 @@
 @using Spacetime.Shared.Icons
 @using Spacetime.Shared.Components.Typography
 @inject RequestService RequestService
+@inject Sortable Sortable
 
 <div class="grid gap-1 grid-cols-12">
     <div class="border-r border-zinc-700 col-span-3">
@@ -35,20 +36,27 @@
                         </Title>
                     </ListItem>
                 }
+
+
                 @foreach (var req in Requests)
                 {
                     <ListItem OnClickCallback="@(e => CurrentRequest = req)" Css="@(CurrentRequest?.Id == req.Id ? "bg-zinc-700" : "")"
                       OnActionCallback="@(async e => await OnDelete(req))">
                         <Title>
-                            <input class="px-4 py-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" />
+                            <input class="p-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" />
                         </Title>
-                        <Prefix><span class="text-xs px-2 py-1">@GetRequestPrefix(req)</span></Prefix>
+                        <Prefix>
+@*                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 handle" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4m0 6l-4 4-4-4" />
+</svg>*@
+                            <span class="text-xs px-2">@GetRequestPrefix(req)</span></Prefix>
                         <ActionTemplate>
                             <Dropdown Items="@RequestDropdown" OnClickCallback="@(() => ConfirmDelete(req))"><DotsVerticalIcon /></Dropdown>
                         </ActionTemplate>
                     </ListItem>
                 }
             </ul>
+            <SortableList></SortableList>
         }
     </div>
     <div class="col-span-9">
@@ -96,6 +104,8 @@
     private SpacetimeRequest CurrentRequest { get; set; }
     private SpacetimeRequest SelectedRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
+    private ElementReference _ref { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         Requests = (await RequestService.GetRequests()).ToList();
