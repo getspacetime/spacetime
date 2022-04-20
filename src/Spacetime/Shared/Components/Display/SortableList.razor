@@ -3,7 +3,7 @@
 @inject ScriptUtils ScriptUtils
 
 <ul @ref="_ref" @onmousemove="OnMouseMove" class="p-3 border select-none">
-    @foreach (var item in Items)
+    @foreach (var item in Items.OrderBy(p => p.Position))
     {
         <ListItem OnMouseUp="@OnMouseUp"
               OnMouseDown="@OnMouseDown"
@@ -23,10 +23,10 @@
 @code {
     private List<ListItem> Items { get; set; } = new List<ListItem>
     {
-        new ListItem{ Value = "One" },
-        new ListItem{ Value = "Two" },
-        new ListItem{ Value = "Three" },
-        new ListItem{ Value = "Four" },
+        new ListItem{ Value = "One", Position = 0 },
+        new ListItem{ Value = "Two", Position = 1 },
+        new ListItem{ Value = "Three", Position = 3 },
+        new ListItem{ Value = "Four", Position = 2 },
     };
 
     // todo: rename this when my brain starts working again
@@ -49,6 +49,24 @@
 
     public async void OnMouseUp(MouseEventArgs args)
     {
+        if (ItemBeingDragged != ShowDisplayUX)
+        {
+            var indexOfItemBeingDragged = Items.IndexOf(ItemBeingDragged);
+            var indexToPlaceItem = Items.IndexOf(ShowDisplayUX);
+            if (indexOfItemBeingDragged == -1 || indexToPlaceItem == -1)
+            {
+                return;
+            }
+
+            Items.Remove(ItemBeingDragged);
+            Items.Insert(indexToPlaceItem, ItemBeingDragged);
+
+            foreach (var item in Items)
+            {
+                item.Position = Items.IndexOf(item);
+            }
+        }
+
         IsMouseDown = false;
         ItemBeingDragged = null;
         ShowDisplayUX = null;
@@ -92,6 +110,7 @@
 
     private class ListItem
     {
+        public int Position { get; set; }
         public HtmlOffset Offset { get; set; } = new HtmlOffset();
         public string Value { get; set; }
     }
