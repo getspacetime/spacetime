@@ -59,27 +59,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiImage Remove="Resources\Images\appiconfgSplashScreen.png" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <None Remove="Resources\appicon.png" />
-	  <None Remove="Resources\appiconfgSplashScreen.png" />
-	  <None Remove="Resources\Images\appiconfgSplashScreen.png" />
 	  <None Remove="Resources\Images\logo.png" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Data\" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <MauiSplashScreen Include="Resources\appiconfgSplashScreen.png">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </MauiSplashScreen>
-	  <MauiSplashScreen Include="Resources\Images\appiconfgSplashScreen.png">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </MauiSplashScreen>
 	</ItemGroup>
 
 	<ItemGroup>
