@@ -44,7 +44,7 @@
 
 ## About The Project
 
-![spacetime banner](https://user-images.githubusercontent.com/1738479/163643935-011423bb-ecf0-4d73-a2a3-5983fedb3226.PNG)
+![spacetime banner](https://user-images.githubusercontent.com/1738479/164606891-cf50aa1b-4d2b-400c-8832-d4d74b664c0e.png)
 
 A fully featured* cross-platform, cross-transport API Client, wormholes excluded. 
 
