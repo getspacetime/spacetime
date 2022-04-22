@@ -1,0 +1,49 @@
+﻿@using Spacetime.Core.Services
+
+@inject SettingsService SettingsService
+
+<MudDialog>
+    <DialogContent>
+        @if (Settings == null)
+        {
+            <MudSkeleton />
+            <MudSkeleton />
+            <MudSkeleton />
+            <MudSkeleton />
+        }
+        else
+        {
+            <h4 class="text-xl font-semibold pb-2">Security</h4>
+            <div class="flex flex-col">
+                <MudCheckBox @onchange="SaveSettings" @bind-Checked="@Settings.ValidateCertificates" Label="Validate SSL Certificates"></MudCheckBox>
+            </div>
+            <h4 class="text-xl font-semibold text-red-500 pb-2">Danger Zone</h4>
+            <div class="p-3 border border-red-500 rounded flex flex-col">
+                <MudButton Color="Color.Error">Reset All Settings</MudButton>
+                <MudButton Color="Color.Error">Reset Local Database</MudButton>
+            </div>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+
+    public SettingsDto Settings { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+           Settings = await SettingsService.GetSettings();
+    }
+
+    public async void SaveSettings()
+    {
+        await SettingsService.SaveSettings(Settings);
+    }
+}

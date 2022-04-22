@@ -1,74 +1,47 @@
 ﻿@using Spacetime.Core.Services
 @using Spacetime.Shared.Components
-@using Spacetime.Shared.Icons
 @using Spacetime.Shared.Components.Containers.Modal
 @using Spacetime.Shared.Components.Containers.Tabs
 @using Spacetime.Shared.Components.Inputs
 @inject IJSRuntime JS
 @inject SettingsService SettingsService
+@inject IDialogService DialogService
+
 
 @inherits LayoutComponentBase
 
 <div class="flex flex-col">
-    <div class="border border-zinc-700 p-2 flex flex-row items-center justify-between">
-        <div class="flex flex-row items-center">
-            <!-- todo: replace with logo once it's done -->
-            <img class="h-8 w-8" src="images/logo.png"/>
-            <div class="pl-3">
-                <span class="hover:text-white cursor-pointer">spacetime</span>
-            </div>
-            <div class="pl-3">
-                <NavLink href="" class="ml-4 font-semibold hover:text-black dark:hover:text-white hover:underline underline-offset-2 decoration-2" Match="NavLinkMatch.All" ActiveClass="underline">
-                    Requests
-                </NavLink>
-                <NavLink href="protobufs" class="ml-4 font-semibold hover:text-black dark:hover:text-white hover:underline underline-offset-2 decoration-2" ActiveClass="underline">
-                    Protobufs
-                </NavLink>
-            </div>
-        </div>
-        <div class="align-self-end">
-            <Button OnClickCallback="OpenSettings"><SettingsIcon /></Button>
-        </div>
-    </div>
+    <MudAppBar Color="Color.Dark" Fixed="false" Dense="true" Elevation="1">
+        @*<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />*@
+        <MudImage ObjectFit="ObjectFit.Contain" Height="40" Width="40" Src="images/logo.png" />
+        <NavLink href="" class="ml-4" Match="NavLinkMatch.All">
+            <MudButton DisableElevation="true" Color="Color.Inherit">Requests</MudButton>
+        </NavLink>
+        <NavLink href="protobufs" class="ml-4">
+            <MudButton DisableElevation="true" Color="Color.Inherit">Protobufs</MudButton>
+        </NavLink>
+        <MudSpacer />
+        <!-- todo: open link to github repo -->
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+        <MudIconButton Icon="@Icons.Filled.Settings" Color="Color.Inherit" OnClick="OpenSettings" />
+
+    </MudAppBar>
+
     <div class="pt-1 flex flex-row">
         <div class="grow">
             @Body
         </div>
     </div>
 
-    @if (SettingsModalVisible)
-    {
-        <Modal Title="Settings" @bind-IsVisible="@SettingsModalVisible" CancelText="Cancel" ConfirmText="Apply settings" OnConfirmCallback="SaveSettings">
-            <h4 class="text-xl font-semibold pb-2">Security</h4>
-            <div class="p-3 flex flex-col">
-                <label class="py-2"> <input type="checkbox" @bind="Settings.ValidateCertificates" />Validate SSL Certificates</label>
-                <label class="py-2"> <input type="checkbox" />Unused Setting</label>
-            </div>
-            <h4 class="text-xl font-semibold text-red-500 pb-2">Danger Zone</h4>
-            <div class="p-3 border border-red-500 rounded flex flex-col">
-                <Button ButtonSize="ButtonSize.Large" ButtonType="ButtonType.Danger" Css="w-48 mb-5" OnClickCallback="@(() => {})">Reset All Settings</Button>
-                <Button ButtonSize="ButtonSize.Large" ButtonType="ButtonType.Danger" Css="w-48 mb-5" OnClickCallback="@(() => {})">Reset Local Database</Button>
-            </div>
-        </Modal>
-    }
+    <MudThemeProvider IsDarkMode="true" />
+    <MudDialogProvider />
+    <MudSnackbarProvider />
 </div>
 
 @code {
-    public SettingsDto Settings { get; set; }
-    public bool SettingsModalVisible { get; set; }
-
-    protected override async Task OnInitializedAsync()
+    public async Task OpenSettings()
     {
-        Settings = await SettingsService.GetSettings();
-    }
-
-    public async void OpenSettings()
-    {
-        SettingsModalVisible = true;
-    }
-
-    public async void SaveSettings()
-    {
-        await SettingsService.SaveSettings(Settings);
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        DialogService.Show<SettingsDialog>("Settings", options);
     }
 }

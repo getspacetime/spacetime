@@ -2,7 +2,6 @@
 @using Spacetime.Core.Services
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
-@using Spacetime.Shared.Icons
 @using Spacetime.Core.Infrastructure;
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Shared.Components.Display.Table
@@ -12,7 +11,7 @@
 
 <div class="grid gap-1 grid-cols-12">
     <div class="col-span-full px-2 py-4">
-        <Button ButtonType="ButtonType.Primary" OnClickCallback="() => { AddProtobufVisible = true; }">Add Proto File</Button>
+        <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="() => { AddProtobufVisible = true; }">Add Proto File</Button>
     </div>
     <div class="shadow-sm overflow-hidden col-span-4">
         <table class="border-collapse table-auto w-full text-sm">

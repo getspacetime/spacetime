@@ -4,6 +4,7 @@ using Spacetime.Core.Services;
 using Spacetime.Core.Infrastructure;
 using Spacetime.Blazor.Sortable;
 using Spacetime.Helpers;
+using MudBlazor.Services;
 
 namespace Spacetime;
 
@@ -33,7 +34,7 @@ public static class MauiProgram
 
 		builder.Services.AddScoped<ScriptUtils>();
 		builder.Services.AddBlazorSortable();
-
-        return builder.Build();
+		builder.Services.AddMudServices();
+		return builder.Build();
 	}
 }
