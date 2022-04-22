@@ -2,9 +2,8 @@
 [![build](https://github.com/getspacetime/spacetime/workflows/build/badge.svg?event=push)](https://github.com/getspacetime/spacetime/actions/workflows/build.yml)
 <div align="center">
   <a href="https://github.com/getspacetime/spacetime">
-    <img src="https://user-images.githubusercontent.com/1738479/163629084-536529ef-0e5c-4a4c-abde-eb471082d02d.png" alt="Logo" width="80" height="80">
+    <img src="https://user-images.githubusercontent.com/1738479/164597569-c1df8287-5d2b-434a-89fa-170e81cb6d90.png" alt="Logo" width="150" height="150">
   </a>
-
 <h3 align="center">spacetime</h3>
 
   <p align="center">
