@@ -2,13 +2,23 @@
 @using Spacetime.Shared.Components.Inputs
 @inject ScriptUtils ScriptUtils
 
-<ul @ref="_ref" @onmousemove="OnMouseMove" class="p-3 border select-none">
+<ul @ref="_ref" @onmousemove="OnMouseMove" class="select-none">
     @foreach (var item in Items.OrderBy(p => p.Position))
     {
         <ListItem OnMouseUp="@OnMouseUp"
               OnMouseDown="@OnMouseDown"
               Offset="item.Offset">
-            <Title>@item.Value</Title>
+
+            <Prefix>
+                @if (!string.IsNullOrWhiteSpace(item.Prefix))
+                {
+                    <span class="text-xs px-2 w-2">@item.Prefix</span>
+                }
+            </Prefix>
+
+            <Title>
+                <input class="p-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@item.Value"/>
+            </Title>
         </ListItem>
         @if (item == ShowDisplayUX && IsMouseDown)
         {
@@ -21,13 +31,8 @@
     <div class="bg-red-800 drop-shadow-2xl" style="height: 4px; width: 100px; position: fixed; top:@(CurrentMouseY)px; left: @(CurrentMouseX + 25)px">X: @CurrentMouseX Y: @CurrentMouseY</div>
 }
 @code {
-    private List<ListItem> Items { get; set; } = new List<ListItem>
-    {
-        new ListItem{ Value = "One", Position = 0 },
-        new ListItem{ Value = "Two", Position = 1 },
-        new ListItem{ Value = "Three", Position = 3 },
-        new ListItem{ Value = "Four", Position = 2 },
-    };
+    [Parameter]
+    public List<ListItem> Items { get; set; }
 
     // todo: rename this when my brain starts working again
     private ListItem ShowDisplayUX { get; set; }
@@ -108,11 +113,12 @@
         return currentItem;
     }
 
-    private class ListItem
+    public class ListItem
     {
         public int Position { get; set; }
         public HtmlOffset Offset { get; set; } = new HtmlOffset();
         public string Value { get; set; }
+        public string Prefix { get; set; }
     }
 }
 
