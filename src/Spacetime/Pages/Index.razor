@@ -24,35 +24,22 @@
                 <SmallCaps>Requests</SmallCaps>
                 <Button OnClickCallback=@NewRequest><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></Button>
             </div>
-            <ul>
-                @if (!Requests.Any())
+            @if (!Requests.Any())
                 {
-                    <ListItem OnClickCallback=@NewRequest>
+                    <ul>
+                        <ListItem OnClickCallback=@NewRequest>
                         <Title>
                             <div class="px-4 py-2">
                                 No requests
                             </div>
                         </Title>
                     </ListItem>
+                    </ul>
                 }
-
-
-                @foreach (var req in Requests)
-                {
-                    <ListItem OnClickCallback="@(e => CurrentRequest = req)" Css="@(CurrentRequest?.Id == req.Id ? "bg-zinc-700" : "")"
-                      OnActionCallback="@(async e => await OnDelete(req))">
-                        <Title>
-                            <input class="p-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@req.Name" @onblur="async () => await Save(req)" />
-                        </Title>
-                        <Prefix>
-                            <span class="text-xs px-2 w-2">@GetRequestPrefix(req)</span>
-                        </Prefix>
-                        <ActionTemplate>
-                            <Dropdown Items="@RequestDropdown" OnClickCallback="@(() => ConfirmDelete(req))"><MudIcon Icon="@Icons.Filled.MoreVert" /></Dropdown>
-                        </ActionTemplate>
-                    </ListItem>
-                }
-            </ul>
+            @if (Items.Any())
+            {
+                <SortableList Items="Items" />
+            }
         }
     </div>
     <div class="col-span-9">
@@ -71,7 +58,12 @@
     </div>
     <Modal Title="New Request" @bind-IsVisible="@ModalVisible"
            CancelText="Cancel">
-        <div class="flex justify-center gap-4">
+           <MudTextField Class="w-5/6"
+                          @bind-Value="NewRequestName"
+                          Label="Request Name"
+                          Placeholder="Request Name"
+                          Variant="Variant.Outlined"/>
+        <div class="flex justify-center gap-4 mt-2">
             <Card OnClickCallback="() => CreateNewRequest(SpacetimeType.REST)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
                 <span class="font-semibold text-xl">REST</span>
                 <p class="text-sm">Make an HTTP request using REST</p>
@@ -86,10 +78,15 @@
     </Modal>
 </div>
 @code {
+    private string NewRequestName { get; set; }
     public bool ModalVisible { get; set; }
     private List<string> RequestDropdown { get => new List<string> { "Delete" }; }
     private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
+    private List<SortableList.ListItem> Items => Requests != null 
+    ? Requests.Select(p => new SortableList.ListItem { Value = p.Name, Prefix= GetRequestPrefix(p) }).ToList()
+    : new List<SortableList.ListItem>();
+
     private ElementReference _ref { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -147,7 +144,7 @@
     {
         ModalVisible = false;
         var req = new SpacetimeRequest();
-        req.Name = "New Request";
+        req.Name = string.IsNullOrWhiteSpace(NewRequestName) ? "New Request" : NewRequestName;
         req.Type = type;
         req.Method = "GET";
         Requests.Add(req);
