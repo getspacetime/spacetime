@@ -2,7 +2,6 @@
 @using Spacetime.Core.Services
 @using Spacetime.Core.gRPC
 @using Spacetime.Shared.Components.Display
-@using Spacetime.Shared.Icons
 @using Spacetime.Core.Infrastructure;
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Shared.Components.Display.Table
@@ -25,12 +24,12 @@
             <Button
                 OnClickCallback="ValidateGrpc"
                 ButtonSize="ButtonSize.Small"
-                ButtonType="ButtonType.Success">Validate Proto</Button>
+                ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Success">Validate Proto</Button>
 
             <Button OnClickCallback="SaveProto"
                 Disabled="@(!CanSave())"
                 ButtonSize="ButtonSize.Small" 
-                ButtonType="ButtonType.Primary">Save Proto</Button>
+                ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary">Save Proto</Button>
         </div>
     </div>
     <div class="col-span-6">

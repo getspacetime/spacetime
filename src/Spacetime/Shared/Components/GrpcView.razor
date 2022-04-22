@@ -5,7 +5,6 @@
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Shared.Components.Containers.Tabs
 @using Spacetime.Shared.Components.Display
-@using Spacetime.Shared.Icons
 @using Spacetime.Shared.Components.Panes
 @using Spacetime.Core.Infrastructure;
 @using Spacetime.Shared.Components.Typography
@@ -19,8 +18,8 @@
         <div class="flex flex-row mb-2 shrink-0 p-2">
             <span class="text-xs px-2 py-2">gRPC</span>
             <input class="px-4 py-2 w-1/2 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
-            <Button ButtonType="ButtonType.Default" OnClickCallback="() => SelectProtoVisible = true">Select Proto</Button>
-            <Button ButtonType="ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
+            <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Default" OnClickCallback="() => SelectProtoVisible = true">Select Proto</Button>
+            <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
         </div>
         <Tabs>
             <Tab Key="Body" CurrentTab="@RequestTab" OnClickCallback="@(() => RequestTab = "Body")">Body</Tab>
