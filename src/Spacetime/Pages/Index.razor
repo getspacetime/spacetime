@@ -25,20 +25,20 @@
                 <Button OnClickCallback=@NewRequest><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></Button>
             </div>
             @if (!Requests.Any())
-                {
-                    <ul>
-                        <ListItem OnClickCallback=@NewRequest>
+            {
+                <ul>
+                    <ListItem OnClickCallback=@NewRequest>
                         <Title>
                             <div class="px-4 py-2">
                                 No requests
                             </div>
                         </Title>
                     </ListItem>
-                    </ul>
-                }
+                </ul>
+            }
             @if (Items.Any())
             {
-                <SortableList Items="Items" />
+                <SortableList Items="Items" OnItemSelected="OnItemSelected" />
             }
         }
     </div>
@@ -56,36 +56,14 @@
             <div class="mx-4 my-4">Select a request or create a new one to get started.</div>
         }
     </div>
-    <Modal Title="New Request" @bind-IsVisible="@ModalVisible"
-           CancelText="Cancel">
-           <MudTextField Class="w-5/6"
-                          @bind-Value="NewRequestName"
-                          Label="Request Name"
-                          Placeholder="Request Name"
-                          Variant="Variant.Outlined"/>
-        <div class="flex justify-center gap-4 mt-2">
-            <Card OnClickCallback="() => CreateNewRequest(SpacetimeType.REST)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
-                <span class="font-semibold text-xl">REST</span>
-                <p class="text-sm">Make an HTTP request using REST</p>
-                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
-            </Card>
-            <Card OnClickCallback="() => CreateNewRequest(SpacetimeType.gRPC)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
-                <span class="font-semibold text-xl">gRPC</span>
-                <p class="text-sm">Make a request using gRPC</p>
-                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
-            </Card>
-        </div>
-    </Modal>
 </div>
 @code {
-    private string NewRequestName { get; set; }
-    public bool ModalVisible { get; set; }
     private List<string> RequestDropdown { get => new List<string> { "Delete" }; }
     private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
-    private List<SortableList.ListItem> Items => Requests != null 
-    ? Requests.Select(p => new SortableList.ListItem { Value = p.Name, Prefix= GetRequestPrefix(p) }).ToList()
-    : new List<SortableList.ListItem>();
+    private List<SortableListItem> Items => Requests != null
+    ? Requests.Select(p => new SortableListItem { Id = p.Id, Value = p.Name, Prefix = GetRequestPrefix(p) }).ToList()
+    : new List<SortableListItem>();
 
     private ElementReference _ref { get; set; }
 
@@ -97,6 +75,11 @@
             CurrentRequest = Requests.First();
         }
 
+    }
+
+    public void OnItemSelected(SortableListItem item)
+    {
+        CurrentRequest = Requests.FirstOrDefault(p => p.Id == item.Id);
     }
 
     public async Task ConfirmDelete(SpacetimeRequest request)
@@ -135,21 +118,22 @@
         return str;
     }
 
-    private void NewRequest()
+    private async Task NewRequest()
     {
-        ModalVisible = true;
-    }
-
-    private void CreateNewRequest(SpacetimeType type)
-    {
-        ModalVisible = false;
-        var req = new SpacetimeRequest();
-        req.Name = string.IsNullOrWhiteSpace(NewRequestName) ? "New Request" : NewRequestName;
-        req.Type = type;
-        req.Method = "GET";
-        Requests.Add(req);
-        CurrentRequest = req;
-        RequestService.AddRequest(req);
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small };
+        var dialog = DialogService.Show<NewRequestModal>("New Request", options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var data = result.Data as NewRequestModal.NewRequestModalResult;
+            var req = new SpacetimeRequest();
+            req.Name = string.IsNullOrWhiteSpace(data.RequestName) ? "New Request" : data.RequestName;
+            req.Type = data.Type;
+            req.Method = "GET";
+            Requests.Add(req);
+            CurrentRequest = req;
+            await RequestService.AddRequest(req);
+        }
     }
 
     private async Task OnDelete(SpacetimeRequest request)

@@ -5,7 +5,8 @@
 <ul @ref="_ref" @onmousemove="OnMouseMove" class="select-none">
     @foreach (var item in Items.OrderBy(p => p.Position))
     {
-        <ListItem OnMouseUp="@OnMouseUp"
+        <ListItem OnClickCallback="async () => { await OnClick(item); }"
+              OnMouseUp="@OnMouseUp"
               OnMouseDown="@OnMouseDown"
               Offset="item.Offset">
 
@@ -17,12 +18,12 @@
             </Prefix>
 
             <Title>
-                <input class="p-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@item.Value"/>
+                <input class="p-2 border border-transparent hover:border-transparent bg-zinc-800" type="text" @bind="@item.Value" />
             </Title>
         </ListItem>
         @if (item == ShowDisplayUX && IsMouseDown)
         {
-            <li style="height: 4px" class="drop-shadow-2xl ring-2 ring-blue-500 ring-inset border border-gray-800 bg-white opacity-50"></li>
+            <li style="height: 20px" class="drop-shadow-2xl border-dashed border-2 border-blue-400"></li>
         }
     }
 </ul>
@@ -32,17 +33,24 @@
 }
 @code {
     [Parameter]
-    public List<ListItem> Items { get; set; }
+    public List<SortableListItem> Items { get; set; }
+    [Parameter]
+    public EventCallback<SortableListItem> OnItemSelected { get; set; }
 
     // todo: rename this when my brain starts working again
-    private ListItem ShowDisplayUX { get; set; }
-    private ListItem ItemBeingDragged { get; set; }
+    private SortableListItem ShowDisplayUX { get; set; }
+    private SortableListItem ItemBeingDragged { get; set; }
     private double CurrentMouseX { get; set; }
     private double CurrentMouseY { get; set; }
     private bool Debug { get; set; } = false;
     private ElementReference _ref;
 
     private bool IsMouseDown { get; set; }
+
+    public async Task OnClick(SortableListItem item)
+    {
+        await OnItemSelected.InvokeAsync(item);
+    }
 
     public async void OnMouseDown(MouseEventArgs args)
     {
@@ -96,9 +104,9 @@
         }
     }
 
-    private ListItem CheckPosition(MouseEventArgs args)
+    private SortableListItem CheckPosition(MouseEventArgs args)
     {
-        ListItem currentItem = null;
+        SortableListItem currentItem = null;
         var sortedItems = Items.OrderByDescending(p => p.Offset.Top);
         foreach (var item in sortedItems)
         {
@@ -111,14 +119,6 @@
         }
 
         return currentItem;
-    }
-
-    public class ListItem
-    {
-        public int Position { get; set; }
-        public HtmlOffset Offset { get; set; } = new HtmlOffset();
-        public string Value { get; set; }
-        public string Prefix { get; set; }
     }
 }
 

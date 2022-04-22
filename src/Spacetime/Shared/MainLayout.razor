@@ -12,7 +12,6 @@
 
 <div class="flex flex-col">
     <MudAppBar Color="Color.Dark" Fixed="false" Dense="true" Elevation="1">
-        @*<MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" />*@
         <MudImage ObjectFit="ObjectFit.Contain" Height="40" Width="40" Src="images/logo.png" />
         <NavLink href="" class="ml-4" Match="NavLinkMatch.All">
             <MudButton DisableElevation="true" Color="Color.Inherit">Requests</MudButton>
@@ -21,8 +20,9 @@
             <MudButton DisableElevation="true" Color="Color.Inherit">Protobufs</MudButton>
         </NavLink>
         <MudSpacer />
-        <!-- todo: open link to github repo -->
-        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+        <a href="https://github.com/getspacetime/spacetime">
+            <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+        </a>
         <MudIconButton Icon="@Icons.Filled.Settings" Color="Color.Inherit" OnClick="OpenSettings" />
 
     </MudAppBar>

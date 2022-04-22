@@ -3,11 +3,15 @@
 @inject ScriptUtils ScriptUtils
 
 <li @onclick="OnClickCallback"
-    @onmousedown="OnMouseDown"
-    @onmouseup="OnMouseUp"
     @ref="ElementReference"
     class="flex justify-between items-center p-1 first:border-t border-b border-zinc-700 hover:bg-zinc-700 cursor-pointer @Css">
 
+    <!-- grab cursor not working for drag handle in webview 4/22/22 -->
+    <div @onmousedown="OnMouseDown"
+         @onmouseup="OnMouseUp"
+         class="shrink opacity-10 hover:opacity-100 transition duration-300 ">
+        <MudIcon Class="cursor-move" Icon="@Icons.Filled.DragHandle" Size="Size.Small" Style="cursor: pointer !important" />
+    </div>
     @if (Prefix != null)
     {
         <div class="shrink">@Prefix</div>
