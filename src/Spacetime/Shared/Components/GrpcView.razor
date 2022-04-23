@@ -17,7 +17,7 @@
     <div class="lg:col-span-6 sm:col-span-full">
         <div class="flex flex-row mb-2 shrink-0 p-2">
             <span class="text-xs px-2 py-2">gRPC</span>
-            <input class="px-4 py-2 w-1/2 border border-zinc-700 bg-zinc-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
+            <input class="px-4 py-2 w-1/2 border border-neutral-700 bg-neutral-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
             <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Default" OnClickCallback="() => SelectProtoVisible = true">Select Proto</Button>
             <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
         </div>

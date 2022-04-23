@@ -13,6 +13,28 @@
     <div class="col-span-full px-2 py-4">
         <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="() => { AddProtobufVisible = true; }">Add Proto File</Button>
     </div>
+    <div class="col-span-4">
+        <MudTreeView T="string" ExpandOnClick="true" @bind-SelectedValue="SelectedValue" Hover="true">
+            @foreach (var svc in Services)
+            {
+                <MudTreeViewItem Value="@(svc.Name)">
+                    @foreach (var method in svc.Methods)
+                    {
+                    <MudTreeViewItem Value="@(method.Name)" />
+                    }
+            </MudTreeViewItem>
+            }
+            <MudTreeViewItem Value="@("Applications")">
+                <MudTreeViewItem Value="@("Terminal")" />
+            </MudTreeViewItem>
+            <MudTreeViewItem Value="@("Documents")">
+                <MudTreeViewItem Value="@("MudBlazor")">
+                    <MudTreeViewItem Value="@("Api")" />
+                    <MudTreeViewItem Value="@("Components")" />
+                </MudTreeViewItem>
+            </MudTreeViewItem>
+        </MudTreeView>
+    </div>
     <div class="shadow-sm overflow-hidden col-span-4">
         <table class="border-collapse table-auto w-full text-sm">
             <thead>
@@ -60,6 +82,7 @@
 </div>
 
 @code {
+    string SelectedValue { get; set; }
     public bool AddProtobufVisible { get; set; }
     public GrpcServiceDefinition SelectedService { get; set; }
     public List<GrpcServiceDefinition> Services { get; set; } = new List<GrpcServiceDefinition>();
