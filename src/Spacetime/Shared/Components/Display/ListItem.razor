@@ -26,13 +26,15 @@
 </li>
 
 @code {
+    private bool calculatedOffset;
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (Offset != null)
+        if (Offset != null && !calculatedOffset)
         {
             var offset = await ScriptUtils.GetOffset(ElementReference);
             Offset.Left = offset.Left;
             Offset.Top = offset.Top;
+            calculatedOffset = true;
         }
     }
 

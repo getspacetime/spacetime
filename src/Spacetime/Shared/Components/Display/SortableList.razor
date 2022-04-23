@@ -96,7 +96,9 @@
         {
             var item = CheckPosition(args);
 
-            if (item != null)
+            // if item is null or item is already the one calculated, no need to 
+            // change this or log it
+            if (item != null && item != ShowDisplayUX)
             {
                 ShowDisplayUX = item;
                 await ScriptUtils.Log($"best item found: mouse position: {args.ClientY} item position: {item.Offset.Top}", item);

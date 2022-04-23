@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
 using System;
 using System.Collections.Generic;
@@ -9,29 +10,27 @@ using System.Threading.Tasks;
 
 namespace Spacetime.Helpers
 {
-    public class HtmlOffset
-    {
-        public double Top { get; set; }
-        public double Left { get; set; }
-    }
     public class ScriptUtils : IAsyncDisposable
     {
         private readonly Lazy<Task<IJSObjectReference>> moduleTask;
-
-        public ScriptUtils(IJSRuntime jsRuntime)
+        private readonly ILogger<ScriptUtils> _log;
+        public ScriptUtils(ILogger<ScriptUtils> log, IJSRuntime jsRuntime)
         {
+            _log = log;
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./utils.js").AsTask());
         }
 
         public async ValueTask<string> Log(string message, object args = null)
         {
+            _log.LogInformation($"console.log: {message}");
             var module = await moduleTask.Value;
             return await module.InvokeAsync<string>("log", message, args);
         }
 
         public async ValueTask<HtmlOffset> GetOffset(ElementReference element)
         {
+            _log.LogInformation("Calculating offset for element {element}", element);
             var options = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,

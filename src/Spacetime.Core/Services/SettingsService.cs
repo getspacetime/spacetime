@@ -58,5 +58,8 @@ public class SettingsService
 
 public class SettingsDto
 {
-    public bool ValidateCertificates { get; set; }
+    public bool DarkMode { get; set; }
+    public bool ValidateCertificates { get; set; } = true;
+    public bool EnableLogging { get; set; } = true;
+    public bool EnableMetrics { get; set; } = true;
 }
