@@ -13,7 +13,7 @@
     <div class="col-span-full px-2 py-4">
         <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="() => { AddProtobufVisible = true; }">Add Proto File</Button>
     </div>
-    <div class="col-span-4">
+    <div class="col-span-3">
         <MudTreeView T="string" ExpandOnClick="true" @bind-SelectedValue="SelectedValue" Hover="true">
             @foreach (var svc in Services)
             {
@@ -24,54 +24,15 @@
                     }
             </MudTreeViewItem>
             }
-            <MudTreeViewItem Value="@("Applications")">
-                <MudTreeViewItem Value="@("Terminal")" />
-            </MudTreeViewItem>
-            <MudTreeViewItem Value="@("Documents")">
-                <MudTreeViewItem Value="@("MudBlazor")">
-                    <MudTreeViewItem Value="@("Api")" />
-                    <MudTreeViewItem Value="@("Components")" />
-                </MudTreeViewItem>
-            </MudTreeViewItem>
         </MudTreeView>
     </div>
-    <div class="shadow-sm overflow-hidden col-span-4">
-        <table class="border-collapse table-auto w-full text-sm">
-            <thead>
-                <tr>
-                    <TableHeader>Service</TableHeader>
-                </tr>
-            </thead>
-            <tbody class="bg-white dark:bg-zinc-800">
-                @foreach (var svc in Services)
-                {
-                    <tr class="dark:hover:bg-zinc-700 cursor-pointer" @onclick="() => { SelectService(svc); }">
-                        <TableCell>@svc.Name</TableCell>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="col-span-8">
-        @if (SelectedService != null)
-        {
-            <Table>
-                <thead>
-                    <tr>
-                        <TableHeader>Method</TableHeader>
-                    </tr>
-                </thead>
-                <TableBody>
-                    @foreach (var method in SelectedService.Methods)
-                    {
-                        <TableRow>
-                            <TableCell>@method.Name</TableCell>
-                        </TableRow>
-                    }
-                </TableBody>
-            </Table>
-
-        }
+    <div class="col-span-9 grid grid-cols-12 gap-2">
+        <div class="col-span-6">
+            <Code Data="" />
+        </div>
+        <div class="col-span-6">
+            <Code Data="" />
+        </div>
     </div>
     <Modal Title="Add Protobuf" @bind-IsVisible="@AddProtobufVisible"
            CancelText="Close">
