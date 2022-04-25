@@ -8,12 +8,12 @@
 @using Spacetime.Shared.Components.Containers.Modal
 
 @inject IProtobufService ProtobufService
+@inject IDialogService DialogService
 
 <div class="grid gap-1 grid-cols-12">
-    <div class="col-span-full px-2 py-4">
-        <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="() => { AddProtobufVisible = true; }">Add Proto File</Button>
-    </div>
-    <div class="col-span-3">
+    <div class="col-span-2 flex flex-col">
+        <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
+
         <MudTreeView T="string" ExpandOnClick="true" @bind-SelectedValue="SelectedValue" Hover="true">
             @foreach (var svc in Services)
             {
@@ -26,25 +26,34 @@
             }
         </MudTreeView>
     </div>
-    <div class="col-span-9 grid grid-cols-12 gap-2">
-        <div class="col-span-6">
-            <Code Data="" />
-        </div>
-        <div class="col-span-6">
-            <Code Data="" />
-        </div>
+    <div class="col-span-10 grid grid-cols-12 gap-2">
+        @if (!string.IsNullOrWhiteSpace(SelectedValue))
+        {
+            <div class="col-span-6">
+                <MudTextField Margin="Margin.Dense"
+                          @bind-Value="URL"
+                          Placeholder="grpc://localhost:80"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
+
+            </div>
+            <div class="col-span-6">
+            </div>
+            <div class="col-span-6">
+                <Code Data="" />
+            </div>
+            <div class="col-span-6">
+                <Code Data="@Result" />
+            </div>
+        }
     </div>
-    <Modal Title="Add Protobuf" @bind-IsVisible="@AddProtobufVisible"
-           CancelText="Close">
-        <div class="flex justify-center gap-4">
-            <AddProtoView />
-        </div>
-    </Modal>
+
 </div>
 
 @code {
+    public string Result { get; set; }
+    public string URL { get; set; } = "localhost:7186";
     string SelectedValue { get; set; }
-    public bool AddProtobufVisible { get; set; }
     public GrpcServiceDefinition SelectedService { get; set; }
     public List<GrpcServiceDefinition> Services { get; set; } = new List<GrpcServiceDefinition>();
     protected override async Task OnInitializedAsync()
@@ -55,5 +64,35 @@
     public void SelectService(GrpcServiceDefinition service)
     {
         SelectedService = service;
+    }
+
+    public void OpenAddProtobuf()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        DialogService.Show<AddProtoDialog>("Add Protobuf", options);
+    }
+
+    public void Execute()
+    {
+        // todo: confirm method id selected, since this currently could be a svc
+        Result = GrpcViaCommandLine("grpcurl", $"{URL} {SelectedValue}");
+    }
+
+    private string GrpcViaCommandLine(string command, string commandParameters)
+    {
+        var process = new System.Diagnostics.Process();
+
+        process.StartInfo.FileName = command;
+        process.StartInfo.Arguments = commandParameters;
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.CreateNoWindow = true;
+        process.Start();
+
+        var output = process.StandardOutput.ReadToEnd();
+
+        process.WaitForExit();
+
+        return output;
     }
 }
