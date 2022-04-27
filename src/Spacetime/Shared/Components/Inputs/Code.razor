@@ -1,10 +1,10 @@
-﻿@implements IDisposable
-@inject IJSRuntime JS
+﻿@using Microsoft.Extensions.Logging
+@inject ILogger<Code> Log
 
-<!-- figure out how to have dynamic sizes here -->
-<div id='editor' name="@Name" @ref="_elementRef" style="height: 590px"></div>
+<div class="flex flex-col grow">
+    <MonacoEditor Id="@Name" ConstructionOptions="EditorConstructionOptions" CssClass=" grow" OnDidChangeModelContent="OnDidChangeModelContent" />
+</div>
 @code {
-    private IJSObjectReference? module;
     private bool _rendered;
 
     [Parameter]
@@ -12,57 +12,51 @@
 
     [Parameter]
     public string Data { get; set; }
-    private ElementReference _elementRef;
 
-    protected override async void OnAfterRender(bool firstRender)
+    [Parameter]
+    public EventCallback<string> DataChanged { get; set; }
+
+    public string Theme { get; set; } = "vs-dark";
+    public string Language { get; set; } = "json";
+    private MonacoEditor _editor;
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
     {
-        if (_rendered)
+        _editor = editor;
+        return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Theme = Theme,
+                Language = Language,
+                Value = Data,
+            };
+    }
+
+    public async Task OnDidChangeModelContent(ModelContentChangedEvent e)
+    {
+        // since there's no automatic data binding in this library
+        // whenever the model changes, send the update here
+        // may not be the most efficient, but good enough for now
+        var model = await _editor.GetModel();
+        var value = await model.GetValue(EndOfLinePreference.TextDefined, false);
+        await DataChanged.InvokeAsync(value);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_editor == null)
         {
-            // we don't need to re-initialize the editor after it's been
-            // rendered once
             return;
         }
 
-        try
+        // since we're reusing the same instances in some cases
+        // we want to be able to update the model once whatever we're viewing
+        // changes to a new request
+        var model = await _editor.GetModel();
+        var value = await model.GetValue(EndOfLinePreference.TextDefined, false);
+        if (Data == null || !Data.Equals(value))
         {
-
-            module = await JS.InvokeAsync<IJSObjectReference>("import", "./editor.js");
-            await module.InvokeVoidAsync("editor", _elementRef, Name, Data);
-            _rendered = true;
+            Log.LogInformation("Parameters changed for code editor, updating value");
+            await model.SetValue(Data ?? string.Empty);
         }
-        catch (Exception ex)
-        {
-            Console.WriteLine(ex.Message);
-        }
-        //await JS.InvokeVoidAsync("editor", _elementRef, Name, Data);
-    }
-
-    protected override async void OnParametersSet()
-    {
-        if (_rendered)
-        {
-            // update the editor whenever the parameter changes
-            // only update once it's been rendered, though
-
-            try
-            {
-                await UpdateEditor();
-                //await JS.InvokeVoidAsync("updateEditor", _elementRef, Name, Data);
-            }
-            catch (Exception ex)
-            {
-                // todo: fall back to a basic editor?
-            }
-        }
-    }
-
-    public async ValueTask UpdateEditor() =>
-        await module.InvokeVoidAsync("updateEditor", _elementRef, Name, Data);
-
-    public async ValueTask Log(string message) => await module.InvokeVoidAsync("log", message);
-    public void Dispose()
-    {
-        Console.WriteLine("disposing");
-        //Log("disposing").GetAwaiter().GetResult();
     }
 }

@@ -10,7 +10,7 @@
 @inject IProtobufService ProtobufService
 @inject IDialogService DialogService
 
-<div class="grid gap-1 grid-cols-12">
+<div class="grid gap-1 grid-cols-12 flex flex-col">
     <div class="col-span-2 flex flex-col">
         <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
 
@@ -26,7 +26,7 @@
             }
         </MudTreeView>
     </div>
-    <div class="col-span-10 grid grid-cols-12 gap-2">
+    <div class="col-span-10 grid grid-cols-12 gap-2 flex flex-col grow">
         @if (!string.IsNullOrWhiteSpace(SelectedValue))
         {
             <div class="col-span-6">
@@ -39,11 +39,11 @@
             </div>
             <div class="col-span-6">
             </div>
-            <div class="col-span-6">
-                <Code Data="" />
+            <div class="col-span-6 grow flex flex-col">
+                <Code @bind-Data="@Request" Name="GrpcRequestEditor"/>
             </div>
-            <div class="col-span-6">
-                <Code Data="@Result" />
+            <div class="col-span-6 grow flex flex-col">
+                <Code @bind-Data="@Result" Name="GrpcResponseEditor" />
             </div>
         }
     </div>
@@ -51,6 +51,7 @@
 </div>
 
 @code {
+    public string Request { get; set; }
     public string Result { get; set; }
     public string URL { get; set; } = "localhost:7186";
     string SelectedValue { get; set; }
@@ -75,7 +76,13 @@
     public void Execute()
     {
         // todo: confirm method id selected, since this currently could be a svc
-        Result = GrpcViaCommandLine("grpcurl", $"{URL} {SelectedValue}");
+        var parameters = $"{URL} {SelectedValue}";
+        if (!string.IsNullOrWhiteSpace(Request))
+        {
+            parameters = $"-d {Request} {parameters}";
+        }
+
+        Result = GrpcViaCommandLine("grpcurl", parameters);
     }
 
     private string GrpcViaCommandLine(string command, string commandParameters)

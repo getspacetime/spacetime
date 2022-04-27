@@ -12,7 +12,7 @@
 @inject Sortable Sortable
 @inject IDialogService DialogService
 
-<div class="grid gap-1 grid-cols-12">
+<div class="grid gap-1 grid-cols-12 flex grow">
     <div class="border-r border-zinc-700 col-span-3">
         @if (Requests == null)
         {
@@ -42,7 +42,7 @@
             }
         }
     </div>
-    <div class="col-span-9">
+    <div class="col-span-9 flex flex-col">
         @if (CurrentRequest?.Type == SpacetimeType.REST)
         {
             <RestView Request="@CurrentRequest" />
