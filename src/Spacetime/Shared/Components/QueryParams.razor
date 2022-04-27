@@ -3,29 +3,30 @@
 @using Spacetime.Core
 @using Spacetime.Core.Infrastructure;
 
-<table>
-    <thead>
-        <tr>
-            <th class="text-left"><SmallCaps>Query Param</SmallCaps></th>
-            <th class="text-left"><SmallCaps>Value</SmallCaps></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var param in Query)
-        {
-       <tr>
-            <td class="py-2">
-                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Name" />
-            </td>
-            <td class="py-2">
-                <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Value"/>
-            </td>
-        </tr>
-        }
-    </tbody>
-</table>
-<Button OnClickCallback="Add" ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary">Add header</Button>
-
+<div class="flex flex-col">
+    <table>
+        <thead>
+            <tr>
+                <th class="text-left"><SmallCaps>Query Param</SmallCaps></th>
+                <th class="text-left"><SmallCaps>Value</SmallCaps></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var param in Query)
+            {
+                <tr>
+                    <td class="py-2">
+                        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Name" />
+                    </td>
+                    <td class="py-2">
+                        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Value" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <MudButton OnClick="Add" Color="Color.Primary">Add header</MudButton>
+</div>
 @code {
     [Parameter]
     public List<QueryParamDto> Query { get; set; }
@@ -33,7 +34,7 @@
     [Parameter]
     public EventCallback<List<QueryParamDto>> QueryChanged { get; set; }
 
-        public async void Remove(QueryParamDto param)
+    public async void Remove(QueryParamDto param)
     {
         Query.Remove(param);
         await QueryChanged.InvokeAsync(Query);

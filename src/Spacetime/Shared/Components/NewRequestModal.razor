@@ -8,21 +8,10 @@
                       Label="Request Name"
                       Placeholder="Request Name"
                       Variant="Variant.Outlined" />
-        <div class="flex justify-center gap-4 mt-2">
-            <Card OnClickCallback="() => Submit(SpacetimeType.REST)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
-                <span class="font-semibold text-xl">REST</span>
-                <p class="text-sm">Make an HTTP request using REST</p>
-                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="https://google.com">Learn more</a></p>
-            </Card>
-            <Card OnClickCallback="() => Submit(SpacetimeType.gRPC)" Css="w-56 h-32 cursor-pointer text-center flex flex-col gap-4 justify-between">
-                <span class="font-semibold text-xl">gRPC</span>
-                <p class="text-sm">Make a request using gRPC</p>
-                <p class="text-sm"><a class="text-cyan-400 hover:underline" href="#">Learn more</a></p>
-            </Card>
-        </div>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Create request</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
@@ -30,7 +19,7 @@
     private string NewRequestName { get; set; }
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    void Submit(SpacetimeType type) => MudDialog.Close(DialogResult.Ok(new NewRequestModalResult { Type = type, RequestName = NewRequestName }));
+    void Submit() => MudDialog.Close(DialogResult.Ok(new NewRequestModalResult { Type = SpacetimeType.REST, RequestName = NewRequestName }));
     void Cancel() => MudDialog.Cancel();
 
     public class NewRequestModalResult

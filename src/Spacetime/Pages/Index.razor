@@ -6,7 +6,6 @@
 @using Spacetime.Shared.Components
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
-@using Spacetime.Shared.Components.Containers.Modal
 @using Spacetime.Shared.Components.Typography
 @inject RequestService RequestService
 @inject Sortable Sortable
@@ -22,7 +21,7 @@
         {
             <div class="px-2 pb-2 flex justify-between">
                 <SmallCaps>Requests</SmallCaps>
-                <Button OnClickCallback=@NewRequest><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></Button>
+                <MudButton OnClick=@NewRequest><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></MudButton>
             </div>
             @if (!Requests.Any())
             {
@@ -122,7 +121,7 @@
 
     private async Task NewRequest()
     {
-        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small };
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<NewRequestModal>("New Request", options);
         var result = await dialog.Result;
         if (!result.Cancelled)

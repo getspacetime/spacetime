@@ -2,34 +2,35 @@
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Core.Infrastructure;
-<table>
-    <thead>
-        <tr>
-            <th class="text-left"><SmallCaps>Header</SmallCaps></th>
-            <th colspan="2" class="text-left"><SmallCaps>Value</SmallCaps></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var header in Headers)
-        {
+<div class="flex flex-col">
+    <table>
+        <thead>
             <tr>
-                <td class="py-2">
-                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Name" />
-                </td>
-                <td class="py-2">
-                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Value" />
-                </td>
-                <td class="py-2">
-                    <Button OnClickCallback="() => Remove(header)">
-                        <MudIcon Icon="@Icons.Filled.DeleteForever" Color="Color.Default"/>
-                    </Button>
-                </td>
+                <th class="text-left"><SmallCaps>Header</SmallCaps></th>
+                <th colspan="2" class="text-left"><SmallCaps>Value</SmallCaps></th>
             </tr>
-        }
-    </tbody>
-</table>
-<Button OnClickCallback="Add" ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary">Add header</Button>
-
+        </thead>
+        <tbody>
+            @foreach (var header in Headers)
+            {
+                <tr>
+                    <td class="py-2">
+                        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Name" />
+                    </td>
+                    <td class="py-2">
+                        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Value" />
+                    </td>
+                    <td class="py-2">
+                        <MudButton OnClick="() => Remove(header)">
+                            <MudIcon Icon="@Icons.Filled.DeleteForever" Color="Color.Default" />
+                        </MudButton>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <MudButton OnClick="Add" Color="Color.Primary">Add header</MudButton>
+</div>
 @code {
 
     [Parameter]

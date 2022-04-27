@@ -8,7 +8,6 @@
 @using Spacetime.Shared.Components.Panes
 @using Spacetime.Core.Infrastructure;
 @using Spacetime.Shared.Components.Typography
-@using Spacetime.Shared.Components.Containers.Modal
 @inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
@@ -18,8 +17,8 @@
         <div class="flex flex-row mb-2 shrink-0 p-2">
             <span class="text-xs px-2 py-2">gRPC</span>
             <input class="px-4 py-2 w-1/2 border border-neutral-700 bg-neutral-800" placeholder="https://localhost:44301/api/tickets" type="text" @bind="Request.URL" @onblur="Save" />
-            <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Default" OnClickCallback="() => SelectProtoVisible = true">Select Proto</Button>
-            <Button ButtonType="Spacetime.Shared.Components.Inputs.ButtonType.Primary" OnClickCallback="@Execute">@ExecuteText</Button>
+            <MudButton OnClick="() => SelectProtoVisible = true">Select Proto</MudButton>
+            <MudButton Color="Color.Primary" OnClick="@Execute">@ExecuteText</MudButton>
         </div>
         <Tabs>
             <Tab Key="Body" CurrentTab="@RequestTab" OnClickCallback="@(() => RequestTab = "Body")">Body</Tab>
@@ -38,8 +37,8 @@
     </div>
     <div class="lg:col-span-6 sm:col-span-full">
         <div class="flex flex-row mb-2 border-bottom border-zinc-700 p-2 @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
-            <Badge BadgeType="StatusCodeBadge">@Request.Response?.StatusCode</Badge>
-            <Badge Css="ml-2">@Request.Response?.ResponseTimeText</Badge>
+            <MudBadge Color="StatusCodeBadge">@Request.Response?.StatusCode</MudBadge>
+            <MudBadge Css="ml-2">@Request.Response?.ResponseTimeText</MudBadge>
         </div>
         <Tabs>
             <Tab Key="Preview" CurrentTab="@ResponseTab" OnClickCallback="@(() => ResponseTab = "Preview")">Preview</Tab>
@@ -56,12 +55,6 @@
     </div>
 </div>
 
-@if (SelectProtoVisible)
-{
-    <Modal Title="Select Proto" @bind-IsVisible="@SelectProtoVisible" CancelText="Cancel" ConfirmText="Set proto" OnConfirmCallback="() => {}">
-        <GrpcPane />
-    </Modal>
-}
 @code {
     [Parameter]
     public SpacetimeRequest Request { get; set; }
@@ -72,7 +65,7 @@
     private bool Loading { get; set; }
     private bool SelectProtoVisible { get; set; }
     public GrpcExploreResult GrpcExploreResult { get; set; }
-    private BadgeType StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
+    private Color StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? Color.Success : Color.Error; }
 
     private void ValidateGrpc()
     {

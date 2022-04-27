@@ -61,7 +61,7 @@
     private string ResponseTab { get; set; } = "Preview";
     private bool Loading { get; set; }
 
-    private BadgeType StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? BadgeType.Success : BadgeType.Danger; }
+    private Color StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? Color.Success : Color.Error; }
 
     [Parameter]
     public SpacetimeRequest Request { get; set; }
