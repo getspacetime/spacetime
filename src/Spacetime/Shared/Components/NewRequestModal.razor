@@ -3,11 +3,15 @@
 
 <MudDialog>
     <DialogContent>
-        <MudTextField Class="w-5/6"
-                      @bind-Value="NewRequestName"
-                      Label="Request Name"
-                      Placeholder="Request Name"
-                      Variant="Variant.Outlined" />
+        <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
+            <MudTextField Class="w-5/6"
+                          @bind-Value="NewRequestName"
+                          Immediate="true"
+                          Label="Request Name"
+                          Placeholder="Request Name"
+                          Variant="Variant.Outlined"
+                          OnKeyDown="OnKeyDown" />
+        </MudFocusTrap>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -26,5 +30,13 @@
     {
         public SpacetimeType Type { get; set; }
         public string RequestName { get; set; }
+    }
+
+    public void OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Code == "Enter")
+        {
+            Submit();
+        }
     }
 }

@@ -36,5 +36,12 @@ namespace Spacetime.Store.Requests
             await _requests.AddRequest(action.Request);
             dispatcher.Dispatch(new AddRequestSuccessAction(action.Request));
         }
+
+        [EffectMethod]
+        public async Task HandleUpdateRequestAction(UpdateRequestAction action, IDispatcher dispatcher)
+        {
+            await _requests.UpdateRequest(action.Request);
+            dispatcher.Dispatch(new UpdateRequestSuccessAction(action.Request));
+        }
     }
 }

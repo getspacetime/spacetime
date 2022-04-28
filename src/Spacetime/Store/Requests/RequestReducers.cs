@@ -111,6 +111,32 @@ namespace Spacetime.Store.Requests
             return draft;
         }
 
+        [ReducerMethod]
+        public static RequestState UpdateRequestSuccess(RequestState state, UpdateRequestSuccessAction action)
+        {
+            var draft = new RequestState
+            {
+                Loading = state.Loading,
+                Requests = state.Requests,
+                Filter = state.Filter,
+                FilteredRequests = state.FilteredRequests,
+                SelectedRequest = state.SelectedRequest
+            };
+
+            var index = draft.Requests.IndexOf(action.Request);
+            if (index == -1)
+            {
+                draft.Requests[index] = action.Request;
+
+                if (draft.SelectedRequest.Id == action.Request.Id)
+                {
+                    draft.SelectedRequest = action.Request;
+                }
+            }
+
+            return draft;
+        }
+
         /// <summary>
         /// Find the closest request to src request
         /// </summary>

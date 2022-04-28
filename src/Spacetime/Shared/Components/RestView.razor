@@ -8,9 +8,13 @@
 @using Spacetime.Shared.Components.Panes
 @using Spacetime.Core.Infrastructure;
 @using Spacetime.Shared.Components.Typography
+@using Spacetime.Store.Requests
 @inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
+@inject IDispatcher Dispatcher
+@inject ILogger<RestView> Log
+
 <style>
     .mud-tabs-panels {
         display: flex;
@@ -19,7 +23,7 @@
 <div class="grid gap-2 grid-cols-12 flex flex-col grow">
     <div class="lg:col-span-6 sm:col-span-full flex flex-col">
         <div class="flex flex-row mb-2 shrink-0 gap-2">
-            <MudSelect Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" @onchange="Save" Class="w-24">
+            <MudSelect T="string" Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" ValueChanged="OnMethodChange" Class="w-24">
                 <MudSelectItem Value="@("GET")" />
                 <MudSelectItem Value="@("POST")" />
             </MudSelect>
@@ -63,9 +67,6 @@
     </div>
 </div>
 @code {
-    // todo: validate this view is only for REST
-    private string RequestTab { get; set; } = "Body";
-    private string ResponseTab { get; set; } = "Preview";
     private bool Loading { get; set; }
 
     private Color StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? Color.Success : Color.Error; }
@@ -82,16 +83,16 @@
     private string ExecuteIcon => !Loading ? Icons.Filled.Send : @Icons.Filled.Refresh;
     private string ExecuteText => !Loading ? "Execute" : "Loading...";
 
-    private async Task Save()
+    private void OnMethodChange(string method)
     {
-        try
-        {
-            await RequestService.UpdateRequest(Request);
-        }
-        catch (Exception ex)
-        {
-            // todo: handle this? :-)
-        }
+        Request.Method = method;
+
+        Save();
+    }
+
+    private void Save()
+    {
+        Dispatcher.Dispatch(new UpdateRequestAction(Request));
     }
 
     private async Task Execute()
@@ -120,7 +121,7 @@
             Loading = false;
         }
 
-        await Save();
+        Save();
     }
 
     private void ClearAll()

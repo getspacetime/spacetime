@@ -9,7 +9,6 @@
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Store.Requests
-@inject RequestService RequestService
 @inject Sortable Sortable
 @inject IState<RequestState> RequestState
 @inject IDispatcher Dispatcher
@@ -167,13 +166,6 @@
 
     private async Task Save(SpacetimeRequest request)
     {
-        try
-        {
-            await RequestService.UpdateRequest(request);
-        }
-        catch (Exception ex)
-        {
-            // todo: handle this?
-        }
+        Dispatcher.Dispatch(new UpdateRequestAction(request));
     }
 }

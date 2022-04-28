@@ -72,9 +72,30 @@ namespace Spacetime.Store.Requests
 
         public SpacetimeRequest Request { get; private set; }
     }
+
     public class AddRequestSuccessAction
     {
         public AddRequestSuccessAction(SpacetimeRequest request)
+        {
+            Request = request;
+        }
+
+        public SpacetimeRequest Request { get; private set; }
+    }
+
+    public class UpdateRequestAction
+    {
+        public UpdateRequestAction(SpacetimeRequest request)
+        {
+            Request = request;
+        }
+
+        public SpacetimeRequest Request { get; private set; }
+    }
+
+    public class UpdateRequestSuccessAction
+    {
+        public UpdateRequestSuccessAction(SpacetimeRequest request)
         {
             Request = request;
         }
