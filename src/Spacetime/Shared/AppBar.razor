@@ -1,0 +1,38 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<SettingState> SettingState
+@inject IDispatcher Dispatcher
+@inject IDialogService DialogService
+@inject SettingsService SettingsService
+
+<MudAppBar Color="Color.Dark" Fixed="false" Dense="true" Elevation="1">
+    <MudImage ObjectFit="ObjectFit.Contain" Height="40" Width="40" Src="images/logo.png" />
+    <NavLink href="" class="ml-4" Match="NavLinkMatch.All">
+        <MudButton DisableElevation="true" Color="Color.Inherit">REST</MudButton>
+    </NavLink>
+    <NavLink href="grpc" class="ml-4">
+        <MudButton DisableElevation="true" Color="Color.Inherit">gRPC</MudButton>
+    </NavLink>
+    <MudSpacer />
+    <a href="https://github.com/getspacetime/spacetime">
+        <MudIconButton Icon="@Icons.Custom.Brands.GitHub" Color="Color.Inherit" />
+    </a>
+    <MudIconButton Icon="@Icons.Filled.Settings" Color="Color.Inherit" OnClick="OpenSettings" />
+
+</MudAppBar>
+@code {
+    public async Task OpenSettings()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        var dialog = DialogService.Show<SettingsDialog>("Settings", options);
+        var result = await dialog.Result;
+        var settings = result.Data as SettingsDto;
+        if (!result.Cancelled && settings != null)
+        {
+            Dispatcher.Dispatch(new SaveSettingsAction(settings));
+        }
+
+        // todo: move to flux
+        await SettingsService.SaveSettings(settings);
+    }
+}

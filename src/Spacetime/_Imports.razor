@@ -1,11 +1,23 @@
-﻿@using System.Net.Http
+﻿@inject DefaultTheme Theme
+
+@using System.Net.Http
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.Extensions.Logging
 @using Microsoft.JSInterop
 @using Spacetime
 @using Spacetime.Shared
+@using Spacetime.Themes
 @using MudBlazor
 @using BlazorMonaco
 
+
+@using Fluxor
+@using Spacetime.Core.Services
+@using Spacetime.Shared.Components
+@using Spacetime.Shared.Components.Containers.Tabs
+@using Spacetime.Shared.Components.Inputs
+@using Spacetime.Store
+@using Spacetime.Store.Settings

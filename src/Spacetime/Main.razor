@@ -1,10 +1,33 @@
-﻿<Router AppAssembly="@GetType().Assembly">
-	<Found Context="routeData">
-		<RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-	</Found>
-	<NotFound>
-		<LayoutView Layout="@typeof(MainLayout)">
-			<p>Sorry, there's nothing at this address.</p>
-		</LayoutView>
-	</NotFound>
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject SettingsService SettingsService
+@inject IState<SettingState> SettingState
+@inject IDispatcher Dispatcher
+
+<Fluxor.Blazor.Web.StoreInitializer />
+
+<Router AppAssembly="@GetType().Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
 </Router>
+
+
+<MudThemeProvider IsDarkMode="@SettingState.Value.Settings.DarkMode" Theme="Theme.Theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@code {
+
+    protected override Task OnInitializedAsync()
+    {
+        Dispatcher.Dispatch(new FetchSettingsAction());
+
+        return Task.CompletedTask;
+    }
+}

@@ -6,6 +6,8 @@ using Spacetime.Blazor.Sortable;
 using Spacetime.Helpers;
 using MudBlazor.Services;
 using Serilog;
+using Fluxor;
+using Spacetime.Themes;
 
 namespace Spacetime;
 
@@ -36,10 +38,14 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Services.AddBlazorWebView();
 
+        var assembly = typeof(MauiProgram).Assembly;
+        builder.Services.AddFluxor(options => options.ScanAssemblies(assembly));
+
         builder.Services.AddSingleton<RequestService>();
         builder.Services.AddSingleton<SettingsService>();
         builder.Services.AddSingleton<SpacetimeRestService>();
         builder.Services.AddSingleton<UrlBuilder>();
+        builder.Services.AddSingleton<DefaultTheme>();
         builder.Services.AddSingleton<IGrpcExplorer, GrpcExplorer>();
         builder.Services.AddSingleton<IProtobufService, LiteDbProtobufService>();
         builder.Services.AddHttpClient<ISpacetimeService, SpacetimeRestService>();

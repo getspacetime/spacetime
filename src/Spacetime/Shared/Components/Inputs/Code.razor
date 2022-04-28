@@ -1,5 +1,8 @@
-﻿@using Microsoft.Extensions.Logging
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@using Microsoft.Extensions.Logging
 @inject ILogger<Code> Log
+@inject IState<SettingState> SettingState
 
 <div class="flex flex-col grow">
     <MonacoEditor Id="@Name" ConstructionOptions="EditorConstructionOptions" CssClass=" grow" OnDidChangeModelContent="OnDidChangeModelContent" />
@@ -16,7 +19,7 @@
     [Parameter]
     public EventCallback<string> DataChanged { get; set; }
 
-    public string Theme { get; set; } = "vs-dark";
+    public string EditorTheme => SettingState.Value.Settings.DarkMode ? "vs-dark" : "vs-light";
     public string Language { get; set; } = "json";
     private MonacoEditor _editor;
     private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
@@ -25,7 +28,7 @@
         return new StandaloneEditorConstructionOptions
             {
                 AutomaticLayout = true,
-                Theme = Theme,
+                Theme = EditorTheme,
                 Language = Language,
                 Value = Data,
             };

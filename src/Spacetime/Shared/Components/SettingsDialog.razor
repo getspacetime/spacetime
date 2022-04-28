@@ -1,10 +1,11 @@
 ﻿@using Spacetime.Core.Services
 
-@inject SettingsService SettingsService
+@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
+@inject IState<SettingState> SettingState
 <MudDialog>
     <DialogContent>
-        @if (Settings == null)
+        @if (SettingState.Value.Loading)
         {
             <MudSkeleton />
             <MudSkeleton />
@@ -15,12 +16,12 @@
         {
             <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
                 <MudTabPanel Text="General">
-                    <MudSwitch @onchange="SaveSettings" @bind-Checked="@Settings.DarkMode" Color="Color.Primary" Label="Dark Mode" ThumbIcon="@Icons.Filled.DarkMode" />
-                    <MudAlert Class="my-2" Severity="Severity.Info">These settings are not currently respected.</MudAlert>
+                    <MudSwitch @bind-Checked="@Settings.DarkMode" Color="Color.Primary" Label="Dark Mode" ThumbIcon="@Icons.Filled.DarkMode" />
+                    <MudAlert Class="my-2" Severity="Severity.Info">Changes to editor themes will take effect after restarting the application.</MudAlert>
                 </MudTabPanel>
                 <MudTabPanel Text="Security">
                     <div class="flex flex-col">
-                        <MudSwitch @onchange="SaveSettings" @bind-Checked="@Settings.ValidateCertificates" Color="Color.Primary" Label="Validate SSL Certificates" />
+                        <MudSwitch @bind-Checked="@Settings.ValidateCertificates" Color="Color.Primary" Label="Validate SSL Certificates" />
                     </div>
                     <h4 class="text-xl font-semibold text-red-500 pb-2">Danger Zone</h4>
                     <div class="p-3 border border-red-500 rounded flex flex-col">
@@ -31,15 +32,15 @@
                 </MudTabPanel>
                 <MudTabPanel Text="Logging">
                     <div class="flex flex-col">
-                        <MudSwitch @onchange="SaveSettings" @bind-Checked="@Settings.EnableLogging" Color="Color.Primary" Label="Enable Logging" />
+                        <MudSwitch @bind-Checked="@Settings.EnableLogging" Color="Color.Primary" Label="Enable Logging" />
                         <MudChipSet Class="my-2" @bind-SelectedChip="selected" Filter="true">
                             <MudChip Text="purple" Disabled="!Settings.EnableLogging" Color="Color.Primary" Default="true">All</MudChip>
                             <MudChip Text="blue" Disabled="!Settings.EnableLogging" Color="Color.Info">Info</MudChip>
                             <MudChip Text="orange" Disabled="!Settings.EnableLogging" Color="Color.Warning">Warning</MudChip>
                             <MudChip Text="red" Disabled="!Settings.EnableLogging" Color="Color.Error">Errors</MudChip>
                         </MudChipSet>
-                        <MudSwitch @onchange="SaveSettings" @bind-Checked="@Settings.EnableMetrics" Color="Color.Primary" Label="Enable Metrics" Disabled="true"/>
-                    <MudAlert Severity="Severity.Normal">Metrics are used to track usage and discover errors. <strong>No PII is collected.</strong> You may disable this at any time, but please consider leaving it on to help us build the best products in the world.</MudAlert>
+                        <MudSwitch @bind-Checked="@Settings.EnableMetrics" Color="Color.Primary" Label="Enable Metrics" Disabled="true" />
+                        <MudAlert Severity="Severity.Normal">Metrics are used to track usage and discover errors. <strong>No PII is collected.</strong> You may disable this at any time, but please consider leaving it on to help us build the best products in the world.</MudAlert>
                     </div>
                     <MudAlert Class="my-2" Severity="Severity.Info">These settings are not currently respected.</MudAlert>
                 </MudTabPanel>
@@ -57,19 +58,22 @@
 @code {
     [CascadingParameter] MudDialogInstance MudDialog { get; set; }
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Submit() => MudDialog.Close(DialogResult.Ok(Settings));
     void Cancel() => MudDialog.Cancel();
 
     MudChip selected;
     public SettingsDto Settings { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        Settings = await SettingsService.GetSettings();
-    }
+        Settings = new SettingsDto
+            {
+                DarkMode = SettingState.Value.Settings.DarkMode,
+                EnableLogging = SettingState.Value.Settings.EnableLogging,
+                EnableMetrics = SettingState.Value.Settings.EnableMetrics,
+                ValidateCertificates = SettingState.Value.Settings.ValidateCertificates
+            };
 
-    public async void SaveSettings()
-    {
-        await SettingsService.SaveSettings(Settings);
+        return Task.CompletedTask;
     }
 }

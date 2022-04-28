@@ -11,16 +11,20 @@
 @inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
-<style>.mud-tabs-panels { display: flex; flex-grow: 1;}</style>
+<style>
+    .mud-tabs-panels {
+        display: flex;
+        flex-grow: 1;
+    }</style>
 <div class="grid gap-2 grid-cols-12 flex flex-col grow">
     <div class="lg:col-span-6 sm:col-span-full flex flex-col">
         <div class="flex flex-row mb-2 shrink-0 gap-2">
-            <MudSelect Margin="Margin.Dense" T="string"  Value="Request.Method" Variant="Variant.Outlined" @onchange="Save" Class="w-24">
+            <MudSelect Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" @onchange="Save" Class="w-24">
                 <MudSelectItem Value="@("GET")" />
                 <MudSelectItem Value="@("POST")" />
             </MudSelect>
             <MudTextField Class="w-5/6"
-            Margin="Margin.Dense"
+                          Margin="Margin.Dense"
                           @bind-Value="Request.URL"
                           Placeholder="https://localhost:44301/api/tickets"
                           Variant="Variant.Outlined"
@@ -40,12 +44,15 @@
         </MudTabs>
     </div>
     <div class="lg:col-span-6 sm:col-span-full flex flex-col">
-        <div class="flex flex-row pb-3 @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
-            <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
-            <MudChip Color="Color.Default">@Request.Response?.ResponseTimeText</MudChip>
+        <div class="flex flex-row pb-3 justify-between">
+            <div class=" @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
+                <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
+                <MudChip Color="Color.Default">@Request.Response?.ResponseTimeText</MudChip>
+            </div>
+            <div class="pr-5 pt-2"><MudIconButton Size="Size.Small" Icon="@Icons.Filled.Delete" OnClick="async () => { await OnDelete.InvokeAsync(Request); }" /></div>
         </div>
 
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow" >
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
             <MudTabPanel Text="Preview" Class="flex">
                 <Code Data="@Request.Response?.ResponseBody" Name="@ResponseEditorName"></Code>
             </MudTabPanel>
@@ -65,6 +72,10 @@
 
     [Parameter]
     public SpacetimeRequest Request { get; set; }
+
+    [Parameter]
+    public EventCallback<SpacetimeRequest> OnDelete { get; set; }
+
     public string RequestEditorName => $"RequestEditor";
     public string ResponseEditorName => $"ResponseEditor";
 

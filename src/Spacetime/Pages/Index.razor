@@ -1,4 +1,5 @@
-﻿@page "/"
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@page "/"
 @using Spacetime.Blazor.Sortable
 @using Spacetime.Core
 @using Spacetime.Core.Services
@@ -7,60 +8,82 @@
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Shared.Components.Typography
+@using Spacetime.Store.Requests
 @inject RequestService RequestService
 @inject Sortable Sortable
+@inject IState<RequestState> RequestState
+@inject IDispatcher Dispatcher
 @inject IDialogService DialogService
+@inject ILogger<Index> Log
 
+<style>
+    /* need to figure out the best way to further customize mud blazor */
+    /* customization seems to be the biggest issue to mud as opposed to using tailwind :-( */
+    .mud-list-item-text .mud-typography {
+        display: flex
+    }
+</style>
 <div class="grid gap-1 grid-cols-12 flex grow">
-    <div class="border-r border-zinc-700 col-span-3">
-        @if (Requests == null)
+    <div class="border-r border-solid col-span-3" style="@($"border-color:{Theme.Swatch.Divider}")">
+        @if (RequestState.Value.FilteredRequests == null)
         {
             <p><em>Loading...</em></p>
         }
         else
         {
             <div class="px-2 pb-2 flex justify-between">
-                <SmallCaps>Requests</SmallCaps>
+                <MudTextField @bind-Value="SearchText"
+                          DebounceInterval="100"
+                          OnDebounceIntervalElapsed="OnFilter"
+                          Margin="Margin.Dense"
+                          Variant="Variant.Outlined"
+                          Placeholder="Filter requests" />
                 <MudButton OnClick=@NewRequest><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></MudButton>
             </div>
-            @if (!Requests.Any())
+            @if (!RequestState.Value.FilteredRequests.Any())
             {
-                <ul>
-                    <ListItem OnClickCallback=@NewRequest>
-                        <Title>
-                            <div class="px-4 py-2">
-                                No requests
-                            </div>
-                        </Title>
-                    </ListItem>
-                </ul>
+                <MudPaper>
+                    <MudList Clickable="true" Dense="true">
+                        <MudListItem>No requests</MudListItem>
+                    </MudList>
+                </MudPaper>
             }
-            @if (Items.Any())
+            @if (RequestState.Value.FilteredRequests.Any())
             {
-                <SortableList Items="Items" OnItemSelected="OnItemSelected" />
+                <MudPaper>
+                    <MudList Clickable="true" Dense="true" SelectedValueChanged="OnSelectedValueChanged">
+                        @foreach (var req in RequestState.Value.FilteredRequests)
+                        {
+                            <MudListItem Class="flex" Value="@req.Id">
+                                <span style="width: 40px"><SmallCaps>@GetRequestPrefix(req)</SmallCaps></span>
+                                <span>
+                                    @req.Name
+                                </span>
+                            </MudListItem>
+                        }
+                    </MudList>
+                </MudPaper>
             }
         }
     </div>
     <div class="col-span-9 flex flex-col">
-        @if (CurrentRequest?.Type == SpacetimeType.REST)
+        @if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.REST)
         {
-            <RestView Request="@CurrentRequest" />
+            <RestView Request="@RequestState.Value.SelectedRequest" OnDelete="ConfirmDelete" />
         }
-        else if (CurrentRequest?.Type == SpacetimeType.gRPC)
+        else if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.gRPC)
         {
-            <GrpcView Request="@CurrentRequest" />
+            <GrpcView Request="@RequestState.Value.SelectedRequest" />
         }
         else
         {
             <div class="mx-4 my-4">Select a request or create a new one to get started.</div>
         }
-    <Spacetime.Shared.Components.Panes.Terminal />
-
     </div>
 </div>
 @code {
+    public string SearchText { get; set; }
     private List<string> RequestDropdown { get => new List<string> { "Delete" }; }
-    private SpacetimeRequest CurrentRequest { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
     private List<SortableListItem> Items => Requests != null
     ? Requests.Select(p => new SortableListItem { Id = p.Id, Value = p.Name, Prefix = GetRequestPrefix(p) }).ToList()
@@ -68,19 +91,26 @@
 
     private ElementReference _ref { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    protected override Task OnInitializedAsync()
     {
-        Requests = (await RequestService.GetRequests()).ToList();
-        if (CurrentRequest == null && Requests.Any())
-        {
-            CurrentRequest = Requests.First();
-        }
-
+        Dispatcher.Dispatch(new FetchRequestsAction());
+        return Task.CompletedTask;
     }
 
-    public void OnItemSelected(SortableListItem item)
+    public void OnFilter()
     {
-        CurrentRequest = Requests.FirstOrDefault(p => p.Id == item.Id);
+        Dispatcher.Dispatch(new FilterRequestsAction(SearchText));
+    }
+
+    public void OnSelectedValueChanged(object data)
+    {
+        var id = data as int?;
+
+        if (id.HasValue)
+        {
+            Log.LogInformation($"Selected request {id}");
+            Dispatcher.Dispatch(new ShowRequestAction(id.Value));
+        }
     }
 
     public async Task ConfirmDelete(SpacetimeRequest request)
@@ -96,7 +126,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            await OnDelete(request);
+            Dispatcher.Dispatch(new DeleteRequestAction(request.Id));
         }
     }
 
@@ -131,32 +161,8 @@
             req.Name = string.IsNullOrWhiteSpace(data.RequestName) ? "New Request" : data.RequestName;
             req.Type = data.Type;
             req.Method = "GET";
-            Requests.Add(req);
-            CurrentRequest = req;
-            await RequestService.AddRequest(req);
+            Dispatcher.Dispatch(new AddRequestAction(req));
         }
-    }
-
-    private async Task OnDelete(SpacetimeRequest request)
-    {
-        var index = Requests.IndexOf(request);
-        if (index > 0)
-        {
-            // set the current request to the preceding
-            CurrentRequest = Requests[index - 1];
-        }
-        else if (Requests.TakeLast(1).First() != request)
-        {
-            // if this isn't the last one, set current request to the next one
-            CurrentRequest = Requests[index + 1];
-        }
-        else
-        {
-            CurrentRequest = null;
-        }
-
-        Requests.Remove(request);
-        RequestService.DeleteRequest(request.Id);
     }
 
     private async Task Save(SpacetimeRequest request)
