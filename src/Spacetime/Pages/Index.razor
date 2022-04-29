@@ -1,15 +1,10 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 @page "/"
-@using Spacetime.Blazor.Sortable
+
 @using Spacetime.Core
 @using Spacetime.Core.Services
 @using Spacetime.Core.Infrastructure;
-@using Spacetime.Shared.Components
-@using Spacetime.Shared.Components.Display
-@using Spacetime.Shared.Components.Inputs
-@using Spacetime.Shared.Components.Typography
-@using Spacetime.Store.Requests
-@inject Sortable Sortable
+
 @inject IState<RequestState> RequestState
 @inject IDispatcher Dispatcher
 @inject IDialogService DialogService
@@ -70,10 +65,6 @@
         {
             <RestView Request="@RequestState.Value.SelectedRequest" OnDelete="ConfirmDelete" />
         }
-        else if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.gRPC)
-        {
-            <GrpcView Request="@RequestState.Value.SelectedRequest" />
-        }
         else
         {
             <div class="mx-4 my-4">Select a request or create a new one to get started.</div>
@@ -82,13 +73,7 @@
 </div>
 @code {
     public string SearchText { get; set; }
-    private List<string> RequestDropdown { get => new List<string> { "Delete" }; }
     private List<SpacetimeRequest> Requests { get; set; }
-    private List<SortableListItem> Items => Requests != null
-    ? Requests.Select(p => new SortableListItem { Id = p.Id, Value = p.Name, Prefix = GetRequestPrefix(p) }).ToList()
-    : new List<SortableListItem>();
-
-    private ElementReference _ref { get; set; }
 
     protected override Task OnInitializedAsync()
     {

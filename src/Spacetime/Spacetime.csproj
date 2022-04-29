@@ -77,7 +77,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\..\blazor-sortable\src\Spacetime.Blazor.Sortable\Spacetime.Blazor.Sortable.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />

@@ -1,8 +1,105 @@
 ﻿@page "/grpc"
-@using Spacetime.Shared.Components.Panes
+@using Spacetime.Core
+@using Spacetime.Core.Services
+@using Spacetime.Shared.Components.Display
+@using Spacetime.Shared.Components.Inputs
+@using Spacetime.Core.Infrastructure;
+@using Spacetime.Shared.Components.Typography
+@using Spacetime.Shared.Components.Display.Table
 
-<GrpcPane></GrpcPane>
+@inject IProtobufService ProtobufService
+@inject IDialogService DialogService
+
+<div class="grid gap-1 grid-cols-12 flex flex-col">
+    <div class="col-span-2 flex flex-col">
+        <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
+
+        <MudTreeView T="string" ExpandOnClick="true" @bind-SelectedValue="SelectedValue" Hover="true">
+            @foreach (var svc in Services)
+            {
+                <MudTreeViewItem Value="@(svc.Name)">
+                    @foreach (var method in svc.Methods)
+                    {
+                    <MudTreeViewItem Value="@(method.Name)" />
+                    }
+            </MudTreeViewItem>
+            }
+        </MudTreeView>
+    </div>
+    <div class="col-span-10 grid grid-cols-12 gap-2 flex flex-col grow">
+        @if (!string.IsNullOrWhiteSpace(SelectedValue))
+        {
+            <div class="col-span-6">
+                <MudTextField Margin="Margin.Dense"
+                          @bind-Value="URL"
+                          Placeholder="grpc://localhost:80"
+                          Variant="Variant.Outlined"
+                          Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
+
+            </div>
+            <div class="col-span-6">
+            </div>
+            <div class="col-span-6 grow flex flex-col">
+                <Code @bind-Data="@Request" Name="GrpcRequestEditor"/>
+            </div>
+            <div class="col-span-6 grow flex flex-col">
+                <Code @bind-Data="@Result" Name="GrpcResponseEditor" />
+            </div>
+        }
+    </div>
+
+</div>
 
 @code {
+    public string Request { get; set; }
+    public string Result { get; set; }
+    public string URL { get; set; } = "localhost:7186";
+    string SelectedValue { get; set; }
+    public GrpcServiceDefinition SelectedService { get; set; }
+    public List<GrpcServiceDefinition> Services { get; set; } = new List<GrpcServiceDefinition>();
+    protected override async Task OnInitializedAsync()
+    {
+        Services = (await ProtobufService.GetServiceDefinitions()).ToList();
+    }
 
+    public void SelectService(GrpcServiceDefinition service)
+    {
+        SelectedService = service;
+    }
+
+    public void OpenAddProtobuf()
+    {
+        var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
+        DialogService.Show<AddProtoDialog>("Add Protobuf", options);
+    }
+
+    public void Execute()
+    {
+        // todo: confirm method id selected, since this currently could be a svc
+        var parameters = $"{URL} {SelectedValue}";
+        if (!string.IsNullOrWhiteSpace(Request))
+        {
+            parameters = $"-d {Request} {parameters}";
+        }
+
+        Result = GrpcViaCommandLine("grpcurl", parameters);
+    }
+
+    private string GrpcViaCommandLine(string command, string commandParameters)
+    {
+        var process = new System.Diagnostics.Process();
+
+        process.StartInfo.FileName = command;
+        process.StartInfo.Arguments = commandParameters;
+        process.StartInfo.UseShellExecute = false;
+        process.StartInfo.RedirectStandardOutput = true;
+        process.StartInfo.CreateNoWindow = true;
+        process.Start();
+
+        var output = process.StandardOutput.ReadToEnd();
+
+        process.WaitForExit();
+
+        return output;
+    }
 }
