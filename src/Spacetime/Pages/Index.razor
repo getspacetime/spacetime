@@ -132,6 +132,12 @@
     private string GetRequestPrefix(SpacetimeRequest req)
     {
         var str = string.Empty;
+
+        if (req == null)
+        {
+            return str;
+        }
+
         switch (req.Type)
         {
             case SpacetimeType.REST:
@@ -164,7 +170,7 @@
         }
     }
 
-    private async Task Save(SpacetimeRequest request)
+    private void Save(SpacetimeRequest request)
     {
         Dispatcher.Dispatch(new UpdateRequestAction(request));
     }
