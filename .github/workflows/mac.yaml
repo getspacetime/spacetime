@@ -1,5 +1,5 @@
   on: push
-  name: ci
+  name: mac
   jobs:      
     build-windows:
       runs-on: macos-latest
@@ -12,12 +12,7 @@
           run: |
               curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 6.0.300-preview.22204.3 --quality preview
               dotnet --version
-
-        - name: Setup MSBuild
-          uses: microsoft/setup-msbuild@v1.1
-          with:
-            vs-prerelease: true
-
+              
         - name: Install MAUI Workloads
           run: |
             dotnet workload install maui --ignore-failed-sources
