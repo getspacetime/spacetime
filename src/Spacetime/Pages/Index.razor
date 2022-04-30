@@ -63,7 +63,7 @@
     <div class="col-span-9 flex flex-col">
         @if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.REST)
         {
-            <RestView Request="@RequestState.Value.SelectedRequest" OnDelete="ConfirmDelete" />
+            <RestView OnDelete="ConfirmDelete" />
         }
         else
         {

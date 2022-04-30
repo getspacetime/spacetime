@@ -2,25 +2,36 @@
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Core.Infrastructure;
-<div class="flex flex-col w-full">
-    <MudTable Items="Headers" Hover="true">
-        <HeaderContent>
-            <MudTh>Header</MudTh>
-            <MudTh>Value</MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Value">@context.Value</MudTd>
-        </RowTemplate>
-        <RowEditingTemplate>
-            <MudTd DataLabel="Name">
-                <MudTextField @bind-Value="@context.Name" />
-            </MudTd>
-            <MudTd DataLabel="Value">
-                <MudTextField @bind-Value="@context.Value" />
-            </MudTd>
-        </RowEditingTemplate>
-    </MudTable>
+<div class="flex flex-col p-2 w-full">
+    <table>
+        <thead>
+        <tr>
+            <th class="text-left p-2 w-96"><SmallCaps>Header</SmallCaps></th>
+            <th class="text-left p-2 w-96"><SmallCaps>Value</SmallCaps></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var header in Headers)
+        {
+            <tr>
+                <td class="py-2 w-96">
+                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Name" />
+                </td>
+                <td class="py-2 w-96">
+                    <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Value" />
+                </td>
+                <td>
+                    <MudIconButton Icon="@Icons.Filled.Delete" OnClick="() => { Remove(header); }"/>
+                </td>
+            </tr>
+        }
+        @if (Headers == null || !Headers.Any())
+        {
+            <tr><td class="p-2 w-96" colspan="2">No headers</td></tr>
+        }
+        </tbody>
+    </table>
     <MudButton OnClick="Add" Color="Color.Primary">Add header</MudButton>
 </div>
 @code {

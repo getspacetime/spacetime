@@ -3,25 +3,33 @@
 @using Spacetime.Core
 @using Spacetime.Core.Infrastructure;
 
-<div class="flex flex-col">
+<div class="flex flex-col p-2 w-full">
     <table>
         <thead>
             <tr>
-                <th class="text-left"><SmallCaps>Query Param</SmallCaps></th>
-                <th class="text-left"><SmallCaps>Value</SmallCaps></th>
+                <th class="text-left p-2 w-96"><SmallCaps>Query Param</SmallCaps></th>
+                <th class="text-left p-2 w-96"><SmallCaps>Value</SmallCaps></th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var param in Query)
             {
                 <tr>
-                    <td class="py-2">
+                    <td class="py-2 w-96">
                         <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Name" />
                     </td>
-                    <td class="py-2">
+                    <td class="py-2 w-96">
                         <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="param.Value" />
                     </td>
+                    <td>
+                        <MudIconButton Icon="@Icons.Filled.Delete" OnClick="() => { Remove(param); }"/>
+                    </td>
                 </tr>
+            }
+            @if (Query == null || !Query.Any())
+            {
+            <tr><td class="p-2 w-96" colspan="2">No query params</td></tr>
             }
         </tbody>
     </table>

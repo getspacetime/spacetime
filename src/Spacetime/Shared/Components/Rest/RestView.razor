@@ -1,10 +1,13 @@
-﻿@using Spacetime.Core.gRPC
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@using Spacetime.Core.gRPC
 
 @inject SpacetimeRestService SpacetimeRestService
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
 @inject IDispatcher Dispatcher
 @inject ILogger<RestView> Log
+@inject IState<RequestState> RequestState
 
 <style>
     .mud-tabs-panels {
@@ -52,7 +55,7 @@
                 <Code Data="@Request.Response?.ResponseBody" Name="@ResponseEditorName"></Code>
             </MudTabPanel>
             <MudTabPanel Text="Headers">
-                <HeadersPane Request="@Request" />
+                <HeadersPane Headers="@Request.Response?.Headers" />
             </MudTabPanel>
         </MudTabs>
     </div>
@@ -60,8 +63,7 @@
 @code {
     private Color StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? Color.Success : Color.Error; }
 
-    [Parameter]
-    public SpacetimeRequest Request { get; set; }
+    public SpacetimeRequest Request => RequestState.Value.SelectedRequest;
 
     [Parameter]
     public EventCallback<SpacetimeRequest> OnDelete { get; set; }
@@ -84,7 +86,7 @@
         Dispatcher.Dispatch(new UpdateRequestAction(Request));
     }
 
-    private async Task Execute()
+    private void Execute()
     {
         if (string.IsNullOrWhiteSpace(Request.URL))
         {

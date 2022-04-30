@@ -3,7 +3,7 @@
 @using Spacetime.Core.Infrastructure;
 
 <div class="flex flex-col w-full">
-    <MudTable Items="Request.Headers" Hover="true">
+    <MudTable Items="Headers" Hover="true">
         <HeaderContent>
             <MudTh>Header</MudTh>
             <MudTh>Value</MudTh>
@@ -17,5 +17,5 @@
 
 @code {
     [Parameter]
-    public SpacetimeRequest Request { get; set; }
+    public IEnumerable<HeaderDto> Headers { get; set; }
 }
