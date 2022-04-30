@@ -34,8 +34,12 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li>
+      <a href="#contributing">Contributing</a>
+      <ul>
+        <li><a href="#architecture">Architecture</a></li>
+      </ul>
+    </li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -112,36 +116,28 @@ Has an error during compilation. Needs investigation.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-## Roadmap
-- [ ] UX
-    - [ ] Responsive design
-    - [ ] Keyboard shortcuts
-- [ ] Core
-    - [ ] User settings
-    - [ ] Security settings
-    - [ ] Request history
-    - [ ] Data Freedom (Exports)
-- [ ] Platform
-    - [x] Windows
-    - [ ] Mac _(in progress)_
-    - [ ] Linux
-    - [ ] iOS
-    - [ ] Android
-- [ ] REST
-    - [ ] Full support for basic REST operations _(in progress)_
-- [ ] gRPC
-    - [ ] GRPC Explorer _(in progress)_
-    - [ ] Unary support _(in progress)_
-    - [ ] Streaming support
-- [ ] Kafka
-    - [ ] Produce messages
-    - [ ] Consume messages
-- [ ] Websockets
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 ## Contributing
 Open an issue or tweet me on Twitter with any suggestions or bug reports.
+
+### Architecture
+The Spacetime MAUI Project uses [Fluxor](https://github.com/mrpmorris/Fluxor) for state management. This means all actions are kicked off using the Dispatcher and handled either in an Effect or a Reducer.
+
+**Example:**
+```
+<button OnClick="Save">Save</button>
+@code {
+    private void Save()
+    {
+        Dispatcher.Dispatch(new UpdateRequestAction(Request));
+    }
+}
+```
+
+This will fire an action, and at the very simplest level, can be handled in a reducer method. However, if this action does anything other than mutate state in a reducer, such as an API call, this will be created in an Effect. 
+
+All Actions, Reducers, and Effects are in the `Spacetime.Store` namespace, organized by "feature."
+
+View the [Fluxor documentation](https://github.com/mrpmorris/Fluxor/blob/master/Tutorials/02-Blazor/02A-StateActionsReducersTutorial/README.md) for further explanation.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
