@@ -34,8 +34,12 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
+    <li>
+      <a href="#contributing">Contributing</a>
+      <ul>
+        <li><a href="#architecture">Architecture</a></li>
+      </ul>
+    </li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
@@ -109,34 +113,6 @@ Completely untested. Theoretically should work, but may need tweaks to configura
 
 Has an error during compilation. Needs investigation. 
 [TBD](https://github.com/spacetimedotnet/spacetime/issues/7)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-## Roadmap
-- [ ] UX
-    - [ ] Responsive design
-    - [ ] Keyboard shortcuts
-- [ ] Core
-    - [ ] User settings
-    - [ ] Security settings
-    - [ ] Request history
-    - [ ] Data Freedom (Exports)
-- [ ] Platform
-    - [x] Windows
-    - [ ] Mac _(in progress)_
-    - [ ] Linux
-    - [ ] iOS
-    - [ ] Android
-- [ ] REST
-    - [ ] Full support for basic REST operations _(in progress)_
-- [ ] gRPC
-    - [ ] GRPC Explorer _(in progress)_
-    - [ ] Unary support _(in progress)_
-    - [ ] Streaming support
-- [ ] Kafka
-    - [ ] Produce messages
-    - [ ] Consume messages
-- [ ] Websockets
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
