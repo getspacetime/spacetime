@@ -2,33 +2,25 @@
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Shared.Components.Inputs
 @using Spacetime.Core.Infrastructure;
-<div class="flex flex-col">
-    <table>
-        <thead>
-            <tr>
-                <th class="text-left"><SmallCaps>Header</SmallCaps></th>
-                <th colspan="2" class="text-left"><SmallCaps>Value</SmallCaps></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var header in Headers)
-            {
-                <tr>
-                    <td class="py-2">
-                        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Name" />
-                    </td>
-                    <td class="py-2">
-                        <input class="px-4 py-2 w-5/6 border border-zinc-700 bg-zinc-800" type="text" @bind="header.Value" />
-                    </td>
-                    <td class="py-2">
-                        <MudButton OnClick="() => Remove(header)">
-                            <MudIcon Icon="@Icons.Filled.DeleteForever" Color="Color.Default" />
-                        </MudButton>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="flex flex-col w-full">
+    <MudTable Items="Headers" Hover="true">
+        <HeaderContent>
+            <MudTh>Header</MudTh>
+            <MudTh>Value</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Value">@context.Value</MudTd>
+        </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Name">
+                <MudTextField @bind-Value="@context.Name" />
+            </MudTd>
+            <MudTd DataLabel="Value">
+                <MudTextField @bind-Value="@context.Value" />
+            </MudTd>
+        </RowEditingTemplate>
+    </MudTable>
     <MudButton OnClick="Add" Color="Color.Primary">Add header</MudButton>
 </div>
 @code {
@@ -45,6 +37,8 @@
 
     public async void Add()
     {
+        // todo: figure out how to 1. trigger edit event and 2. immediately force focus
+        // when the user presses this button
         Headers.Add(new HeaderDto());
         await HeadersChanged.InvokeAsync(Headers);
     }

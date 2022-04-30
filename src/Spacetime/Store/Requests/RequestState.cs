@@ -6,7 +6,11 @@ namespace Spacetime.Store.Requests
     [FeatureState]
     public class RequestState
     {
+        /// <summary>
+        /// Indicates data is being fetched.
+        /// </summary>
         public bool Loading { get; set; }
+
         public string Filter { get; set; }
         public SpacetimeRequest SelectedRequest { get; set; }
         public List<SpacetimeRequest> Requests { get; set; }

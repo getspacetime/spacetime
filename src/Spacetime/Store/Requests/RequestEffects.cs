@@ -1,5 +1,8 @@
 ﻿using Fluxor;
+using Microsoft.Extensions.Logging;
+using Spacetime.Core.Infrastructure;
 using Spacetime.Core.Services;
+using Spacetime.Store.Requests.Actions;
 
 namespace Spacetime.Store.Requests
 {
@@ -8,9 +11,13 @@ namespace Spacetime.Store.Requests
     /// </summary>
     public class RequestEffects
     {
+        private readonly ILogger<RequestEffects> _log;
         private readonly RequestService _requests;
-        public RequestEffects(RequestService requests)
+        private readonly ISpacetimeService _spacetime;
+        public RequestEffects(ILogger<RequestEffects> log, ISpacetimeService spacetime, RequestService requests)
         {
+            _log = log;
+            _spacetime = spacetime;
             _requests = requests;
         }
 
@@ -42,6 +49,28 @@ namespace Spacetime.Store.Requests
         {
             await _requests.UpdateRequest(action.Request);
             dispatcher.Dispatch(new UpdateRequestSuccessAction(action.Request));
+        }
+
+        [EffectMethod]
+        public async Task HandleExecuteRequestAction(ExecuteRequestAction action, IDispatcher dispatcher)
+        {
+            try
+            {
+                var response = await _spacetime.Execute(action.Request);
+                dispatcher.Dispatch(new ExecuteRequestSuccessAction(action.Request.Id, response));
+            }
+            catch (Exception ex)
+            {
+                _log.LogError(ex, "Failed to execute request {id}", action?.Request?.Id);
+                dispatcher.Dispatch(new ExecuteRequestFailAction(action?.Request?.Id, null));
+            }
+            finally
+            {
+                if (action != null)
+                {
+                    dispatcher.Dispatch(new UpdateRequestAction(action.Request));
+                }
+            }
         }
     }
 }

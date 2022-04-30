@@ -2,8 +2,9 @@
 {
     public enum SpacetimeStatus
     {
-        Unknown,
+        Default,
         Ok,
-        Error
+        Error,
+        Active
     }
 }

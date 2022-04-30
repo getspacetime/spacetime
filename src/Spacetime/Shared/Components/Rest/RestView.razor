@@ -58,8 +58,6 @@
     </div>
 </div>
 @code {
-    private bool Loading { get; set; }
-
     private Color StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? Color.Success : Color.Error; }
 
     [Parameter]
@@ -71,8 +69,8 @@
     public string RequestEditorName => $"RequestEditor";
     public string ResponseEditorName => $"ResponseEditor";
 
-    private string ExecuteIcon => !Loading ? Icons.Filled.Send : @Icons.Filled.Refresh;
-    private string ExecuteText => !Loading ? "Execute" : "Loading...";
+    private string ExecuteIcon => Request.Status != SpacetimeStatus.Active ? Icons.Filled.Send : @Icons.Filled.Refresh;
+    private string ExecuteText => Request.Status != SpacetimeStatus.Active ? "Execute" : "Loading...";
 
     private void OnMethodChange(string method)
     {
@@ -88,43 +86,13 @@
 
     private async Task Execute()
     {
-        ClearResponse();
-
         if (string.IsNullOrWhiteSpace(Request.URL))
         {
             return;
         }
 
-        try
-        {
-            Loading = true;
+        Dispatcher.Dispatch(new ExecuteRequestAction(Request));
 
-            var response = await SpacetimeRestService.Execute(Request);
 
-            Request.Response = response;
-        }
-        catch (Exception ex)
-        {
-            // todo: add logging / toasts
-        }
-        finally
-        {
-            Loading = false;
-        }
-
-        Save();
-    }
-
-    private void ClearAll()
-    {
-        Request.URL = string.Empty;
-        Request.RequestBody = string.Empty;
-
-        ClearResponse();
-    }
-
-    private void ClearResponse()
-    {
-        Request.Response = new SpacetimeResponse();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Fluxor;
 using Spacetime.Core.Infrastructure;
+using Spacetime.Store.Requests.Actions;
 
 namespace Spacetime.Store.Requests
 {
@@ -133,6 +134,80 @@ namespace Spacetime.Store.Requests
                     draft.SelectedRequest = action.Request;
                 }
             }
+
+            return draft;
+        }
+
+
+        [ReducerMethod]
+        public static RequestState ExecuteRequest(RequestState state, ExecuteRequestAction action)
+        {
+            var draft = new RequestState
+            {
+                Loading = state.Loading,
+                Requests = state.Requests,
+                Filter = state.Filter,
+                FilteredRequests = state.FilteredRequests,
+                SelectedRequest = state.SelectedRequest
+            };
+
+            var request = draft.Requests.FirstOrDefault(p => p.Id == action.Request.Id);
+            if (request == null)
+            {
+                return draft;
+            }
+
+            request.Status = SpacetimeStatus.Active;
+            request.Response = new SpacetimeResponse();
+
+            return draft;
+        }
+
+        [ReducerMethod]
+        public static RequestState ExecuteRequestSuccess(RequestState state, ExecuteRequestSuccessAction action)
+        {
+            var draft = new RequestState
+            {
+                Loading = state.Loading,
+                Requests = state.Requests,
+                Filter = state.Filter,
+                FilteredRequests = state.FilteredRequests,
+                SelectedRequest = state.SelectedRequest
+            };
+
+            var request = draft.Requests.FirstOrDefault(p => p.Id == action.Id);
+            if (request == null)
+            {
+                return draft;
+            }
+
+            // todo: need to confirm with all of the reducers if fluxor is taking care
+            // of immutability, or if I need to manually clone everything
+            request.Response = action.Response;
+            request.Status = SpacetimeStatus.Ok;
+
+            return draft;
+        }
+
+        [ReducerMethod]
+        public static RequestState ExecuteRequestFail(RequestState state, ExecuteRequestFailAction action)
+        {
+            var draft = new RequestState
+            {
+                Loading = state.Loading,
+                Requests = state.Requests,
+                Filter = state.Filter,
+                FilteredRequests = state.FilteredRequests,
+                SelectedRequest = state.SelectedRequest
+            };
+
+            var request = draft.Requests.FirstOrDefault(p => p.Id == action.Id);
+            if (request == null)
+            {
+                return draft;
+            }
+
+            request.Status = SpacetimeStatus.Error;
 
             return draft;
         }
