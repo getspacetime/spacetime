@@ -137,7 +137,7 @@ This will fire an action, and at the very simplest level, can be handled in a re
 
 All Actions, Reducers, and Effects are in the `Spacetime.Store` namespace, organized by "feature."
 
-View the Fluxor documentation for further explanation.
+View the [Fluxor documentation](https://github.com/mrpmorris/Fluxor/blob/master/Tutorials/02-Blazor/02A-StateActionsReducersTutorial/README.md) for further explanation.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
