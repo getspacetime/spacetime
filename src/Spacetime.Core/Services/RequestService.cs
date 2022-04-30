@@ -15,7 +15,7 @@ public class RequestService : LiteDbService
     {
         _log.LogInformation("Fetching requests");
 
-        var requests = new List<SpacetimeRequest>();
+        List<SpacetimeRequest> requests;
         using (var db = WithDatabase())
         {
             var col = db.GetCollection<SpacetimeRequest>("requests");
