@@ -26,8 +26,8 @@
         - name: Restore Dependencies
           run: dotnet restore src/Spacetime/Spacetime.csproj
 
-         - name: Build MAUI Windows
-           run: msbuild src/Spacetime/Spacetime.csproj -r -p:Configuration=Release -p:RestorePackages=false -p:TargetFramework=net6.0-windows10.0.19041 /p:GenerateAppxPackageOnBuild=true
+        - name: Build MAUI Windows
+          run: msbuild src/Spacetime/Spacetime.csproj -r -p:Configuration=Release -p:RestorePackages=false -p:TargetFramework=net6.0-windows10.0.19041 /p:GenerateAppxPackageOnBuild=true
 
       # - name: Upload Windows Artifact
       #   uses: actions/upload-artifact@v2.3.1
