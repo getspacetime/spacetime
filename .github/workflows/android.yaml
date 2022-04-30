@@ -1,11 +1,11 @@
   on: 
     schedule:
       - cron: '0 0 * * *'
-  name: mac
+  name: android
   jobs:      
     build-windows:
       runs-on: macos-latest
-      name: Mac Build
+      name: Android Build
       steps:
         - name: Checkout
           uses: actions/checkout@v2
@@ -23,5 +23,5 @@
           run: dotnet restore src/Spacetime/Spacetime.csproj
 
         - name: Build Spacetime
-          run: dotnet build src/Spacetime/Spacetime.csproj -c Release -f:net6.0-android # use android until xcode 13.3.1 is available
+          run: dotnet build src/Spacetime/Spacetime.csproj -c Release -f:net6.0-android
           

@@ -16,10 +16,9 @@
         - name: Install .NET 6.0.300-preview.22204.3
           shell: pwsh
           run: |
-             C:\msys64\usr\bin\wget.exe https://dot.net/v1/dotnet-install.ps1 -OutFile C:\dotnet-install.ps1
+             C:\msys64\usr\bin\wget.exe "https://dot.net/v1/dotnet-install.ps1" -OutFile "C:\dotnet-install.ps1"
              C:\dotnet-install.ps1 -Version 6.0.300-preview.22204.3
              dotnet --info
-             Write-Host "##vso[task.prependpath]C:\\Users\\VssAdministrator\\AppData\\Local\\Microsoft\\dotnet"
         
         - name: Install MAUI Workloads
           run: |
