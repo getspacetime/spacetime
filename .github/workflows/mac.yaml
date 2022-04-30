@@ -1,0 +1,37 @@
+  on: push
+  name: ci
+  jobs:      
+    build-windows:
+      runs-on: macos-latest
+      name: Mac Build
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+      - task: CmdLine@2
+        displayName: Install .NET 6.0.300-preview.22204.3
+        inputs:
+          script: |
+            curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 6.0.300-preview.22204.3 --quality preview
+            dotnet --version
+
+        - name: Setup MSBuild
+          uses: microsoft/setup-msbuild@v1.1
+          with:
+            vs-prerelease: true
+
+        - name: Install MAUI Workloads
+          run: |
+            dotnet workload install maui --ignore-failed-sources
+
+        - name: Restore Dependencies
+          run: dotnet restore src/Spacetime/Spacetime.csproj
+
+        - name: Build Spacetime
+          run: dotnet build src/Spacetime/Spacetime.csproj -c Release -f:net6.0-android # use android until xcode 13.3.1 is available
+
+      # - name: Upload Windows Artifact
+      #   uses: actions/upload-artifact@v2.3.1
+      #   with:
+      #     name: windows-ci-build
+      #     path: src/MauiBeach/bin/Release/net6.0-windows*/**/MauiBeach*.msix
