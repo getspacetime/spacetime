@@ -43,7 +43,7 @@
     </div>
     <div class="lg:col-span-6 sm:col-span-full flex flex-col">
         <div class="flex flex-row pb-3 justify-between">
-            <div class=" @(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
+            <div class="@(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
                 <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
                 <MudChip Color="Color.Default">@Request.Response?.ResponseTimeText</MudChip>
             </div>
