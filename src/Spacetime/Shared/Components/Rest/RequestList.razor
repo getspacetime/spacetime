@@ -1,0 +1,131 @@
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@inject IState<RequestState> RequestState
+@inject IDialogService DialogService
+@inject IDispatcher Dispatcher
+@inject ILogger<Index> Log
+
+<style>
+    /* need to figure out the best way to further customize mud blazor */
+    /* customization seems to be the biggest issue to mud as opposed to using tailwind :-( */
+    .mud-list-item-text .mud-typography {
+        display: flex;
+        justify-content: space-between;
+        justify-items: start;
+    }
+
+    .mud-list.mud-list-padding {
+        padding: 0;
+    }
+</style>
+<div class="border-r border-solid col-span-3" style="@($"border-color:{Theme.Swatch.Divider}")">
+    @if (RequestState.Value.FilteredRequests == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <div class="px-2 pb-2 flex justify-between">
+            <MudTextField @bind-Value="SearchText"
+                          DebounceInterval="100"
+                          OnDebounceIntervalElapsed="OnFilter"
+                          Margin="Margin.Dense"
+                          Variant="Variant.Outlined"
+                          Placeholder="Filter requests" />
+            <MudButton OnClick=@NewRequest><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></MudButton>
+        </div>
+        @if (!RequestState.Value.FilteredRequests.Any())
+        {
+            <MudPaper>
+                <MudList Clickable="true" Dense="true">
+                    <MudListItem>No requests</MudListItem>
+                </MudList>
+            </MudPaper>
+        }
+        @if (RequestState.Value.FilteredRequests.Any())
+        {
+            <MudPaper>
+                <MudList Clickable="true" Dense="true" SelectedValueChanged="OnSelectedValueChanged">
+                    @foreach (var req in RequestState.Value.FilteredRequests)
+                    {
+                        <MudListItem Class="flex justify-between" Value="@req.Id">
+                            <span style="width: 40px; padding: 3px" class="shrink"><SmallCaps>@GetRequestPrefix(req)</SmallCaps></span>
+                            <span class="grow" style="padding: 3px">
+                                @req.Name
+                            </span>
+                            <span>
+                                <MudMenu Size="Size.Small" Icon="@Icons.Filled.MoreVert">
+                                    <MudMenuItem OnClick="async () => { await OnDelete.InvokeAsync(); }"><MudIcon Icon="@Icons.Filled.Delete"/> Delete</MudMenuItem>
+                                </MudMenu>
+                            </span>
+                        </MudListItem>
+                    }
+                </MudList>
+            </MudPaper>
+        }
+    }
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<SpacetimeRequest> OnDelete { get; set; }
+
+    public string SearchText { get; set; }
+
+    public void OnFilter()
+    {
+        Dispatcher.Dispatch(new FilterRequestsAction(SearchText));
+    }
+
+    private string GetRequestPrefix(SpacetimeRequest req)
+    {
+        var str = string.Empty;
+
+        if (req == null)
+        {
+            return str;
+        }
+
+        switch (req.Type)
+        {
+            case SpacetimeType.REST:
+                str = req.Method;
+                break;
+            case SpacetimeType.gRPC:
+                str = "gRPC";
+                break;
+            default:
+                str = req.Method;
+                break;
+        }
+
+        return str;
+    }
+
+    public void OnSelectedValueChanged(object data)
+    {
+        var id = data as int?;
+
+        if (id.HasValue)
+        {
+            Log.LogInformation($"Selected request {id}");
+            Dispatcher.Dispatch(new ShowRequestAction(id.Value));
+        }
+    }
+
+    private async Task NewRequest()
+    {
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        var dialog = DialogService.Show<NewRequestModal>("New Request", options);
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var data = result.Data as NewRequestModal.NewRequestModalResult;
+            var req = new SpacetimeRequest();
+            req.Name = string.IsNullOrWhiteSpace(data.RequestName) ? "New Request" : data.RequestName;
+            req.Type = data.Type;
+            req.Method = "GET";
+            Dispatcher.Dispatch(new AddRequestAction(req));
+        }
+    }
+}
