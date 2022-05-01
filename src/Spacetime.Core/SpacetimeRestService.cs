@@ -1,32 +1,42 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Spacetime.Core.Formatters;
 using Spacetime.Core.Infrastructure;
+using Spacetime.Core.Services;
+
 namespace Spacetime.Core
 {
-
     public class SpacetimeRestService : ISpacetimeService
     {
         private readonly ILogger<SpacetimeRestService> _log;
         private readonly HttpClient _client;
         private readonly UrlBuilder _urlBuilder;
-        private readonly JsonSerializerOptions _jsonOptions = new JsonSerializerOptions { WriteIndented = true };
-
-        private readonly Dictionary<string, HttpMethod> _methods = new Dictionary<string, HttpMethod>
+        private readonly ResponseOptions _defaultResponseOptions = new ();
+        private readonly Dictionary<string, HttpMethod> _methods = new ()
         {
             {"GET", HttpMethod.Get },
             {"POST", HttpMethod.Post }
         };
 
-        public SpacetimeRestService(ILogger<SpacetimeRestService> log, HttpClient client, UrlBuilder urlBuilder)
+        private readonly IFormatterFactory _formatter;
+
+        public SpacetimeRestService(
+            ILogger<SpacetimeRestService> log, 
+            HttpClient client, 
+            UrlBuilder urlBuilder, 
+            IFormatterFactory formatter)
         {
             _log = log;
             _client = client;
             _urlBuilder = urlBuilder;
+            _formatter = formatter;
         }
 
-        public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
+        public async Task<SpacetimeResponse> Execute(SpacetimeRequest request, ResponseOptions options = null)
         {
+            options ??= _defaultResponseOptions;
+
             _log.LogInformation("Executing request {id} with method {method}", request.Id, request.Method);
 
             var response = new SpacetimeResponse();
@@ -41,7 +51,13 @@ namespace Spacetime.Core
                 _log.LogInformation("Executed request {id} with method {method} in {time}", request.Id, request.Method, timer.ElapsedMilliseconds);
 
                 var responseJson = await httpResponse.Content.ReadAsStringAsync();
-                response.ResponseBody = PrettyPrintJson(responseJson);
+
+                if (options.Pretty)
+                {
+                    var formatter = _formatter.Get(GetFormatterType(httpResponse));
+                    response.ResponseBody = formatter.Format(responseJson);
+                }
+
                 response.Headers = httpResponse.Headers.Select(p => new HeaderDto { Name = p.Key, Value = string.Join(';', p.Value) });
                 response.Status = httpResponse.IsSuccessStatusCode ? SpacetimeStatus.Ok : SpacetimeStatus.Error;
                 response.StatusCode = httpResponse.StatusCode.ToString();
@@ -63,12 +79,11 @@ namespace Spacetime.Core
             return response;
         }
 
-        private string PrettyPrintJson(string json)
+        private FormatterType GetFormatterType(HttpResponseMessage message)
         {
-            _log.LogInformation("Beautifying JSON response");
-
-            return (JsonSerializer.Serialize(
-                  JsonSerializer.Deserialize<object>(json), _jsonOptions));
+            // todo: get the content type and use this to determine formatter
+            // todo: allow override of formatter using RequestOptions
+            return FormatterType.Json;
         }
 
         private HttpRequestMessage BuildHttpRequest(SpacetimeRequest request)

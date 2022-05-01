@@ -4,7 +4,7 @@ namespace Spacetime.Core
 {
     public class SpacetimeGrpcService : ISpacetimeService
     {
-        public async Task<SpacetimeResponse> Execute(SpacetimeRequest request)
+        public async Task<SpacetimeResponse> Execute(SpacetimeRequest request, ResponseOptions options = null)
         {
             var response = new SpacetimeResponse
             {

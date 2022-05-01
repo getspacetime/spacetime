@@ -53,3 +53,27 @@ public class SettingsDto
     public bool EnableLogging { get; set; } = true;
     public bool EnableMetrics { get; set; } = true;
 }
+
+public class RequestOptions
+{
+    /// <summary>
+    /// Enables formatting the request, if formatting for the content-type is supported.
+    /// </summary>
+    public bool Pretty { get; set; } = true;
+}
+
+public class ThemeOptions
+{
+    public bool DarkMode { get; set; } = true;
+}
+
+public class SecurityOptions
+{
+    public bool ValidateCertificates { get; set; } = true;
+}
+
+public class LoggingOptions
+{
+    public bool EnableLogging { get; set; } = true;
+    public bool EnableMetrics { get; set; } = true;
+}

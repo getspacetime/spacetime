@@ -2,7 +2,7 @@
 
 @using Spacetime.Core.gRPC
 
-@inject SpacetimeRestService SpacetimeRestService
+@inject ISpacetimeService SpacetimeRestService
 @inject RequestService RequestService
 @inject IGrpcExplorer GrpcExplorer
 @inject IDispatcher Dispatcher
@@ -47,7 +47,10 @@
                 <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
                 <MudChip Color="Color.Default">@Request.Response?.ResponseTimeText</MudChip>
             </div>
-            <div class="pr-5 pt-2"><MudIconButton Size="Size.Small" Icon="@Icons.Filled.Delete" OnClick="async () => { await OnDelete.InvokeAsync(Request); }" /></div>
+            <div class="pr-5 pt-2">
+                <MudIconButton Disabled="true" Size="Size.Small" Icon="@Icons.Filled.FormatPaint" OnClick="async () => { }"/>
+                <MudIconButton Size="Size.Small" Icon="@Icons.Filled.Delete" OnClick="async () => { await OnDelete.InvokeAsync(Request); }"/>
+            </div>
         </div>
 
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
@@ -73,6 +76,7 @@
 
     private string ExecuteIcon => Request.Status != SpacetimeStatus.Active ? Icons.Filled.Send : @Icons.Filled.Refresh;
     private string ExecuteText => Request.Status != SpacetimeStatus.Active ? "Execute" : "Loading...";
+    private readonly ResponseOptions _options = new ResponseOptions(); 
 
     private void OnMethodChange(string method)
     {

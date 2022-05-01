@@ -2,6 +2,6 @@
 {
     public interface ISpacetimeService
     {
-        Task<SpacetimeResponse> Execute(SpacetimeRequest request);
+        Task<SpacetimeResponse> Execute(SpacetimeRequest request, ResponseOptions options = null);
     }
 }
