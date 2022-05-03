@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public List<GrpcMethodDefinition> Methods { get; set; } = new List<GrpcMethodDefinition>();
+        public List<GrpcMethodDefinition> Methods { get; set; } = new ();
     }
 }

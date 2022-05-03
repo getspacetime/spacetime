@@ -12,6 +12,7 @@ using Fluxor;
 using Spacetime.Themes;
 using Spacetime.Core.Formatters;
 using Spacetime.Container;
+using Spacetime.Core.gRPC.Dynamic;
 
 namespace Spacetime;
 
@@ -67,6 +68,7 @@ public static class MauiProgram
         builder.RegisterType<DefaultTheme>();
         builder.RegisterType<ScriptUtils>();
         builder.RegisterType<GrpcExplorer>().As<IGrpcExplorer>();
+        builder.RegisterType<DynamicGrpcFactory>().As<IDynamicGrpcFactory>();
         builder.RegisterType<LiteDbProtobufService>().As<IProtobufService>();
 
         builder.RegisterType<FormatterFactory>().As<IFormatterFactory>();

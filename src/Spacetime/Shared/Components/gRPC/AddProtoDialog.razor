@@ -7,27 +7,50 @@
 
 <MudDialog>
     <DialogContent>
-        <div class="grid grid-cols-12">
-            <div class="col-span-6">
-                <div class="mb-2">
-                    <strong>Proto Import Path</strong>
-                    <input class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ImportPath" />
-                </div>
-                <div class="mb-2">
-                    <strong>Proto File Name</strong>
-                    <input class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ProtoFile" />
-                </div>
+        <MudTabs  Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
+            <MudTabPanel Text="From URL" Class="flex flex-col">
+                <MudTextField Margin="Margin.Dense"
+                              @bind-Value="URL"
+                              Placeholder="URL"
+                              Label="URL"
+                              Variant="Variant.Outlined" />
                 <div class="mb-2">
                     <MudButton OnClick="ValidateGrpc"
-                            Size="Size.Small"
-                            Color="Color.Success">
+                               Size="Size.Small"
+                               Color="Color.Success">
                         Validate Proto
                     </MudButton>
 
                     <MudButton OnClick="SaveProto"
-                            Disabled="@(!CanSave())"
-                            Size="Size.Small"
-                            Color="Color.Primary">
+                               Disabled="@(!CanSave())"
+                               Size="Size.Small"
+                               Color="Color.Primary">
+                        Save Proto
+                    </MudButton>
+                </div>
+            </MudTabPanel>
+            <MudTabPanel Text="From Files" Class="flex flex-col">
+                <div class="grid grid-cols-12">
+            <div class="col-span-6">
+                <div class="mb-2">
+                    <strong>Proto Import Path</strong>
+                    <input class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ImportPath"/>
+                </div>
+                <div class="mb-2">
+                    <strong>Proto File Name</strong>
+                    <input class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ProtoFile"/>
+                </div>
+                <div class="mb-2">
+                    <MudButton OnClick="ValidateGrpc"
+                               Size="Size.Small"
+                               Color="Color.Success">
+                        Validate Proto
+                    </MudButton>
+
+                    <MudButton OnClick="SaveProto"
+                               Disabled="@(!CanSave())"
+                               Size="Size.Small"
+                               Color="Color.Primary">
                         Save Proto
                     </MudButton>
                 </div>
@@ -40,10 +63,10 @@
                     <!-- todo: sorting -->
                     <Table>
                         <thead>
-                            <tr>
-                                <TableHeader>Service</TableHeader>
-                                <TableHeader>Method</TableHeader>
-                            </tr>
+                        <tr>
+                            <TableHeader>Service</TableHeader>
+                            <TableHeader>Method</TableHeader>
+                        </tr>
                         </thead>
                         <TableBody>
                             @foreach (var svc in FlattenedServiceMap)
@@ -58,6 +81,9 @@
                 }
             </div>
         </div>
+            </MudTabPanel>
+        </MudTabs>
+        
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -73,14 +99,23 @@
 
     public string ProtoFile { get; set; }
     public string ImportPath { get; set; }
+    public string URL { get; set; }
 
     public GrpcExploreResult GrpcExploreResult { get; set; }
     private List<FlattenedService> FlattenedServiceMap { get; set; } = new List<FlattenedService>();
 
-    private void ValidateGrpc()
+    private async Task ValidateGrpc()
     {
         FlattenedServiceMap.Clear();
-        GrpcExploreResult = GrpcExplorer.GetExplorer(ImportPath, ProtoFile);
+
+        if (string.IsNullOrWhiteSpace(URL))
+        {
+            GrpcExploreResult = GrpcExplorer.GetExplorer(ImportPath, ProtoFile);
+        }
+        else
+        {
+            GrpcExploreResult = await GrpcExplorer.Explore(URL);
+        }
         foreach (var svc in GrpcExploreResult.Services)
         {
             foreach (var method in svc.Methods)

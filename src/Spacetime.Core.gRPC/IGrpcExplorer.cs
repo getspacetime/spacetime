@@ -14,5 +14,7 @@ namespace Spacetime.Core.gRPC
         /// <returns>The message formatted as JSON</returns>
         Task<SpacetimeResponse> Invoke(string host, string service, string method, string json);
         GrpcExploreResult GetExplorer(string importPath, string protoFileName);
+
+        Task<GrpcExploreResult> Explore(string host);
     }
 }

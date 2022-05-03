@@ -1,21 +1,23 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
-using DynamicGrpc;
-using Google.Protobuf;
-using Google.Protobuf.Reflection;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using Spacetime.gRPC.Wrapper;
 using Spacetime.Core.Infrastructure;
+using Spacetime.Core.gRPC.Dynamic;
 
 namespace Spacetime.Core.gRPC
 {
     public class GrpcExplorer : IGrpcExplorer
     {
         private readonly ILogger<GrpcExplorer> _log;
-        public GrpcExplorer(ILogger<GrpcExplorer> log)
+        private readonly IDynamicGrpcFactory _factory;
+
+        public GrpcExplorer(ILogger<GrpcExplorer> log, IDynamicGrpcFactory factory)
         {
             _log = log;
+            _factory = factory;
         }
 
         public GrpcExploreResult GetExplorer(string importPath, string protoFileName)
@@ -38,7 +40,7 @@ namespace Spacetime.Core.gRPC
             try
             {
                 using var channel = GrpcChannel.ForAddress(host);
-                var client = await DynamicGrpcClient.FromServerReflection(channel);
+                var client = await _factory.FromServerReflection(channel);
 
                 var parameters = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
@@ -63,6 +65,13 @@ namespace Spacetime.Core.gRPC
             }
 
             return response;
+        }
+
+        public async Task<GrpcExploreResult> Explore(string host)
+        {
+            using var channel = GrpcChannel.ForAddress(host);
+            var client = await _factory.FromServerReflection(channel);
+            return await client.Explore();
         }
 
         public IEnumerable<string> ListServices(string importPath, string protoFileName)
