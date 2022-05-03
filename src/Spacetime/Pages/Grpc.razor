@@ -16,41 +16,32 @@
 <div class="grid gap-1 grid-cols-12 flex flex-col">
     <div class="col-span-3 flex flex-col">
         <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
-
-        <MudTreeView T="string" ExpandOnClick="true" @bind-SelectedValue="SelectedValue" Hover="true">
-            @foreach (var svc in Services)
-            {
-                <MudTreeViewItem Value="@(svc.Name)">
-                    @foreach (var method in svc.Methods)
-                    {
-                    <MudTreeViewItem Value="@(method.Name)" />
-                    }
-            </MudTreeViewItem>
-            }
-        </MudTreeView>
+        
+        <MudPaper Width="300px" Elevation="0">
+            <MudTreeView Items="TreeItems" MultiSelection="false" @bind-ActivatedValue="ActivatedValue">
+                <ItemTemplate>
+                    <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems" Value="@context"
+                                     Icon="@context.Icon" Text="@context.Title" EndText="@context.Number?.ToString()" EndTextTypo="@Typo.caption" />
+                </ItemTemplate>
+            </MudTreeView>
+        </MudPaper>
     </div>
     <div class="col-span-9 grid grid-cols-12 gap-2 flex flex-col grow">
         <div class="col-span-6">
             <MudTextField Margin="Margin.Dense"
-                          @bind-Value="Service"
-                          Placeholder="Service"
-                          Variant="Variant.Outlined" />
-            <MudTextField Margin="Margin.Dense"
-                          @bind-Value="Method"
+                          Value="ActivatedValue?.Title"
                           Placeholder="Method"
+                          Disabled="true"
                           Variant="Variant.Outlined" />
         </div>
         <div class="col-span-6">
             <MudTextField Margin="Margin.Dense"
                           @bind-Value="URL"
-                          Placeholder="grpc://localhost:80"
+                          Placeholder="http://localhost:80"
                           Variant="Variant.Outlined"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
         </div>
         <div class="col-span-6 grow flex flex-col">
-            <div class="flex flex-row pb-3 justify-between">
-                <MudChip Color="Color.Default">@SelectedValue</MudChip>
-            </div>
             <Code @bind-Data="@Request" Name="GrpcRequestEditor" />
         </div>
         <div class="col-span-6 grow flex flex-col">
@@ -68,19 +59,38 @@
     private SpacetimeResponse Response { get; set; } = new SpacetimeResponse();
     public string Request { get; set; }
     public string URL { get; set; } = "https://localhost:7186";
-    public string Service { get; set; } = "greet.Greeter";
-    public string Method { get; set; } = "SayHello";
-    string SelectedValue { get; set; }
-    public GrpcServiceDefinition SelectedService { get; set; }
+    
+
+    private TreeItemData ActivatedValue { get; set; }
+
+    private HashSet<TreeItemData> SelectedValues { get; set; }
+
+    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
+
     public List<GrpcServiceDefinition> Services { get; set; } = new List<GrpcServiceDefinition>();
     protected override async Task OnInitializedAsync()
     {
         Services = (await ProtobufService.GetServiceDefinitions()).ToList();
-    }
 
-    public void SelectService(GrpcServiceDefinition service)
-    {
-        SelectedService = service;
+        foreach (var svc in Services)
+        {
+            var children = new HashSet<TreeItemData>()
+            {
+            };
+
+            foreach (var method in svc.Methods)
+            {
+                children.Add(new TreeItemData(method.Name, Icons.Filled.FilePresent)
+                {
+                    Parent = svc.Name
+                });
+            }
+
+            var data = new TreeItemData(svc.Name, Icons.Filled.Folder, svc.Methods.Count);
+            data.TreeItems = children;
+
+            TreeItems.Add(data);
+        }
     }
 
     public void OpenAddProtobuf()
@@ -91,23 +101,66 @@
 
     private bool CanExecute()
     {
-        if (string.IsNullOrWhiteSpace(Request) || string.IsNullOrWhiteSpace(Service) || string.IsNullOrWhiteSpace(Method))
+        var valid = true;
+
+        if (string.IsNullOrWhiteSpace(Request))
         {
-            return false;
+            Snackbar.Add("Request body is required.", Severity.Error);
+            valid = false;
         }
 
-        return true;
+        if (ActivatedValue == null)
+        {
+            Snackbar.Add("Select a gRPC Method", Severity.Error);
+            valid = false;
+        }
+
+        if (ActivatedValue != null)
+        {
+            var split = ActivatedValue.Title?.Split(".", StringSplitOptions.RemoveEmptyEntries);
+            if (split.Count() != 3)
+            {
+                Snackbar.Add($"Select a method for service {ActivatedValue.Title}", Severity.Error);
+                valid = false;
+            }
+        }
+
+        return valid;
     }
 
     public async Task Execute()
     {
         if (!CanExecute())
         {
-            Snackbar.Add("Enter a request body, service, and method.", Severity.Error);
             return;
         }
 
         // todo: validate json
-        Response = await GrpcExplorer.Invoke(URL, Service, Method, Request);
+        var split = ActivatedValue.Title?.Split(".", StringSplitOptions.RemoveEmptyEntries);
+        var service = $"{split[0]}.{split[1]}";
+        var method = split[2];
+        Response = await GrpcExplorer.Invoke(URL, service, method, Request);
     }
+
+    public class TreeItemData
+    {
+        public string Parent { get; set; }
+        public string Title { get; set; }
+        public string Type { get; set; }
+        public string Icon { get; set; }
+
+        public int? Number { get; set; }
+
+        public bool IsExpanded { get; set; }
+
+        public HashSet<TreeItemData> TreeItems { get; set; }
+
+        public TreeItemData(string title, string icon, int? number = null)
+        {
+            Title = title;
+            Icon = icon;
+            Number = number;
+        }
+    }
+
 }
