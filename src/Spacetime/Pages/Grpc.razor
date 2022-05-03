@@ -1,5 +1,6 @@
 ﻿@page "/grpc"
 @using Spacetime.Core
+@using Spacetime.Core.gRPC
 @using Spacetime.Core.Services
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
@@ -9,9 +10,11 @@
 
 @inject IProtobufService ProtobufService
 @inject IDialogService DialogService
+@inject IGrpcExplorer GrpcExplorer
+@inject ISnackbar Snackbar
 
 <div class="grid gap-1 grid-cols-12 flex flex-col">
-    <div class="col-span-2 flex flex-col">
+    <div class="col-span-3 flex flex-col">
         <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
 
         <MudTreeView T="string" ExpandOnClick="true" @bind-SelectedValue="SelectedValue" Hover="true">
@@ -26,34 +29,47 @@
             }
         </MudTreeView>
     </div>
-    <div class="col-span-10 grid grid-cols-12 gap-2 flex flex-col grow">
-        @if (!string.IsNullOrWhiteSpace(SelectedValue))
-        {
-            <div class="col-span-6">
-                <MudTextField Margin="Margin.Dense"
+    <div class="col-span-9 grid grid-cols-12 gap-2 flex flex-col grow">
+        <div class="col-span-6">
+            <MudTextField Margin="Margin.Dense"
+                          @bind-Value="Service"
+                          Placeholder="Service"
+                          Variant="Variant.Outlined" />
+            <MudTextField Margin="Margin.Dense"
+                          @bind-Value="Method"
+                          Placeholder="Method"
+                          Variant="Variant.Outlined" />
+        </div>
+        <div class="col-span-6">
+            <MudTextField Margin="Margin.Dense"
                           @bind-Value="URL"
                           Placeholder="grpc://localhost:80"
                           Variant="Variant.Outlined"
                           Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
-
+        </div>
+        <div class="col-span-6 grow flex flex-col">
+            <div class="flex flex-row pb-3 justify-between">
+                <MudChip Color="Color.Default">@SelectedValue</MudChip>
             </div>
-            <div class="col-span-6">
+            <Code @bind-Data="@Request" Name="GrpcRequestEditor" />
+        </div>
+        <div class="col-span-6 grow flex flex-col">
+            <div class="flex flex-row pb-3 justify-between">
+                <MudChip Color="Color.Default">@Response?.Status</MudChip>
+                <MudChip Color="Color.Default">@(Response?.ElapsedMs)ms</MudChip>
             </div>
-            <div class="col-span-6 grow flex flex-col">
-                <Code @bind-Data="@Request" Name="GrpcRequestEditor"/>
-            </div>
-            <div class="col-span-6 grow flex flex-col">
-                <Code @bind-Data="@Result" Name="GrpcResponseEditor" />
-            </div>
-        }
+            <Code @bind-Data="@Response.ResponseBody" Name="GrpcResponseEditor" />
+        </div>
     </div>
 
 </div>
 
 @code {
+    private SpacetimeResponse Response { get; set; } = new SpacetimeResponse();
     public string Request { get; set; }
-    public string Result { get; set; }
-    public string URL { get; set; } = "localhost:7186";
+    public string URL { get; set; } = "https://localhost:7186";
+    public string Service { get; set; } = "greet.Greeter";
+    public string Method { get; set; } = "SayHello";
     string SelectedValue { get; set; }
     public GrpcServiceDefinition SelectedService { get; set; }
     public List<GrpcServiceDefinition> Services { get; set; } = new List<GrpcServiceDefinition>();
@@ -73,33 +89,25 @@
         DialogService.Show<AddProtoDialog>("Add Protobuf", options);
     }
 
-    public void Execute()
+    private bool CanExecute()
     {
-        // todo: confirm method id selected, since this currently could be a svc
-        var parameters = $"{URL} {SelectedValue}";
-        if (!string.IsNullOrWhiteSpace(Request))
+        if (string.IsNullOrWhiteSpace(Request) || string.IsNullOrWhiteSpace(Service) || string.IsNullOrWhiteSpace(Method))
         {
-            parameters = $"-d {Request} {parameters}";
+            return false;
         }
 
-        Result = GrpcViaCommandLine("grpcurl", parameters);
+        return true;
     }
 
-    private string GrpcViaCommandLine(string command, string commandParameters)
+    public async Task Execute()
     {
-        var process = new System.Diagnostics.Process();
+        if (!CanExecute())
+        {
+            Snackbar.Add("Enter a request body, service, and method.", Severity.Error);
+            return;
+        }
 
-        process.StartInfo.FileName = command;
-        process.StartInfo.Arguments = commandParameters;
-        process.StartInfo.UseShellExecute = false;
-        process.StartInfo.RedirectStandardOutput = true;
-        process.StartInfo.CreateNoWindow = true;
-        process.Start();
-
-        var output = process.StandardOutput.ReadToEnd();
-
-        process.WaitForExit();
-
-        return output;
+        // todo: validate json
+        Response = await GrpcExplorer.Invoke(URL, Service, Method, Request);
     }
 }
