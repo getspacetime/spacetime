@@ -18,9 +18,9 @@
     ·
     <a href="https://github.com/spacetimedotnet/spacetime/issues/new?assignees=&labels=&template=feature_request.md&title=">Request Feature</a>
   </p>
+  
+  <b align="center">Spacetime is not production-ready and is in active development. Pre-release users are welcomed with this warning in mind. </b>
 </div>
-
-<b>Spacetime is not production-ready and is in active development. Pre-release users are welcomed, but be warned. </b>
 
 <details>
   <summary>Table of Contents</summary>
