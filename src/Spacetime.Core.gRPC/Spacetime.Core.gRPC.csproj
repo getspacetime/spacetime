@@ -21,10 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <Reference Include="Spacetime.gRPC.Wrapper">
 	    <HintPath>..\..\lib\grpc-wrapper\Spacetime.gRPC.Wrapper.dll</HintPath>
 	  </Reference>

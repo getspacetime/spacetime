@@ -10,7 +10,6 @@ using FluentAssertions;
 using Grpc.Core;
 using Moq;
 using Spacetime.Core.gRPC.Dynamic;
-using Spacetime.Core.Infrastructure;
 using Xunit;
 
 namespace Spacetime.Core.gRPC.Tests
@@ -35,7 +34,7 @@ namespace Spacetime.Core.gRPC.Tests
             SetupFactory(client, factory);
             SetupClient(client, clientResponse);
 
-            var expected = new SpacetimeResponse { Status = SpacetimeStatus.Ok, ResponseBody = DefaultJson};
+            var expected = new GrpcResponse { Status = GrpcStatus.Ok, ResponseBody = DefaultJson};
 
             var actual = await sut.Invoke(DefaultUrl, DefaultService, DefaultMethod, DefaultJson);
             actual.Status.Should().Be(expected.Status);
@@ -52,7 +51,7 @@ namespace Spacetime.Core.gRPC.Tests
             SetupFactory(client, factory);
             SetupClientThrow(client);
 
-            var expected = new SpacetimeResponse { Status = SpacetimeStatus.Error, ResponseBody = "oops" };
+            var expected = new GrpcResponse { Status = GrpcStatus.Error, ResponseBody = "oops" };
 
             var actual = await sut.Invoke(DefaultUrl, DefaultService, DefaultMethod, DefaultJson);
             actual.Status.Should().Be(expected.Status);

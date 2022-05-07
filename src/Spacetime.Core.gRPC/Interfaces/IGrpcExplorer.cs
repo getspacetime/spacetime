@@ -1,6 +1,4 @@
-﻿using Spacetime.Core.Infrastructure;
-
-namespace Spacetime.Core.gRPC.Interfaces
+﻿namespace Spacetime.Core.gRPC.Interfaces
 {
     public interface IGrpcExplorer
     {
@@ -12,7 +10,7 @@ namespace Spacetime.Core.gRPC.Interfaces
         /// <param name="method">The name of the method, e.g. SayHello</param>
         /// <param name="json">The response body as JSON</param>
         /// <returns>The message formatted as JSON</returns>
-        Task<SpacetimeResponse> Invoke(string host, string service, string method, string json);
+        Task<GrpcResponse> Invoke(string host, string service, string method, string json);
         GrpcExploreResult GetExplorer(string importPath, string protoFileName);
 
         Task<GrpcExploreResult> Explore(string host);

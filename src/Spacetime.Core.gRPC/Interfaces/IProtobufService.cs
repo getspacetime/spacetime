@@ -1,6 +1,4 @@
-﻿using Spacetime.Core.Infrastructure;
-
-namespace Spacetime.Core.gRPC.Interfaces
+﻿namespace Spacetime.Core.gRPC.Interfaces
 {
     /// <summary>
     /// Manages the stored protobuf services the user has saved.

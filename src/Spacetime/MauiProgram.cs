@@ -3,7 +3,6 @@ using Autofac.Extensions.DependencyInjection;
 using Spacetime.Core;
 using Spacetime.Core.gRPC;
 using Spacetime.Core.Services;
-using Spacetime.Core.Infrastructure;
 using Spacetime.Helpers;
 using MudBlazor.Services;
 using Serilog;

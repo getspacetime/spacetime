@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Xunit;
 using FluentAssertions;
-using Spacetime.Core.Infrastructure;
+
 namespace Spacetime.Core.Tests
 {
     public class UrlBuilderTests

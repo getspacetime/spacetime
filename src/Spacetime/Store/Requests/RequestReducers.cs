@@ -1,5 +1,5 @@
 ﻿using Fluxor;
-using Spacetime.Core.Infrastructure;
+using Spacetime.Core;
 using Spacetime.Store.Requests.Actions;
 
 namespace Spacetime.Store.Requests

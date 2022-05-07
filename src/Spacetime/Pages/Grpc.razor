@@ -4,7 +4,6 @@
 @using Spacetime.Core.Services
 @using Spacetime.Shared.Components.Display
 @using Spacetime.Shared.Components.Inputs
-@using Spacetime.Core.Infrastructure
 @using Spacetime.Shared.Components.Typography
 @using Spacetime.Core.gRPC.Interfaces
 @using Spacetime.Blazor.gRPC
@@ -140,7 +139,13 @@
         var split = ActivatedValue.Title?.Split(".", StringSplitOptions.RemoveEmptyEntries);
         var service = $"{split[0]}.{split[1]}";
         var method = split[2];
-        Response = await GrpcExplorer.Invoke(URL, service, method, Request);
+        var grpcResponse = await GrpcExplorer.Invoke(URL, service, method, Request);
+        Response = new SpacetimeResponse
+        {
+            ElapsedMs = grpcResponse.ElapsedMs,
+            ResponseBody = grpcResponse.ResponseBody,
+            Status = (SpacetimeStatus) grpcResponse.Status
+        };
     }
 
     public class TreeItemData

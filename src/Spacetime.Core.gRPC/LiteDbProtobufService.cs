@@ -1,6 +1,4 @@
 ﻿using Spacetime.Core.gRPC.Interfaces;
-using Spacetime.Core.Infrastructure;
-
 
 namespace Spacetime.Core.gRPC
 {

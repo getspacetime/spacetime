@@ -42,17 +42,17 @@
     [Parameter]
     public EventCallback<HtmlOffset> OffsetChanged { get; set; }
     [Parameter]
-    public RenderFragment? Title { get; set; }
+    public RenderFragment Title { get; set; }
     [Parameter]
-    public RenderFragment? Prefix { get; set; }
+    public RenderFragment Prefix { get; set; }
     [Parameter]
-    public RenderFragment? ActionTemplate { get; set; }
+    public RenderFragment ActionTemplate { get; set; }
 
     private ElementReference ElementReference;
     [Parameter]
     public EventCallback<ElementReference> ElementReferenceChanged { get; set; }
     [Parameter]
-    public string? Css { get; set; }
+    public string Css { get; set; }
     [Parameter]
     public EventCallback<MouseEventArgs> OnActionCallback { get; set; }
 

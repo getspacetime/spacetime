@@ -1,4 +1,4 @@
-﻿namespace Spacetime.Core.Infrastructure
+﻿namespace Spacetime.Core.gRPC
 {
     public class GrpcMethodDefinition
     {

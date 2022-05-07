@@ -2,7 +2,6 @@
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Spacetime.Core.Formatters;
-using Spacetime.Core.Infrastructure;
 using Spacetime.Core.Services;
 
 namespace Spacetime.Core
