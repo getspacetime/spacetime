@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Spacetime.gRPC.Wrapper;
 using Spacetime.Core.Infrastructure;
 using Spacetime.Core.gRPC.Dynamic;
+using Spacetime.Core.gRPC.Interfaces;
 
 namespace Spacetime.Core.gRPC
 {
@@ -76,6 +77,7 @@ namespace Spacetime.Core.gRPC
 
         public IEnumerable<string> ListServices(string importPath, string protoFileName)
         {
+            // TODO: use dynamic grpc client
             var curl = new GRPCurl();
             var result = curl.ListServices(importPath, protoFileName);
             return result.Items.Select(p => p.Name);
@@ -83,6 +85,7 @@ namespace Spacetime.Core.gRPC
 
         public IEnumerable<string> ListMethods(string importPath, string protoFileName, string svc)
         {
+            // TODO: use dynamic grpc client
             var curl = new GRPCurl();
             var result = curl.ListMethods(importPath, protoFileName, svc);
             return result.Items.Select(p => p.Name);

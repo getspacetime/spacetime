@@ -1,4 +1,4 @@
-﻿using Spacetime.Core.Services;
+﻿using Spacetime.Settings;
 
 namespace Spacetime.Store.Settings
 {

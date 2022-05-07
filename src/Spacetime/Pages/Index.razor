@@ -3,7 +3,8 @@
 
 @using Spacetime.Core
 @using Spacetime.Core.Services
-@using Spacetime.Core.Infrastructure;
+@using Spacetime.Core.Infrastructure
+
 
 @inject IState<RequestState> RequestState
 @inject IDispatcher Dispatcher
@@ -12,7 +13,7 @@
 
 
 <div class="grid gap-1 grid-cols-12 flex grow">
-    <RequestList OnDelete="ConfirmDelete" />
+    <RequestList OnDelete="ConfirmDelete"/>
     <div class="col-span-9 flex flex-col">
         @if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.REST)
         {

@@ -1,12 +1,12 @@
 ﻿using Fluxor;
-using Spacetime.Core.Services;
+using Spacetime.Settings;
 
 namespace Spacetime.Store.Settings
 {
     public class SettingEffects
     {
-        private readonly SettingsService _service;
-        public SettingEffects(SettingsService service)
+        private readonly ISettingsService _service;
+        public SettingEffects(ISettingsService service)
         {
             _service = service;
         }
