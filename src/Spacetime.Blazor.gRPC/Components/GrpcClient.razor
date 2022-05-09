@@ -1,88 +1,65 @@
-﻿@inject IProtobufService ProtobufService
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@using Fluxor
+@using Spacetime.Blazor.gRPC.Store
+@inject IProtobufService ProtobufService
 @inject IDialogService DialogService
 @inject IGrpcExplorer GrpcExplorer
 @inject ISnackbar Snackbar
+@inject IState<GrpcState> GrpcState
+@inject IDispatcher Dispatcher
 
-<div class="grid gap-1 grid-cols-12 flex flex-col">
-    <div class="col-span-3 flex flex-col">
+<MudGrid Class="d-flex flex-grow-1">
+    <MudItem sm="12" md="3" class="flex-grow-0">
         <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
-
-        <MudPaper Width="300px" Elevation="0">
-            <MudTreeView Items="TreeItems" MultiSelection="false" @bind-ActivatedValue="ActivatedValue">
-                <ItemTemplate>
-                    <MudTreeViewItem @bind-Expanded="@context.IsExpanded" Items="@context.TreeItems" Value="@context"
-                                     Icon="@context.Icon" Text="@context.Title" EndText="@context.Number?.ToString()" EndTextTypo="@Typo.caption" />
-                </ItemTemplate>
-            </MudTreeView>
-        </MudPaper>
-    </div>
-    <div class="col-span-9 grid grid-cols-12 gap-2 flex flex-col grow">
-        <div class="col-span-6">
-            <MudTextField Margin="Margin.Dense"
-                          Value="ActivatedValue?.Title"
-                          Placeholder="Method"
-                          Disabled="true"
-                          Variant="Variant.Outlined" />
-        </div>
-        <div class="col-span-6">
-            <MudTextField Margin="Margin.Dense"
-                          @bind-Value="URL"
-                          Placeholder="http://localhost:80"
-                          Variant="Variant.Outlined"
-                          Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
-        </div>
-        <div class="col-span-6 grow flex flex-col">
-            <Code DarkMode="DarkMode" @bind-Data="@Request" Name="GrpcRequestEditor" />
-        </div>
-        <div class="col-span-6 grow flex flex-col">
-            <div class="flex flex-row pb-3 justify-between">
-                <MudChip Color="Color.Default">@Response?.Status</MudChip>
-                <MudChip Color="Color.Default">@(Response?.ElapsedMs)ms</MudChip>
-            </div>
-            <Code DarkMode="DarkMode" @bind-Data="@Response.ResponseBody" Name="GrpcResponseEditor" />
-        </div>
-    </div>
-
-</div>
+        <ServiceExplorer @bind-ActivatedValue="ActivatedValue" />
+    </MudItem>
+    <MudItem sm="12" md="9" Class="d-flex flex-column">
+        <MudGrid Class="d-flex">
+            <MudItem xs="3">
+                <MudTextField Margin="Margin.Dense"
+                              Value="GrpcState.Value.SelectedRequest?.Method"
+                              Placeholder="Method"
+                              Disabled="true"
+                              Variant="Variant.Outlined" />
+            </MudItem>
+            <MudItem xs="3">
+                <MudTextField Margin="Margin.Dense"
+                              @bind-Value="URL"
+                              Placeholder="http://localhost:80"
+                              Variant="Variant.Outlined"
+                              Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
+            </MudItem>
+            <MudItem xs="3">
+                <div class="flex flex-row">
+                    <MudChip Color="Color.Default">@Response?.Status</MudChip>
+                    <MudChip Color="Color.Default">@(Response?.ElapsedMs)ms</MudChip>
+                </div>
+            </MudItem>
+        </MudGrid>
+        <MudGrid Class="d-flex flex-grow-1">
+            <MudItem sm="12" md="6" Class="d-flex">
+                <GrpcRequest DarkMode="DarkMode" @bind-Request="Request" />
+            </MudItem>
+            <MudItem sm="12" md="6" Class="d-flex">
+                <GrpcResponse DarkMode="DarkMode" @bind-Response="Response" />
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>
 @code {
     [Parameter]
     public bool DarkMode { get; set; }
     private SpacetimeResponse Response { get; set; } = new SpacetimeResponse();
-    public string Request { get; set; } = string.Empty;
+    public string Request { get; set; }
     public string URL { get; set; } = "https://localhost:7186";
-    
 
-    private TreeItemData ActivatedValue { get; set; }
-
-    private HashSet<TreeItemData> SelectedValues { get; set; }
-
-    private HashSet<TreeItemData> TreeItems { get; set; } = new HashSet<TreeItemData>();
-
-    public List<GrpcServiceDefinition> Services { get; set; } = new List<GrpcServiceDefinition>();
     protected override async Task OnInitializedAsync()
     {
-        Services = (await ProtobufService.GetServiceDefinitions()).ToList();
-
-        foreach (var svc in Services)
-        {
-            var children = new HashSet<TreeItemData>()
-            {
-            };
-
-            foreach (var method in svc.Methods)
-            {
-                children.Add(new TreeItemData(method.Name, Icons.Filled.FilePresent)
-                {
-                    Parent = svc.Name
-                });
-            }
-
-            var data = new TreeItemData(svc.Name, Icons.Filled.Folder, svc.Methods.Count);
-            data.TreeItems = children;
-
-            TreeItems.Add(data);
-        }
+        Dispatcher.Dispatch(new ShowRequestAction("greet.Greeter", "greet.Greeter.SayHello"));
     }
+
+    private ServiceExplorer.TreeItemData ActivatedValue { get; set; }
 
     public void OpenAddProtobuf()
     {
@@ -100,18 +77,18 @@
             valid = false;
         }
 
-        if (ActivatedValue == null)
+        var method = GrpcState.Value.SelectedRequest?.Method;
+        if (string.IsNullOrWhiteSpace(method))
         {
             Snackbar.Add("Select a gRPC Method", Severity.Error);
             valid = false;
         }
-
-        if (ActivatedValue != null)
+        else
         {
-            var split = ActivatedValue.Title?.Split(".", StringSplitOptions.RemoveEmptyEntries);
+            var split = method.Split(".", StringSplitOptions.RemoveEmptyEntries);
             if (split.Count() != 3)
             {
-                Snackbar.Add($"Select a method for service {ActivatedValue.Title}", Severity.Error);
+                Snackbar.Add($"Select a method for service {method}", Severity.Error);
                 valid = false;
             }
         }
@@ -126,38 +103,18 @@
             return;
         }
 
+        var request = GrpcState.Value.SelectedRequest;
+
         // todo: validate json
-        var split = ActivatedValue.Title?.Split(".", StringSplitOptions.RemoveEmptyEntries);
+        var split = request.Method.Split(".", StringSplitOptions.RemoveEmptyEntries);
         var service = $"{split[0]}.{split[1]}";
         var method = split[2];
         var grpcResponse = await GrpcExplorer.Invoke(URL, service, method, Request);
         Response = new SpacetimeResponse
-        {
-            ElapsedMs = grpcResponse.ElapsedMs,
-            ResponseBody = grpcResponse.ResponseBody,
-            Status = (SpacetimeStatus) grpcResponse.Status
-        };
+            {
+                ElapsedMs = grpcResponse.ElapsedMs,
+                ResponseBody = grpcResponse.ResponseBody,
+                Status = (SpacetimeStatus)grpcResponse.Status
+            };
     }
-
-    public class TreeItemData
-    {
-        public string Parent { get; set; }
-        public string Title { get; set; }
-        public string Type { get; set; }
-        public string Icon { get; set; }
-
-        public int? Number { get; set; }
-
-        public bool IsExpanded { get; set; }
-
-        public HashSet<TreeItemData> TreeItems { get; set; }
-
-        public TreeItemData(string title, string icon, int? number = null)
-        {
-            Title = title;
-            Icon = icon;
-            Number = number;
-        }
-    }
-
 }

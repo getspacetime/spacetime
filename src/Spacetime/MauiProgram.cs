@@ -7,12 +7,14 @@ using Spacetime.Helpers;
 using MudBlazor.Services;
 using Serilog;
 using Fluxor;
+using Spacetime.Blazor.gRPC.Store;
 using Spacetime.Themes;
 using Spacetime.Core.Formatters;
 using Spacetime.Container;
 using Spacetime.Core.gRPC.Dynamic;
 using Spacetime.Core.gRPC.Interfaces;
 using Spacetime.Settings;
+using Spacetime.Store.Requests;
 
 namespace Spacetime;
 
@@ -46,8 +48,10 @@ public static class MauiProgram
         builder.Services.AddBlazorWebView();
         
         // add third party libraries
-        var assembly = typeof(MauiProgram).Assembly;
-        builder.Services.AddFluxor(options => options.ScanAssemblies(assembly));
+        builder.Services.AddFluxor(options => options.ScanAssemblies(
+            typeof(RequestState).Assembly, 
+            typeof(GrpcState).Assembly));
+
         builder.Services.AddMudServices();
 
         // register http clients

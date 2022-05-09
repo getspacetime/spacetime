@@ -1,0 +1,22 @@
+﻿<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="d-flex flex-grow-1" PanelClass="d-flex flex-grow-1">
+    <MudTabPanel Text="Request" Class="flex">
+        <Code DarkMode="DarkMode" @bind-Data="@BoundValue" Name="GrpcRequestEditor" />
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+    [Parameter]
+    public bool DarkMode { get; set; }
+
+    private string BoundValue
+    {
+        get => Request;
+        set => RequestChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public string Request { get; set; }
+
+    [Parameter]
+    public EventCallback<string> RequestChanged { get; set; }
+}
