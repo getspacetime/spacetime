@@ -1,6 +1,7 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using Spacetime.Settings
 
-@inject SettingsService SettingsService
+@inject ISettingsService SettingsService
 @inject IState<SettingState> SettingState
 @inject IDispatcher Dispatcher
 

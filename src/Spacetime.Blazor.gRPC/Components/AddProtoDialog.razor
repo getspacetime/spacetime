@@ -1,0 +1,142 @@
+﻿@using Spacetime.Core.gRPC;
+@using Spacetime.Core.gRPC.Interfaces
+
+@inject IGrpcExplorer GrpcExplorer
+@inject IProtobufService ProtobufService
+
+<MudDialog>
+    <DialogContent>
+        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
+            <MudTabPanel Text="From URL" Class="flex flex-col">
+                <MudTextField Margin="Margin.Dense"
+                              @bind-Value="URL"
+                              Placeholder="URL"
+                              Label="URL"
+                              Variant="Variant.Outlined" />
+                <div class="mb-2">
+                    <MudButton OnClick="ValidateGrpc"
+                               Size="Size.Small"
+                               Color="Color.Success">
+                        Validate Proto
+                    </MudButton>
+
+                    <MudButton OnClick="SaveProto"
+                               Disabled="@(!CanSave())"
+                               Size="Size.Small"
+                               Color="Color.Primary">
+                        Save Proto
+                    </MudButton>
+                </div>
+            </MudTabPanel>
+            <MudTabPanel Text="From Files (disabled)" Class="flex flex-col">
+                <div class="grid grid-cols-12">
+                    <div class="col-span-6">
+                        <div class="mb-2">
+                            <strong>Proto Import Path</strong>
+                            <input disabled class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ImportPath" />
+                        </div>
+                        <div class="mb-2">
+                            <strong>Proto File Name</strong>
+                            <input disabled class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ProtoFile" />
+                        </div>
+                        <div class="mb-2">
+                            <MudButton OnClick="ValidateGrpc"
+                                       Size="Size.Small"
+                                       Color="Color.Success">
+                                Validate Proto
+                            </MudButton>
+
+                            <MudButton OnClick="SaveProto"
+                                       Disabled="@(!CanSave())"
+                                       Size="Size.Small"
+                                       Color="Color.Primary">
+                                Save Proto
+                            </MudButton>
+                        </div>
+                    </div>
+                    <div class="col-span-6">
+                        @if (GrpcExploreResult != null)
+                        {
+                            <!-- todo: pagination -->
+                            <!-- todo: filtering -->
+                            <!-- todo: sorting -->
+                            <MudTable Items="FlattenedServiceMap" Hover="true" FixedHeader="true" Height="600px">
+                                <HeaderContent>
+                                    <MudTh>Header</MudTh>
+                                    <MudTh>Value</MudTh>
+                                </HeaderContent>
+                                <RowTemplate>
+                                    <MudTd DataLabel="Name">@context.ServiceName</MudTd>
+                                    <MudTd DataLabel="Value">@context.MethodName</MudTd>
+                                </RowTemplate>
+                            </MudTable>
+                        }
+                    </div>
+                </div>
+            </MudTabPanel>
+        </MudTabs>
+
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog?.Cancel();
+
+    public string? ProtoFile { get; set; }
+    public string? ImportPath { get; set; }
+    public string? URL { get; set; }
+
+    public GrpcExploreResult? GrpcExploreResult { get; set; }
+    private List<FlattenedService> FlattenedServiceMap { get; set; } = new List<FlattenedService>();
+
+    private async Task ValidateGrpc()
+    {
+
+        FlattenedServiceMap.Clear();
+
+        if (string.IsNullOrWhiteSpace(URL))
+        {
+            return;
+
+            // add this back later
+            //GrpcExploreResult = GrpcExplorer.GetExplorer(ImportPath, ProtoFile);
+        }
+        GrpcExploreResult = await GrpcExplorer.Explore(URL);
+
+        foreach (var svc in GrpcExploreResult.Services)
+        {
+            foreach (var method in svc.Methods)
+            {
+                FlattenedServiceMap.Add(new FlattenedService { ServiceName = svc.Name, MethodName = method.Name });
+            }
+        }
+    }
+
+    private async void SaveProto()
+    {
+        if (GrpcExploreResult == null)
+        {
+            return;
+        }
+
+        await ProtobufService.Save(GrpcExploreResult.Services);
+    }
+
+    private bool CanSave()
+    {
+        return GrpcExploreResult != null && GrpcExploreResult.Services.Count > 0;
+    }
+
+    private class FlattenedService
+    {
+        public string? ServiceName { get; set; }
+        public string? MethodName { get; set; }
+    }
+}

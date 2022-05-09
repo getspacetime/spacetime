@@ -1,9 +1,10 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+@using Spacetime.Settings
 
 @inject IState<SettingState> SettingState
 @inject IDispatcher Dispatcher
 @inject IDialogService DialogService
-@inject SettingsService SettingsService
+@inject ISettingsService SettingsService
 
 <MudAppBar Color="Color.Dark" Fixed="false" Dense="true" Elevation="1">
     <MudImage ObjectFit="ObjectFit.Contain" Height="40" Width="40" Src="images/logo.png" />

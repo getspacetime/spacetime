@@ -1,0 +1,64 @@
+﻿@using Microsoft.Extensions.Logging
+@inject ILogger<Code> Log
+
+<div class="flex flex-col grow">
+    <MonacoEditor Id="@Name" ConstructionOptions="EditorConstructionOptions" CssClass=" grow" OnDidChangeModelContent="OnDidChangeModelContent" />
+</div>
+@code {
+
+    [Parameter]
+    public string Name { get; set; }
+
+    [Parameter]
+    public string Data { get; set; }
+
+    [Parameter]
+    public bool DarkMode { get; set; }
+
+    [Parameter]
+    public EventCallback<string> DataChanged { get; set; }
+
+    public string EditorTheme => DarkMode ? "vs-dark" : "vs-light";
+    public string Language { get; set; } = "json";
+    private MonacoEditor _editor;
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(MonacoEditor editor)
+    {
+        _editor = editor;
+        return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Theme = EditorTheme,
+                Language = Language,
+                Value = Data,
+            };
+    }
+
+    public async Task OnDidChangeModelContent(ModelContentChangedEvent e)
+    {
+        // since there's no automatic data binding in this library
+        // whenever the model changes, send the update here
+        // may not be the most efficient, but good enough for now
+        var model = await _editor.GetModel();
+        var value = await model.GetValue(EndOfLinePreference.TextDefined, false);
+        await DataChanged.InvokeAsync(value);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (_editor == null)
+        {
+            return;
+        }
+
+        // since we're reusing the same instances in some cases
+        // we want to be able to update the model once whatever we're viewing
+        // changes to a new request
+        var model = await _editor.GetModel();
+        var value = await model.GetValue(EndOfLinePreference.TextDefined, false);
+        if (Data == null || !Data.Equals(value))
+        {
+            Log.LogInformation("Parameters changed for code editor, updating value");
+            await model.SetValue(Data ?? string.Empty);
+        }
+    }
+}

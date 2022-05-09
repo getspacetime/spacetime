@@ -1,35 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
 	<PropertyGroup>
-		<TargetFrameworks>net6.0-android;net6.0-ios;net6.0-maccatalyst</TargetFrameworks>
-		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows')) and '$(MSBuildRuntimeType)' == 'Full'">$(TargetFrameworks);net6.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>net6.0-maccatalyst</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('windows'))">$(TargetFrameworks);net6.0-windows10.0.19041.0</TargetFrameworks>
 		<OutputType>Exe</OutputType>
 		<RootNamespace>Spacetime</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<EnablePreviewMsixTooling>true</EnablePreviewMsixTooling>
 		<EnableDefaultCssItems>false</EnableDefaultCssItems>
 
 		<!-- Display name -->
-		<ApplicationTitle>Spacetime</ApplicationTitle>
+		<ApplicationTitle>Spacetime API Client</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.spacetime</ApplicationId>
+		<ApplicationId>com.spacetime.apiclient</ApplicationId>
+		<ApplicationIdGuid>1BD8327B-7E00-4462-9629-F6AD11CE67C8</ApplicationIdGuid>
 
 		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
-		<!-- Required for C# Hot Reload -->
-		<UseInterpreter Condition="'$(Configuration)' == 'Debug'">True</UseInterpreter>
-
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-ios'">14.2</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-maccatalyst'">14.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="'$(TargetFramework)' == 'net6.0-android'">21.0</SupportedOSPlatformVersion>
-		<SupportedOSPlatformVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</SupportedOSPlatformVersion>
-		<TargetPlatformMinVersion Condition="$(TargetFramework.Contains('-windows'))">10.0.17763.0</TargetPlatformMinVersion>
-		<FileVersion>1.0.0.1</FileVersion>
-		<AssemblyVersion>1.0.0.1</AssemblyVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">14.0</SupportedOSPlatformVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
+		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -73,15 +68,18 @@
 	  <PackageReference Include="BlazorMonaco" Version="2.1.0" />
 	  <PackageReference Include="Fluxor.Blazor.Web" Version="5.2.0" />
 	  <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
-	  <PackageReference Include="MudBlazor" Version="6.0.10-dev.4" />
+	  <PackageReference Include="MudBlazor" Version="6.0.10" />
 	  <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
 	  <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\Spacetime.Blazor.gRPC\Spacetime.Blazor.gRPC.csproj" />
+	  <ProjectReference Include="..\Spacetime.Blazor.Shared\Spacetime.Blazor.Shared.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj" />
-	  <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Spacetime.Core.Shared\Spacetime.Core.Shared.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />
+	  <ProjectReference Include="..\Spacetime.Settings\Spacetime.Settings.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

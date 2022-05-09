@@ -1,11 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
-using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
 using Spacetime.gRPC.Wrapper;
-using Spacetime.Core.Infrastructure;
 using Spacetime.Core.gRPC.Dynamic;
+using Spacetime.Core.gRPC.Interfaces;
 
 namespace Spacetime.Core.gRPC
 {
@@ -32,10 +31,10 @@ namespace Spacetime.Core.gRPC
             return explorer;
         }
 
-        public async Task<SpacetimeResponse> Invoke(string host, string service, string method, string json)
+        public async Task<GrpcResponse> Invoke(string host, string service, string method, string json)
         {
             _log.LogInformation("Invoking service {host}, {service}, {method}", host, service, method);
-            var response = new SpacetimeResponse {Status = SpacetimeStatus.Active};
+            var response = new GrpcResponse() {Status = GrpcStatus.Active};
             Stopwatch stopwatch = null;
             try
             {
@@ -51,7 +50,7 @@ namespace Spacetime.Core.gRPC
 
                 var resultJson = JsonSerializer.Serialize(result);
 
-                response.Status = SpacetimeStatus.Ok;
+                response.Status = GrpcStatus.Ok;
                 response.ResponseBody = resultJson;
                 response.ElapsedMs = stopwatch.ElapsedMilliseconds;
             }
@@ -60,7 +59,7 @@ namespace Spacetime.Core.gRPC
                 _log.LogError(ex, "Failed to invoke service {host}, {service}, {method}", host, service, method);
 
                 response.ResponseBody = ex.Message;
-                response.Status = SpacetimeStatus.Error;
+                response.Status = GrpcStatus.Error;
                 response.ElapsedMs = stopwatch?.ElapsedMilliseconds ?? -1;
             }
 
@@ -76,6 +75,7 @@ namespace Spacetime.Core.gRPC
 
         public IEnumerable<string> ListServices(string importPath, string protoFileName)
         {
+            // TODO: use dynamic grpc client
             var curl = new GRPCurl();
             var result = curl.ListServices(importPath, protoFileName);
             return result.Items.Select(p => p.Name);
@@ -83,6 +83,7 @@ namespace Spacetime.Core.gRPC
 
         public IEnumerable<string> ListMethods(string importPath, string protoFileName, string svc)
         {
+            // TODO: use dynamic grpc client
             var curl = new GRPCurl();
             var result = curl.ListMethods(importPath, protoFileName, svc);
             return result.Items.Select(p => p.Name);

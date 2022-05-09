@@ -1,5 +1,5 @@
 ﻿using Flurl;
-using Spacetime.Core.Infrastructure;
+using Spacetime.Core.Shared;
 
 namespace Spacetime.Core
 {

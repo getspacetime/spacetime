@@ -1,4 +1,4 @@
-﻿using Spacetime.Core.Infrastructure;
+﻿using Spacetime.Core.Shared;
 
 namespace Spacetime.Store.Requests.Actions;
 

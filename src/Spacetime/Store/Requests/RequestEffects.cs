@@ -1,6 +1,6 @@
 ﻿using Fluxor;
 using Microsoft.Extensions.Logging;
-using Spacetime.Core.Infrastructure;
+using Spacetime.Core;
 using Spacetime.Core.Services;
 using Spacetime.Store.Requests.Actions;
 

@@ -1,6 +1,7 @@
 ﻿using LiteDB;
 using Microsoft.Extensions.Logging;
-using Spacetime.Core.Infrastructure;
+using Spacetime.Core.Shared;
+
 namespace Spacetime.Core.Services;
 
 public class RequestService : LiteDbService

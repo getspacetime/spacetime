@@ -1,10 +1,8 @@
 ﻿using Autofac;
-using Autofac.Builder;
 using Autofac.Extensions.DependencyInjection;
 using Spacetime.Core;
 using Spacetime.Core.gRPC;
 using Spacetime.Core.Services;
-using Spacetime.Core.Infrastructure;
 using Spacetime.Helpers;
 using MudBlazor.Services;
 using Serilog;
@@ -13,6 +11,8 @@ using Spacetime.Themes;
 using Spacetime.Core.Formatters;
 using Spacetime.Container;
 using Spacetime.Core.gRPC.Dynamic;
+using Spacetime.Core.gRPC.Interfaces;
+using Spacetime.Settings;
 
 namespace Spacetime;
 
@@ -62,7 +62,7 @@ public static class MauiProgram
     private static void ConfigureContainer(ContainerBuilder builder)
     {
         builder.RegisterType<RequestService>();
-        builder.RegisterType<SettingsService>();
+        builder.RegisterType<SettingsService>().As<ISettingsService>();
         builder.RegisterType<SpacetimeRestService>().As<ISpacetimeService>();
         builder.RegisterType<UrlBuilder>();
         builder.RegisterType<DefaultTheme>();
