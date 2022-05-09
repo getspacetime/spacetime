@@ -1,4 +1,6 @@
-﻿namespace Spacetime.Core
+﻿using Spacetime.Core.Shared;
+
+namespace Spacetime.Core
 {
     public interface ISpacetimeService
     {

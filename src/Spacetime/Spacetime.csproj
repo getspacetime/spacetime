@@ -74,9 +74,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Spacetime.Blazor\Spacetime.Blazor.csproj" />
+	  <ProjectReference Include="..\Spacetime.Blazor.gRPC\Spacetime.Blazor.gRPC.csproj" />
+	  <ProjectReference Include="..\Spacetime.Blazor.Shared\Spacetime.Blazor.Shared.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj" />
-	  <ProjectReference Include="..\Spacetime.Core.Infrastructure\Spacetime.Core.Infrastructure.csproj" />
+	  <ProjectReference Include="..\Spacetime.Core.Shared\Spacetime.Core.Shared.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />
 	  <ProjectReference Include="..\Spacetime.Settings\Spacetime.Settings.csproj" />
 	</ItemGroup>

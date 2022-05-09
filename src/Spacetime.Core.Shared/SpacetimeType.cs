@@ -1,4 +1,4 @@
-﻿namespace Spacetime.Core;
+﻿namespace Spacetime.Core.Shared;
 
 public enum SpacetimeType
 {

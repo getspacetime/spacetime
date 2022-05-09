@@ -84,16 +84,16 @@
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
+    void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog?.Cancel();
 
-    public string ProtoFile { get; set; }
-    public string ImportPath { get; set; }
-    public string URL { get; set; }
+    public string? ProtoFile { get; set; }
+    public string? ImportPath { get; set; }
+    public string? URL { get; set; }
 
-    public GrpcExploreResult GrpcExploreResult { get; set; }
+    public GrpcExploreResult? GrpcExploreResult { get; set; }
     private List<FlattenedService> FlattenedServiceMap { get; set; } = new List<FlattenedService>();
 
     private async Task ValidateGrpc()
@@ -121,6 +121,11 @@
 
     private async void SaveProto()
     {
+        if (GrpcExploreResult == null)
+        {
+            return;
+        }
+
         await ProtobufService.Save(GrpcExploreResult.Services);
     }
 
@@ -131,7 +136,7 @@
 
     private class FlattenedService
     {
-        public string ServiceName { get; set; }
-        public string MethodName { get; set; }
+        public string? ServiceName { get; set; }
+        public string? MethodName { get; set; }
     }
 }

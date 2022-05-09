@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Xunit;
 using FluentAssertions;
+using Spacetime.Core.Shared;
 
 namespace Spacetime.Core.Tests
 {

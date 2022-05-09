@@ -9,6 +9,7 @@
 @inject IDispatcher Dispatcher
 @inject ILogger<RestView> Log
 @inject IState<RequestState> RequestState
+@inject IState<SettingState> SettingState
 
 <style>
     .mud-tabs-panels {
@@ -32,7 +33,7 @@
         </div>
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
             <MudTabPanel Text="Body" Class="flex">
-                <Code @bind-Data="Request.RequestBody" Name="@RequestEditorName"></Code>
+                <Code DarkMode="SettingState.Value.Settings.DarkMode" @bind-Data="Request.RequestBody" Name="@RequestEditorName"></Code>
             </MudTabPanel>
             <MudTabPanel Text="Query">
                 <QueryParams @bind-Query="Request.QueryParams" />
@@ -46,7 +47,7 @@
         <div class="flex flex-row pb-3 justify-between">
             <div class="@(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
                 <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
-                <MudChip Color="Color.Default">@Request.Response?.ResponseTimeText</MudChip>
+                <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
             </div>
             <div class="pr-5 pt-2">
                 <MudIconButton Disabled="true" Size="Size.Small" Icon="@Icons.Filled.FormatPaint" OnClick="async () => { }"/>
@@ -56,7 +57,7 @@
 
         <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
             <MudTabPanel Text="Preview" Class="flex">
-                <Code Data="@Request.Response?.ResponseBody" Name="@ResponseEditorName"></Code>
+                <Code DarkMode="SettingState.Value.Settings.DarkMode"  Data="@Request.Response?.ResponseBody" Name="@ResponseEditorName"></Code>
             </MudTabPanel>
             <MudTabPanel Text="Headers">
                 <HeadersPane Headers="@Request.Response?.Headers" />

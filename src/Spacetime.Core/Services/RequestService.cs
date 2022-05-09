@@ -1,5 +1,6 @@
 ﻿using LiteDB;
 using Microsoft.Extensions.Logging;
+using Spacetime.Core.Shared;
 
 namespace Spacetime.Core.Services;
 

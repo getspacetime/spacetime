@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Spacetime.Core.Formatters;
 using Spacetime.Core.Services;
+using Spacetime.Core.Shared;
 
 namespace Spacetime.Core
 {
