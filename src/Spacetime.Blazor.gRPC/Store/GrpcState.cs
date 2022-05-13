@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fluxor;
+using Spacetime.Core.gRPC;
 using Spacetime.Core.Shared;
 
 namespace Spacetime.Blazor.gRPC.Store
@@ -11,38 +12,28 @@ namespace Spacetime.Blazor.gRPC.Store
     [FeatureState]
     public class GrpcState
     {
-        public GrpcRequest SelectedRequest { get; set; }
+        public List<GrpcServiceDefinition> Services { get; set; }
     }
 
     public static class GrpcReducers
     {
         [ReducerMethod]
-        public static GrpcState ShowRequest(GrpcState state, ShowRequestAction action)
+        public static GrpcState FetchServicesSuccess(GrpcState state, FetchServicesSuccessAction action)
         {
             return new GrpcState
             {
-                SelectedRequest = new GrpcRequest
-                {
-                    Service = action.Service,
-                    Method = action.Method
-                }
+                Services = action.Services
             };
         }
     }
 
-    public class GrpcRequest : SpacetimeRequest
+    public class FetchServicesSuccessAction
     {
-        public string Service { get; set; }
+        public List<GrpcServiceDefinition> Services { get; set; }
     }
 
-    public class ShowRequestAction
+    public class FetchServicesAction
     {
-        public string Service { get; set; }
-        public string Method { get; set; }
-        public ShowRequestAction(string service, string method)
-        {
-            Service = service;
-            Method = method;
-        }
+
     }
 }

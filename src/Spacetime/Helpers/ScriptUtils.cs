@@ -28,6 +28,12 @@ namespace Spacetime.Helpers
             return await module.InvokeAsync<string>("log", message, args);
         }
 
+        public async ValueTask<bool> CopyToClipboard(string contents)
+        {
+            var module = await moduleTask.Value;
+            return await module.InvokeAsync<bool>("copyToClipboard", contents);
+        }
+
         public async ValueTask<HtmlOffset> GetOffset(ElementReference element)
         {
             _log.LogInformation("Calculating offset for element {element}", element);

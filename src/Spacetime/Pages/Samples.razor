@@ -1,0 +1,69 @@
+﻿@page "/samples"
+@using Spacetime.Helpers
+@inject ScriptUtils ScriptUtils
+@inject ISnackbar Snackbar
+
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="padding: 0">
+    <MudPaper Height="100%" Width="100%" Square="true" Class="mud-theme-primary">
+        <MudPaper Class="mud-height-full" Style="overflow:hidden; position:relative;">
+            <MudDrawerContainer Class="mud-height-full">
+                <MudDrawer @bind-Open="@open" Elevation="0" Variant="@DrawerVariant.Persistent" Color="Color.Dark">
+                    <MudDrawerHeader>
+                        <MudText Typo="Typo.h6">Samples</MudText>
+                    </MudDrawerHeader>
+                    <MudPaper>
+                        <MudList Clickable="true" @bind-SelectedValue="SelectedValue">
+                            @foreach (var item in Items)
+                            {
+                                <MudListItem Text="@item.Name" Value="@item.Contents" />
+                            }
+                        </MudList>
+                    </MudPaper>
+                </MudDrawer>
+                <div class="d-flex flex-column mud-height-full">
+                    <MudButtonGroup Color="Color.Primary" Variant="Variant.Outlined">
+                        <MudIconButton Icon="@Icons.Filled.ContentCopy" OnClick="async () => await Copy()"></MudIconButton>
+                    </MudButtonGroup>
+                    <Code Data="@((string) SelectedValue)" Name="SampleEditor"/>
+                </div>
+            </MudDrawerContainer>
+        </MudPaper>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    bool open = true;
+    List<SampleItem> Items { get; set; }
+    object SelectedValue { get; set; }
+
+    void ToggleDrawer()
+    {
+        open = !open;
+    }
+
+    protected override void OnInitialized()
+    {
+        Items = new List<SampleItem>();
+        Items.Add(new SampleItem { Name = "SayHello gRPC 1", Contents = "{ \"name\": \"world\" }" });
+        Items.Add(new SampleItem { Name = "SayHello gRPC 2", Contents = "{ \"name\": \"Spacetime\" }" });
+    }
+
+    public async Task Copy()
+    {
+        var str = SelectedValue as string;
+        if (str != null)
+        {
+            if (await ScriptUtils.CopyToClipboard(str))
+            {
+                Snackbar.Add("Copied to Clipboard!", Severity.Info);
+            }
+        }
+    }
+
+    public class SampleItem
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Contents { get; set; }
+    }
+}

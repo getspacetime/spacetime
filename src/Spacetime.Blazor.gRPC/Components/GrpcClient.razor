@@ -2,31 +2,35 @@
 
 @using Fluxor
 @using Spacetime.Blazor.gRPC.Store
+@using System.Diagnostics
 @inject IProtobufService ProtobufService
 @inject IDialogService DialogService
 @inject IGrpcExplorer GrpcExplorer
 @inject ISnackbar Snackbar
-@inject IState<GrpcState> GrpcState
 @inject IDispatcher Dispatcher
 
 <MudGrid Class="d-flex flex-grow-1">
-    <MudItem sm="12" md="3" class="flex-grow-0">
-        <MudButton FullWidth="false" Class="justify-self-end" Color="Color.Secondary" OnClick="OpenAddProtobuf">Add Proto File</MudButton>
-        <ServiceExplorer @bind-ActivatedValue="ActivatedValue" />
-    </MudItem>
-    <MudItem sm="12" md="9" Class="d-flex flex-column">
+    <MudItem xs="12" Class="d-flex flex-column">
         <MudGrid Class="d-flex">
             <MudItem xs="3">
                 <MudTextField Margin="Margin.Dense"
-                              Value="GrpcState.Value.SelectedRequest?.Method"
+                              Label="Service"
+                              Value="Service?.Name"
+                              Placeholder="Service"
+                              Variant="Variant.Outlined"
+                              Class="my-4"/>
+                <MudTextField Margin="Margin.Dense"
+                              Label="Method"
+                              Value="Method?.Name"
                               Placeholder="Method"
-                              Disabled="true"
-                              Variant="Variant.Outlined" />
+                              Variant="Variant.Outlined"/>
             </MudItem>
             <MudItem xs="3">
                 <MudTextField Margin="Margin.Dense"
+                              Class="my-4"
                               @bind-Value="URL"
-                              Placeholder="http://localhost:80"
+                              Label="Host"
+                              Placeholder="http://localhost:8080"
                               Variant="Variant.Outlined"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
             </MudItem>
@@ -39,27 +43,24 @@
         </MudGrid>
         <MudGrid Class="d-flex flex-grow-1">
             <MudItem sm="12" md="6" Class="d-flex">
-                <GrpcRequest DarkMode="DarkMode" @bind-Request="Request" />
+                <GrpcRequest @bind-Request="Request" />
             </MudItem>
             <MudItem sm="12" md="6" Class="d-flex">
-                <GrpcResponse DarkMode="DarkMode" @bind-Response="Response" />
+                <GrpcResponse @bind-Response="Response" />
             </MudItem>
         </MudGrid>
     </MudItem>
 </MudGrid>
 @code {
-    [Parameter]
-    public bool DarkMode { get; set; }
     private SpacetimeResponse Response { get; set; } = new SpacetimeResponse();
     public string Request { get; set; }
     public string URL { get; set; } = "https://localhost:7186";
-
-    protected override async Task OnInitializedAsync()
-    {
-        Dispatcher.Dispatch(new ShowRequestAction("greet.Greeter", "greet.Greeter.SayHello"));
-    }
-
-    private ServiceExplorer.TreeItemData ActivatedValue { get; set; }
+    
+    [Parameter]
+    public GrpcServiceDefinition? Service { get; set; }
+    
+    [Parameter]
+    public GrpcMethodDefinition? Method { get; set; }
 
     public void OpenAddProtobuf()
     {
@@ -76,19 +77,18 @@
             Snackbar.Add("Request body is required.", Severity.Error);
             valid = false;
         }
-
-        var method = GrpcState.Value.SelectedRequest?.Method;
-        if (string.IsNullOrWhiteSpace(method))
+        
+        if (Method == null || string.IsNullOrWhiteSpace(Method.Name))
         {
             Snackbar.Add("Select a gRPC Method", Severity.Error);
             valid = false;
         }
         else
         {
-            var split = method.Split(".", StringSplitOptions.RemoveEmptyEntries);
+            var split = Method.Name.Split(".", StringSplitOptions.RemoveEmptyEntries);
             if (split.Count() != 3)
             {
-                Snackbar.Add($"Select a method for service {method}", Severity.Error);
+                Snackbar.Add($"Select a method for service {Service?.Name}", Severity.Error);
                 valid = false;
             }
         }
@@ -103,10 +103,9 @@
             return;
         }
 
-        var request = GrpcState.Value.SelectedRequest;
-
         // todo: validate json
-        var split = request.Method.Split(".", StringSplitOptions.RemoveEmptyEntries);
+        Debug.Assert(Method != null);
+        var split = Method.Name.Split(".", StringSplitOptions.RemoveEmptyEntries);
         var service = $"{split[0]}.{split[1]}";
         var method = split[2];
         var grpcResponse = await GrpcExplorer.Invoke(URL, service, method, Request);

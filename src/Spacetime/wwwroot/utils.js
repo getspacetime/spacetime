@@ -2,6 +2,15 @@
     console.log(message, args);
 }
 
+export function copyToClipboard(contents) {
+    return navigator.clipboard.writeText(contents).then(() => {
+        log("copied to clipboard!");
+        return true;
+    }).catch(err => {
+        log("failed to copy to clipboard", err);
+        return false;
+    });
+}
 
 export function getOffset(el) {
     var _x = 0;

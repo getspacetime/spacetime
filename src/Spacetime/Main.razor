@@ -9,7 +9,9 @@
 
 <Router AppAssembly="@GetType().Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <CascadingValue Name="DarkMode" Value="@SettingState.Value.Settings.DarkMode">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        </CascadingValue>
     </Found>
     <NotFound>
         <LayoutView Layout="@typeof(MainLayout)">

@@ -1,0 +1,40 @@
+﻿<MudDialog>
+    <DialogContent>
+        Edit Request Dialog
+        <MudFocusTrap DefaultFocus="DefaultFocus.FirstChild">
+            <MudTextField Class="w-5/6"
+                          @bind-Value="Result.RequestName"
+                          Immediate="true"
+                          Label="Request Name"
+                          Placeholder="Request Name"
+                          Variant="Variant.Outlined"
+                          OnKeyDown="OnKeyDown" />
+        </MudFocusTrap>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Save request</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance? MudDialog { get; set; }
+
+    void Submit() => MudDialog?.Close(DialogResult.Ok(Result));
+    void Cancel() => MudDialog?.Cancel();
+
+    private EditRequestModalResult Result { get; set; } = new();
+
+    public void OnKeyDown(KeyboardEventArgs args)
+    {
+        if (args.Code == "Enter")
+        {
+            Submit();
+        }
+    }
+
+    public class EditRequestModalResult
+    {
+        public string RequestName { get; set; }
+    }
+}
