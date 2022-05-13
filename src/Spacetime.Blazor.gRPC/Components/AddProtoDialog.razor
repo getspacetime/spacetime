@@ -14,19 +14,20 @@
                               Placeholder="URL"
                               Label="URL"
                               Variant="Variant.Outlined" />
-                <div class="mb-2">
+                <div class="my-2">
                     <MudButton OnClick="ValidateGrpc"
-                               Size="Size.Small"
                                Color="Color.Success">
-                        Validate Proto
+                        Get Service Metadata
                     </MudButton>
-
-                    <MudButton OnClick="SaveProto"
-                               Disabled="@(!CanSave())"
-                               Size="Size.Small"
-                               Color="Color.Primary">
-                        Save Proto
-                    </MudButton>
+                    
+                    @if (CanSave())
+                    {
+                        <MudButton OnClick="SaveProto"
+                                   Disabled="@(!CanSave())"
+                                   Color="Color.Primary">
+                            Save Service
+                        </MudButton>
+                    }
                 </div>
             </MudItem>
             <MudItem xs="6">
@@ -35,7 +36,7 @@
                     <!-- todo: pagination -->
                     <!-- todo: filtering -->
                     <!-- todo: sorting -->
-                    <MudTable Items="FlattenedServiceMap" Hover="true" FixedHeader="true" Height="600px">
+                    <MudTable Items="FlattenedServiceMap" Hover="true" FixedHeader="true" Height="300px">
                         <HeaderContent>
                             <MudTh>Service</MudTh>
                             <MudTh>Method</MudTh>
@@ -46,13 +47,16 @@
                         </RowTemplate>
                     </MudTable>
                 }
+                else
+                {
+                    <MudText Typo="Typo.body2">To explore services and methods, add the URL of your service that supports gRPC reflection.</MudText>
+                }
             </MudItem>
         </MudGrid>
 
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Close</MudButton>
     </DialogActions>
 </MudDialog>
 

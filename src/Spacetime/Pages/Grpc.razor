@@ -113,7 +113,7 @@
     public async Task OpenAddProtobuf()
     {
         var options = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<AddProtoDialog>("Add Protobuf", options);
+        var dialog = DialogService.Show<AddProtoDialog>("Add gRPC Service", options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
