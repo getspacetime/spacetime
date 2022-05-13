@@ -2,7 +2,6 @@
 using System.Text.Json;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
-using Spacetime.gRPC.Wrapper;
 using Spacetime.Core.gRPC.Dynamic;
 using Spacetime.Core.gRPC.Interfaces;
 
@@ -17,18 +16,6 @@ namespace Spacetime.Core.gRPC
         {
             _log = log;
             _factory = factory;
-        }
-
-        public GrpcExploreResult GetExplorer(string importPath, string protoFileName)
-        {
-            var explorer = new GrpcExploreResult();
-            explorer.Services = ListServices(importPath, protoFileName).Select(p => new GrpcServiceDefinition { Name = p }).ToList();
-            foreach (var svc in explorer.Services)
-            {
-                svc.Methods = ListMethods(importPath, protoFileName, svc.Name).Select(p => new GrpcMethodDefinition { Name = p }).ToList();
-            }
-
-            return explorer;
         }
 
         public async Task<GrpcResponse> Invoke(string host, string service, string method, string json)
@@ -70,23 +57,14 @@ namespace Spacetime.Core.gRPC
         {
             using var channel = GrpcChannel.ForAddress(host);
             var client = await _factory.FromServerReflection(channel);
-            return await client.Explore();
-        }
+            var result = await client.Explore();
 
-        public IEnumerable<string> ListServices(string importPath, string protoFileName)
-        {
-            // TODO: use dynamic grpc client
-            var curl = new GRPCurl();
-            var result = curl.ListServices(importPath, protoFileName);
-            return result.Items.Select(p => p.Name);
-        }
-
-        public IEnumerable<string> ListMethods(string importPath, string protoFileName, string svc)
-        {
-            // TODO: use dynamic grpc client
-            var curl = new GRPCurl();
-            var result = curl.ListMethods(importPath, protoFileName, svc);
-            return result.Items.Select(p => p.Name);
+            // the .NET server reflection for gRPC shows up as a service
+            // named ServerReflection - remove this from the list to avoid clutter
+            result.Services = result.Services
+                .Where(p => !p.Name.Equals("ServerReflection", StringComparison.OrdinalIgnoreCase)).ToList();
+            
+            return result;
         }
     }
 }

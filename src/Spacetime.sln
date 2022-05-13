@@ -20,6 +20,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.Shared", "Sp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Blazor.Shared", "Spacetime.Blazor.Shared\Spacetime.Blazor.Shared.csproj", "{73941402-6266-43DE-A7DF-43C8458F932C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spacetime.Blazor.Rest", "Spacetime.Blazor.Rest\Spacetime.Blazor.Rest.csproj", "{1AE446DF-9B7B-4271-9F8B-51A00A9418F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{73941402-6266-43DE-A7DF-43C8458F932C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73941402-6266-43DE-A7DF-43C8458F932C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73941402-6266-43DE-A7DF-43C8458F932C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1AE446DF-9B7B-4271-9F8B-51A00A9418F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AE446DF-9B7B-4271-9F8B-51A00A9418F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AE446DF-9B7B-4271-9F8B-51A00A9418F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AE446DF-9B7B-4271-9F8B-51A00A9418F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

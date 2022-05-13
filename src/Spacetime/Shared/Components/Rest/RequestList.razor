@@ -54,8 +54,9 @@
                                 @req.Name
                             </span>
                             <span>
-                                <MudMenu Size="Size.Small" Icon="@Icons.Filled.MoreVert">
-                                    <MudMenuItem OnClick="async () => { await OnDelete.InvokeAsync(); }"><MudIcon Icon="@Icons.Filled.Delete"/> Delete</MudMenuItem>
+                                <MudMenu Size="Size.Small" Icon="@Icons.Filled.MoreVert" Dense="true">
+                                    <MudMenuItem OnClick="async () => { await OnEdit.InvokeAsync(req); }">Edit</MudMenuItem>
+                                    <MudMenuItem OnClick="async () => { await OnDelete.InvokeAsync(req); }">Delete</MudMenuItem>
                                 </MudMenu>
                             </span>
                         </MudListItem>
@@ -67,6 +68,8 @@
 </div>
 
 @code {
+    [Parameter]
+    public EventCallback<SpacetimeRequest> OnEdit { get; set; }
     [Parameter]
     public EventCallback<SpacetimeRequest> OnDelete { get; set; }
 

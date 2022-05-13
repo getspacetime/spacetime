@@ -7,5 +7,6 @@
     {
         Task<IEnumerable<GrpcServiceDefinition>> GetServiceDefinitions();
         Task Save(List<GrpcServiceDefinition> services);
+        Task Remove(int serviceId);
     }
 }

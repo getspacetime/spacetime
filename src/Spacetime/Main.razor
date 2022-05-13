@@ -4,12 +4,15 @@
 @inject ISettingsService SettingsService
 @inject IState<SettingState> SettingState
 @inject IDispatcher Dispatcher
+@inject ISnackbar Snackbar
 
 <Fluxor.Blazor.Web.StoreInitializer />
 
 <Router AppAssembly="@GetType().Assembly">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <CascadingValue Name="DarkMode" Value="@SettingState.Value.Settings.DarkMode">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        </CascadingValue>
     </Found>
     <NotFound>
         <LayoutView Layout="@typeof(MainLayout)">
@@ -27,6 +30,8 @@
 
     protected override Task OnInitializedAsync()
     {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+
         Dispatcher.Dispatch(new FetchSettingsAction());
 
         return Task.CompletedTask;

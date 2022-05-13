@@ -9,62 +9,84 @@
 @inject IDispatcher Dispatcher
 @inject ILogger<RestView> Log
 @inject IState<RequestState> RequestState
-@inject IState<SettingState> SettingState
 
 <style>
+    /* there's a bug when switching to mudblazor for grid.
+        the panels and code editor will grow to fill the screen
+        and continue growing to be absolutely massive outside of the screen.
+        until I figure this out, going to keep using tailwind here
+    */
     .mud-tabs-panels {
         display: flex;
         flex-grow: 1;
-    }</style>
-<div class="grid gap-2 grid-cols-12 flex flex-col grow">
-    <div class="lg:col-span-6 sm:col-span-full flex flex-col">
-        <div class="flex flex-row mb-2 shrink-0 gap-2">
-            <MudSelect T="string" Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" ValueChanged="OnMethodChange" Class="w-24">
-                <MudSelectItem Value="@("GET")" />
-                <MudSelectItem Value="@("POST")" />
-            </MudSelect>
-            <MudTextField Class="w-5/6"
-                          Margin="Margin.Dense"
-                          @bind-Value="Request.URL"
-                          Placeholder="https://localhost:44301/api/tickets"
-                          Variant="Variant.Outlined"
-                          @onblur="Save"
-                          Adornment="Adornment.End" AdornmentIcon="@ExecuteIcon" OnAdornmentClick="Execute" />
-        </div>
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
-            <MudTabPanel Text="Body" Class="flex">
-                <Code DarkMode="SettingState.Value.Settings.DarkMode" @bind-Data="Request.RequestBody" Name="@RequestEditorName"></Code>
-            </MudTabPanel>
-            <MudTabPanel Text="Query">
-                <QueryParams @bind-Query="Request.QueryParams" />
-            </MudTabPanel>
-            <MudTabPanel Text="Headers">
-                <RequestHeaders @bind-Headers="@Request.Headers" />
-            </MudTabPanel>
-        </MudTabs>
-    </div>
-    <div class="lg:col-span-6 sm:col-span-full flex flex-col">
-        <div class="flex flex-row pb-3 justify-between">
-            <div class="@(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
-                <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
-                <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
-            </div>
-            <div class="pr-5 pt-2">
-                <MudIconButton Disabled="true" Size="Size.Small" Icon="@Icons.Filled.FormatPaint" OnClick="async () => { }"/>
-                <MudIconButton Size="Size.Small" Icon="@Icons.Filled.Delete" OnClick="async () => { await OnDelete.InvokeAsync(Request); }"/>
-            </div>
-        </div>
+    }
+</style>
 
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
-            <MudTabPanel Text="Preview" Class="flex">
-                <Code DarkMode="SettingState.Value.Settings.DarkMode"  Data="@Request.Response?.ResponseBody" Name="@ResponseEditorName"></Code>
-            </MudTabPanel>
-            <MudTabPanel Text="Headers">
-                <HeadersPane Headers="@Request.Response?.Headers" />
-            </MudTabPanel>
-        </MudTabs>
+@if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.REST)
+{
+    <div class="grid gap-2 grid-cols-12 flex flex-col grow ml-2">
+        <div class="lg:col-span-6 sm:col-span-full flex flex-col">
+            <div class="flex flex-row shrink-0 gap-2 my-4">
+                <MudIconButton
+
+                    Icon="@(DrawerOpen ? Icons.Filled.ChevronLeft : Icons.Filled.ChevronRight)"
+                    OnClick="OnDrawerToggle"/>
+                <MudSelect T="string" Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" ValueChanged="OnMethodChange" Class="w-24">
+                    <MudSelectItem Value="@("GET")"/>
+                    <MudSelectItem Value="@("POST")"/>
+                </MudSelect>
+                <MudTextField Class="w-5/6"
+                              Margin="Margin.Dense"
+                              @bind-Value="Request.URL"
+                              Placeholder="https://localhost:44301/api/tickets"
+                              Variant="Variant.Outlined"
+                              @onblur="Save"
+                              Adornment="Adornment.End" AdornmentIcon="@ExecuteIcon" OnAdornmentClick="Execute"/>
+            </div>
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
+                <MudTabPanel Text="Body" Class="flex">
+                    <Code @bind-Data="Request.RequestBody" Name="@RequestEditorName"></Code>
+                </MudTabPanel>
+                <MudTabPanel Text="Query">
+                    <QueryParams @bind-Query="Request.QueryParams"/>
+                </MudTabPanel>
+                <MudTabPanel Text="Headers">
+                    <RequestHeaders @bind-Headers="@Request.Headers"/>
+                </MudTabPanel>
+            </MudTabs>
+        </div>
+        <div class="lg:col-span-6 sm:col-span-full flex flex-col">
+            <div class="flex my-5 flex-row justify-between">
+                <div class="@(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
+                    <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
+                    <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
+                </div>
+                <div class="pr-5">
+                    <MudIconButton Disabled="true" Size="Size.Small" Icon="@Icons.Filled.FormatPaint" OnClick="async () => {}"/>
+                    <MudIconButton Size="Size.Small" Icon="@Icons.Filled.Delete" OnClick="async () => { await OnDelete.InvokeAsync(Request); }"/>
+                </div>
+            </div>
+
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="flex grow">
+                <MudTabPanel Text="Preview" Class="flex">
+                    <Code Data="@Request.Response?.ResponseBody" Name="@ResponseEditorName"></Code>
+                </MudTabPanel>
+                <MudTabPanel Text="Headers">
+                    <HeadersPane Headers="@Request.Response?.Headers"/>
+                </MudTabPanel>
+            </MudTabs>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="mx-4 my-4">
+        <MudIconButton
+            Icon="@(DrawerOpen ? Icons.Filled.ChevronLeft : Icons.Filled.ChevronRight)"
+            OnClick="OnDrawerToggle"/>
+        Select a request or create a new one to get started.
+    </div>
+}
 @code {
     private Color StatusCodeBadge { get => Request?.Response?.Status == SpacetimeStatus.Ok ? Color.Success : Color.Error; }
 
@@ -72,7 +94,12 @@
 
     [Parameter]
     public EventCallback<SpacetimeRequest> OnDelete { get; set; }
+    
+    [Parameter]
+    public bool DrawerOpen { get; set; }
 
+    [Parameter]
+    public EventCallback OnDrawerToggle { get; set; }
     public string RequestEditorName => $"RequestEditor";
     public string ResponseEditorName => $"ResponseEditor";
 

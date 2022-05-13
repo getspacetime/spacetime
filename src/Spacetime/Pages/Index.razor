@@ -3,28 +3,46 @@
 
 @using Spacetime.Core
 @using Spacetime.Core.Services
-
+@using Spacetime.Blazor.Rest.Components
 
 @inject IState<RequestState> RequestState
 @inject IDispatcher Dispatcher
 @inject IDialogService DialogService
 @inject ILogger<Index> Log
 
+<MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="padding: 0">
+    <MudPaper Height="100%" Width="100%" Square="true" Class="mud-theme-primary" Elevation="0">
+        <MudPaper Class="mud-height-full" Square="true" Style="overflow:hidden; position:relative;">
+            <MudDrawerContainer Class="mud-height-full">
+                <MudDrawer @bind-Open="@open" Width="300px" Elevation="0" Variant="@DrawerVariant.Persistent">
+                    <MudDrawerHeader>
+                        <MudText Typo="Typo.h6">Requests</MudText>
+                    </MudDrawerHeader>
+                    <RequestList OnEdit="OnEdit" OnDelete="ConfirmDelete" />
+                </MudDrawer>
+                <div class="d-flex flex-column mud-height-full">
+                    <RestView DrawerOpen="open" OnDrawerToggle="ToggleDrawer" OnDelete="ConfirmDelete" />
+                </div>
+            </MudDrawerContainer>
+        </MudPaper>
+    </MudPaper>
+</MudContainer>
 
-<div class="grid gap-1 grid-cols-12 flex grow">
-    <RequestList OnDelete="ConfirmDelete"/>
-    <div class="col-span-9 flex flex-col">
-        @if (RequestState.Value.SelectedRequest?.Type == SpacetimeType.REST)
-        {
-            <RestView OnDelete="ConfirmDelete"/>
-        }
-        else
-        {
-            <div class="mx-4 my-4">Select a request or create a new one to get started.</div>
-        }
-    </div>
-</div>
 @code {
+
+     /*
+     * todo: create application state and store it.
+     * 1 - drawer position
+     * 2 - current request if user closes/reopens
+     * 3 - current module user is on (grpc/rest/etc)
+    */
+    bool open = true;
+
+    void ToggleDrawer()
+    {
+        open = !open;
+    }
+
     public string SearchText { get; set; }
     private List<SpacetimeRequest> Requests { get; set; }
 
@@ -32,6 +50,21 @@
     {
         Dispatcher.Dispatch(new FetchRequestsAction());
         return Task.CompletedTask;
+    }
+
+    public async Task OnEdit(SpacetimeRequest request)
+    {
+        var dialog = DialogService.Show<EditRequestDialog>();
+        var result = await dialog.Result;
+        if (!result.Cancelled)
+        {
+            var data = result.Data as EditRequestDialog.EditRequestModalResult;
+            if (data != null)
+            {
+                request.Name = data.RequestName;
+                Dispatcher.Dispatch(new UpdateRequestAction(request));
+            }
+        }
     }
 
     public async Task ConfirmDelete(SpacetimeRequest request)
