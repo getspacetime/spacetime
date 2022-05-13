@@ -1,15 +1,16 @@
 ﻿@using Spacetime.Core.gRPC;
 @using Spacetime.Core.gRPC.Interfaces
+@using Fluxor
+@using Spacetime.Blazor.gRPC.Store
 
 @inject IGrpcExplorer GrpcExplorer
-@inject IProtobufService ProtobufService
+@inject IDispatcher Dispatcher
 
 <MudDialog>
     <DialogContent>
-        <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-4">
-            <MudTabPanel Text="From URL" Class="flex flex-col">
-                <MudTextField Margin="Margin.Dense"
-                              @bind-Value="URL"
+        <MudGrid>
+            <MudItem xs="6">
+                <MudTextField @bind-Value="URL"
                               Placeholder="URL"
                               Label="URL"
                               Variant="Variant.Outlined" />
@@ -27,54 +28,26 @@
                         Save Proto
                     </MudButton>
                 </div>
-            </MudTabPanel>
-            <MudTabPanel Text="From Files (disabled)" Class="flex flex-col">
-                <div class="grid grid-cols-12">
-                    <div class="col-span-6">
-                        <div class="mb-2">
-                            <strong>Proto Import Path</strong>
-                            <input disabled class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ImportPath" />
-                        </div>
-                        <div class="mb-2">
-                            <strong>Proto File Name</strong>
-                            <input disabled class="px-4 py-2 w-5/6 border border-neutral-700 bg-neutral-800" type="text" @bind="ProtoFile" />
-                        </div>
-                        <div class="mb-2">
-                            <MudButton OnClick="ValidateGrpc"
-                                       Size="Size.Small"
-                                       Color="Color.Success">
-                                Validate Proto
-                            </MudButton>
-
-                            <MudButton OnClick="SaveProto"
-                                       Disabled="@(!CanSave())"
-                                       Size="Size.Small"
-                                       Color="Color.Primary">
-                                Save Proto
-                            </MudButton>
-                        </div>
-                    </div>
-                    <div class="col-span-6">
-                        @if (GrpcExploreResult != null)
-                        {
-                            <!-- todo: pagination -->
-                            <!-- todo: filtering -->
-                            <!-- todo: sorting -->
-                            <MudTable Items="FlattenedServiceMap" Hover="true" FixedHeader="true" Height="600px">
-                                <HeaderContent>
-                                    <MudTh>Header</MudTh>
-                                    <MudTh>Value</MudTh>
-                                </HeaderContent>
-                                <RowTemplate>
-                                    <MudTd DataLabel="Name">@context.ServiceName</MudTd>
-                                    <MudTd DataLabel="Value">@context.MethodName</MudTd>
-                                </RowTemplate>
-                            </MudTable>
-                        }
-                    </div>
-                </div>
-            </MudTabPanel>
-        </MudTabs>
+            </MudItem>
+            <MudItem xs="6">
+                @if (GrpcExploreResult != null)
+                {
+                    <!-- todo: pagination -->
+                    <!-- todo: filtering -->
+                    <!-- todo: sorting -->
+                    <MudTable Items="FlattenedServiceMap" Hover="true" FixedHeader="true" Height="600px">
+                        <HeaderContent>
+                            <MudTh>Service</MudTh>
+                            <MudTh>Method</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Name">@context.ServiceName</MudTd>
+                            <MudTd DataLabel="Value">@context.MethodName</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+            </MudItem>
+        </MudGrid>
 
     </DialogContent>
     <DialogActions>
@@ -98,16 +71,13 @@
 
     private async Task ValidateGrpc()
     {
-
         FlattenedServiceMap.Clear();
 
         if (string.IsNullOrWhiteSpace(URL))
         {
             return;
-
-            // add this back later
-            //GrpcExploreResult = GrpcExplorer.GetExplorer(ImportPath, ProtoFile);
         }
+
         GrpcExploreResult = await GrpcExplorer.Explore(URL);
 
         foreach (var svc in GrpcExploreResult.Services)
@@ -119,14 +89,14 @@
         }
     }
 
-    private async void SaveProto()
+    private void SaveProto()
     {
         if (GrpcExploreResult == null)
         {
             return;
         }
 
-        await ProtobufService.Save(GrpcExploreResult.Services);
+        Dispatcher.Dispatch(new SaveServicesAction { Services = GrpcExploreResult.Services });
     }
 
     private bool CanSave()

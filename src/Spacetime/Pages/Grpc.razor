@@ -12,30 +12,60 @@
 @inject IState<GrpcState> State
 
 <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="padding: 0">
-    <MudPaper Height="100%" Width="100%" Square="true" Class="mud-theme-primary">
-        <MudPaper Class="mud-height-full" Style="overflow:hidden; position:relative;">
+    <MudPaper Height="100%" Width="100%" Square="true" Elevation="0" Class="mud-theme-primary">
+        <MudPaper Class="mud-height-full" Square="true" Elevation="0" Style="overflow:hidden; position:relative;">
             <MudDrawerContainer Class="mud-height-full ">
-                <MudDrawer @bind-Open="@open" Width="300px" Class="border-r border-solid" style="@($"border-color:{Theme.Swatch.Divider}")" Elevation="0" Variant="@DrawerVariant.Persistent" Color="Color.Dark">
+                <MudDrawer @bind-Open="@open" Width="300px" Class="border-r border-solid" style="@($"border-color:{Theme.Swatch.Divider}")" Elevation="0" Variant="@DrawerVariant.Persistent">
                     <MudDrawerHeader>
                         <MudText Typo="Typo.h6">gRPC Services</MudText>
                     </MudDrawerHeader>
-                    <div class="px-2 pb-2 flex justify-between">
-                       
-                        <MudButton OnClick=@OpenAddProtobuf><MudIcon Icon="@Icons.Filled.AddCircleOutline" /></MudButton>
+                    <div class="px-2 pb-2 flex justify-between items-baseline">
+                        <MudTextField Label="Search" Variant="Variant.Text" Dense="true" @bind-Value="Search"/>
+                        <MudIconButton Icon="@Icons.Filled.AddCircleOutline" Color="Color.Primary" OnClick=@OpenAddProtobuf></MudIconButton>
                     </div>
                     <MudPaper>
-                        <MudList Dense="true" Clickable="true">
+                        <MudList Dense="true" Clickable="State.Value.Services.Any()">
                             @foreach (var svc in State.Value.Services)
                             {
-                                <MudListItem Text="@svc.Name" InitiallyExpanded="false">
+                                <MudListItem InitiallyExpanded="false">
+                                    <ChildContent>
+                                        <MudMenu ActivationEvent="@MudBlazor.MouseEvent.RightClick"
+                                             Dense="true">
+                                            <ActivatorContent>
+                                                @svc.Name
+                                            </ActivatorContent>
+                                            <ChildContent>
+                                                <MudMenuItem OnClick="() => RemoveService(svc.Id)">Remove Service</MudMenuItem>
+                                            </ChildContent>
+                                        </MudMenu>
+                                    </ChildContent>
                                     <NestedList>
                                         @foreach (var method in svc.Methods)
                                         {
-                                            <MudListItem Dense="true" Class="py-0">
-                                                <MudNavLink Href="@($"/grpc/{svc.Id}/{method.Id}")">@method.Name</MudNavLink>
-                                            </MudListItem>
+                                            <MudMenu ActivationEvent="@MudBlazor.MouseEvent.RightClick"
+                                             Dense="true"
+                                             PositionAtCursor="true">
+                                                <ActivatorContent>
+                                                    <MudListItem Dense="true" Class="py-0">
+                                                        <MudNavLink Href="@($"/grpc/{svc.Id}/{method.Id}")">@method.Name</MudNavLink>
+                                                    </MudListItem>
+                                                </ActivatorContent>
+                                                <ChildContent>
+                                                    <MudMenuItem>Remove Method</MudMenuItem>
+                                                </ChildContent>
+                                            </MudMenu>
                                         }
                                     </NestedList>
+                                </MudListItem>
+                            }
+                            
+                            @if (!State.Value.Services.Any())
+                            {
+                                <MudListItem>
+                                    <MudStack>
+                                        <MudText Align="Align.Center" Typo="Typo.caption">No services found.</MudText>
+                                        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="OpenAddProtobuf">Add Service</MudButton>
+                                    </MudStack>
                                 </MudListItem>
                             }
                         </MudList>
@@ -63,12 +93,15 @@
     [Parameter]
     public int? MethodId { get; set; }
 
+    public string Search { get; set; }
     public GrpcServiceDefinition? CurrentService { get; set; }
     public GrpcMethodDefinition? CurrentMethod { get; set; }
 
     protected override void OnInitialized()
     {
         Dispatcher.Dispatch(new FetchServicesAction());
+
+        base.OnInitialized();
     }
 
     protected override void OnParametersSet()
@@ -86,5 +119,15 @@
         {
             Dispatcher.Dispatch(new FetchServicesAction());
         }
+    }
+
+    public void RemoveService(int id)
+    {
+        Dispatcher.Dispatch(new RemoveServiceAction {Id = id});
+    }
+
+    public void RemoveMethod(int id)
+    {
+
     }
 }

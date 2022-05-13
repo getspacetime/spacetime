@@ -26,10 +26,10 @@ namespace Spacetime.Themes
                 Background = "#27272a",
                 BackgroundGrey = "#27272f",
                 Surface = "#212121",
-                DrawerBackground = "#27272f",
+                DrawerBackground = "#212121",
                 DrawerText = "rgba(255,255,255, 0.50)",
                 DrawerIcon = "rgba(255,255,255, 0.50)",
-                AppbarBackground = "#27272f",
+                AppbarBackground = "#212121",
                 AppbarText = "rgba(255,255,255, 0.70)",
                 TextPrimary = "rgba(255,255,255, 0.70)",
                 TextSecondary = "rgba(255,255,255, 0.50)",
@@ -47,7 +47,7 @@ namespace Spacetime.Themes
                 Warning = "#ffa800",
                 Error = "#f64e62",
                 Dark = "#212121",
-
+                
             }
         };
 

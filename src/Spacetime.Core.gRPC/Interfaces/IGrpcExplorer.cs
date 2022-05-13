@@ -11,7 +11,6 @@
         /// <param name="json">The response body as JSON</param>
         /// <returns>The message formatted as JSON</returns>
         Task<GrpcResponse> Invoke(string host, string service, string method, string json);
-        GrpcExploreResult GetExplorer(string importPath, string protoFileName);
 
         Task<GrpcExploreResult> Explore(string host);
     }

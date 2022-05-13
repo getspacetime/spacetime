@@ -79,18 +79,16 @@ Spacetime is proudly built with .NET MAUI Blazor.
 ### Prerequisites
 * [Visual Studio 2022 Preview](https://visualstudio.microsoft.com/vs/preview/)
 * [.NET MAUI Workload](https://docs.microsoft.com/en-us/dotnet/maui/get-started/installation) - currently RC1
+* npm
+* webpack
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Running locally
 
-There are two steps to running locally. First, the front end resources (JavaScript and Tailwind) need to be bundled using Webpack.
+Once all prerequisites are fulfilled, make sure to run `npm install` in the `wwwroot` folder. When you build the solution, the project will automatically run `npm run build`.
 
-1. Install NPM
-2. Install Webpack
-3. In the `wwwroot` folder, run the command `npm run dev`
-
-Once you have run the above npm command, you can start debugging in Visual Studio. When you make changes, be sure to restart the application (hot reloading doesn't seem to work quite right yet).
+Note: hot reloading does not yet work, but it should be fixed soon.
 
 ### Installation
 
@@ -108,16 +106,6 @@ dotnet build -t:Run -f net6.0-maccatalyst
 **Installer*
 [TBD](https://github.com/spacetimedotnet/spacetime/issues/5)
 
-#### iOS
-
-Completely untested. Theoretically should work, but may need tweaks to configuration and/or a developer account.
-
-[TBD](https://github.com/spacetimedotnet/spacetime/issues/6)
-
-#### Android
-
-Has an error during compilation. Needs investigation. 
-[TBD](https://github.com/spacetimedotnet/spacetime/issues/7)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

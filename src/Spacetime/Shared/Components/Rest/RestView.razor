@@ -26,8 +26,9 @@
 {
     <div class="grid gap-2 grid-cols-12 flex flex-col grow ml-2">
         <div class="lg:col-span-6 sm:col-span-full flex flex-col">
-            <div class="flex flex-row mb-2 shrink-0 gap-2">
+            <div class="flex flex-row shrink-0 gap-2 my-4">
                 <MudIconButton
+
                     Icon="@(DrawerOpen ? Icons.Filled.ChevronLeft : Icons.Filled.ChevronRight)"
                     OnClick="OnDrawerToggle"/>
                 <MudSelect T="string" Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" ValueChanged="OnMethodChange" Class="w-24">
@@ -55,12 +56,12 @@
             </MudTabs>
         </div>
         <div class="lg:col-span-6 sm:col-span-full flex flex-col">
-            <div class="flex flex-row pb-3 justify-between">
+            <div class="flex my-5 flex-row justify-between">
                 <div class="@(string.IsNullOrWhiteSpace(Request.Response?.StatusCode) ? "invisible" : "")">
                     <MudChip Color="Color.Success">@Request.Response?.StatusCode</MudChip>
                     <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
                 </div>
-                <div class="pr-5 pt-2">
+                <div class="pr-5">
                     <MudIconButton Disabled="true" Size="Size.Small" Icon="@Icons.Filled.FormatPaint" OnClick="async () => {}"/>
                     <MudIconButton Size="Size.Small" Icon="@Icons.Filled.Delete" OnClick="async () => { await OnDelete.InvokeAsync(Request); }"/>
                 </div>

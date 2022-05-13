@@ -15,18 +15,6 @@ namespace Spacetime.Blazor.gRPC.Store
         public List<GrpcServiceDefinition> Services { get; set; }
     }
 
-    public static class GrpcReducers
-    {
-        [ReducerMethod]
-        public static GrpcState FetchServicesSuccess(GrpcState state, FetchServicesSuccessAction action)
-        {
-            return new GrpcState
-            {
-                Services = action.Services
-            };
-        }
-    }
-
     public class FetchServicesSuccessAction
     {
         public List<GrpcServiceDefinition> Services { get; set; }
@@ -35,5 +23,15 @@ namespace Spacetime.Blazor.gRPC.Store
     public class FetchServicesAction
     {
 
+    }
+
+    public class SaveServicesAction
+    {
+        public List<GrpcServiceDefinition> Services { get; set; }
+    }
+
+    public class RemoveServiceAction
+    {
+        public int Id { get; set; }
     }
 }

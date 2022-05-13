@@ -4,6 +4,7 @@
 @inject ISettingsService SettingsService
 @inject IState<SettingState> SettingState
 @inject IDispatcher Dispatcher
+@inject ISnackbar Snackbar
 
 <Fluxor.Blazor.Web.StoreInitializer />
 
@@ -29,6 +30,8 @@
 
     protected override Task OnInitializedAsync()
     {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+
         Dispatcher.Dispatch(new FetchSettingsAction());
 
         return Task.CompletedTask;

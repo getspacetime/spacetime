@@ -11,10 +11,10 @@
 @inject ILogger<Index> Log
 
 <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Style="padding: 0">
-    <MudPaper Height="100%" Width="100%" Square="true" Class="mud-theme-primary">
-        <MudPaper Class="mud-height-full" Style="overflow:hidden; position:relative;">
+    <MudPaper Height="100%" Width="100%" Square="true" Class="mud-theme-primary" Elevation="0">
+        <MudPaper Class="mud-height-full" Square="true" Style="overflow:hidden; position:relative;">
             <MudDrawerContainer Class="mud-height-full">
-                <MudDrawer @bind-Open="@open" Width="300px" Elevation="0" Variant="@DrawerVariant.Persistent" Color="Color.Dark">
+                <MudDrawer @bind-Open="@open" Width="300px" Elevation="0" Variant="@DrawerVariant.Persistent">
                     <MudDrawerHeader>
                         <MudText Typo="Typo.h6">Requests</MudText>
                     </MudDrawerHeader>

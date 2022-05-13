@@ -89,6 +89,10 @@
 	  </Content>
 	</ItemGroup>
 
+	<Target Name="Tailwind" BeforeTargets="Build">
+		<Exec WorkingDirectory="wwwroot" Command="npm run build"/>
+	</Target>
+
 	<Target Name="_RemoveStaticWebAssetsDevelopmentManifest" BeforeTargets="GetCopyToOutputDirectoryItems">
 		<ItemGroup>
 			<ContentWithTargetPath Remove="$(StaticWebAssetDevelopmentManifestPath)" />
