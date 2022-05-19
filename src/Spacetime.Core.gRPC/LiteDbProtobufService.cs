@@ -1,16 +1,32 @@
 ﻿using LiteDB;
+using Microsoft.Extensions.Logging;
 using Spacetime.Core.gRPC.Interfaces;
 
 namespace Spacetime.Core.gRPC;
 public class LiteDbProtobufService : LiteDbService, IProtobufService
 {
+    private readonly ILogger<LiteDbProtobufService> _log;
+
+    public LiteDbProtobufService(ILogger<LiteDbProtobufService> log)
+    {
+        _log = log;
+    }
+
     public Task<IEnumerable<GrpcServiceDefinition>> GetServiceDefinitions()
     {
         var defs = new List<GrpcServiceDefinition>();
-        using (var db = WithDatabase())
+
+        try
         {
-            var col = db.WithCollection();
-            defs = col.FindAll().ToList();
+            using (var db = WithDatabase())
+            {
+                var col = db.WithCollection();
+                defs = col.FindAll().ToList();
+            }
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Failed to load service definitions");
         }
 
         return Task.FromResult(defs.AsEnumerable());

@@ -1,14 +1,9 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace Spacetime.Helpers
+namespace Spacetime.Blazor.Shared
 {
     public class ScriptUtils : IAsyncDisposable
     {

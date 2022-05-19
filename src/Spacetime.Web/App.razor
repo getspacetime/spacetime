@@ -1,0 +1,30 @@
+﻿@using MudBlazor
+@using Spacetime.Blazor.Shared.Themes
+@using System.Reflection
+@using Spacetime.Blazor.gRPC.Components
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="Assemblies">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+    </Found>
+    <NotFound>
+        <PageTitle>Not found</PageTitle>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+<MudThemeProvider IsDarkMode="false" Theme="DefaultTheme.Theme" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+@code
+{
+    public List<Assembly> Assemblies { get; set; } = new List<Assembly>
+    {
+        typeof(GrpcClient).Assembly
+    };
+
+    public DefaultTheme DefaultTheme { get; set; } = new DefaultTheme();
+}

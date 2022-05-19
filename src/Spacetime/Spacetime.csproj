@@ -77,6 +77,7 @@
 	  <ProjectReference Include="..\Spacetime.Blazor.gRPC\Spacetime.Blazor.gRPC.csproj" />
 	  <ProjectReference Include="..\Spacetime.Blazor.Rest\Spacetime.Blazor.Rest.csproj" />
 	  <ProjectReference Include="..\Spacetime.Blazor.Shared\Spacetime.Blazor.Shared.csproj" />
+	  <ProjectReference Include="..\Spacetime.CompositionRoot\Spacetime.CompositionRoot.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core.Shared\Spacetime.Core.Shared.csproj" />
 	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />
@@ -90,7 +91,7 @@
 	</ItemGroup>
 
 	<Target Name="Tailwind" BeforeTargets="Build">
-		<Exec WorkingDirectory="wwwroot" Command="npm run build"/>
+		<Exec WorkingDirectory="wwwroot" Command="npm run build" />
 	</Target>
 
 	<Target Name="_RemoveStaticWebAssetsDevelopmentManifest" BeforeTargets="GetCopyToOutputDirectoryItems">

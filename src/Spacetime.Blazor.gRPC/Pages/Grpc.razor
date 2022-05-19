@@ -15,7 +15,7 @@
     <MudPaper Height="100%" Width="100%" Square="true" Elevation="0" Class="mud-theme-primary">
         <MudPaper Class="mud-height-full" Square="true" Elevation="0" Style="overflow:hidden; position:relative;">
             <MudDrawerContainer Class="mud-height-full ">
-                <MudDrawer @bind-Open="@open" Width="300px" Class="border-r border-solid" style="@($"border-color:{Theme.Swatch.Divider}")" Elevation="0" Variant="@DrawerVariant.Persistent">
+                <MudDrawer @bind-Open="@open" Width="300px" Class="border-r border-solid" Elevation="0" Variant="@DrawerVariant.Persistent">
                     <MudDrawerHeader>
                         <MudText Typo="Typo.h6">gRPC Services</MudText>
                     </MudDrawerHeader>
@@ -24,7 +24,7 @@
                         <MudIconButton Icon="@Icons.Filled.AddCircleOutline" Color="Color.Primary" OnClick=@OpenAddProtobuf></MudIconButton>
                     </div>
                     <MudPaper>
-                        <MudList Dense="true" Clickable="State.Value.Services.Any()">
+                       @* <MudList Dense="true" Clickable="State.Value.Services.Any()">
                             @foreach (var svc in State.Value.Services)
                             {
                                 <MudListItem InitiallyExpanded="false">
@@ -68,10 +68,10 @@
                                     </MudStack>
                                 </MudListItem>
                             }
-                        </MudList>
+                        </MudList>*@
                     </MudPaper>
                 </MudDrawer>
-                <div class="d-flex flex-column mud-height-full pl-4">
+                <div class="d-flex flex-column mud-height-full pl-4 pb-4">
                     <GrpcClient Service="@CurrentService" Method="@CurrentMethod" />
                 </div>
             </MudDrawerContainer>
@@ -87,13 +87,16 @@
         open = !open;
     }
 
+    [CascadingParameter]
+    public MudTheme Theme { get; set; } = new();
+
     [Parameter]
     public int? ServiceId { get; set; }
 
     [Parameter]
     public int? MethodId { get; set; }
 
-    public string Search { get; set; }
+    public string Search { get; set; } = string.Empty;
     public GrpcServiceDefinition? CurrentService { get; set; }
     public GrpcMethodDefinition? CurrentMethod { get; set; }
 

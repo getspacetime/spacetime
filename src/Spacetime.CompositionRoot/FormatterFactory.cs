@@ -1,7 +1,7 @@
 ﻿using Autofac.Features.Indexed;
 using Spacetime.Core.Formatters;
 
-namespace Spacetime.Container;
+namespace Spacetime.CompositionRoot;
 
 /// <summary>
 /// Register the IFormatter using Keyed IIndex support in Autofac 

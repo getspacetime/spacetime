@@ -50,15 +50,22 @@
             return;
         }
 
-        // since we're reusing the same instances in some cases
-        // we want to be able to update the model once whatever we're viewing
-        // changes to a new request
+        //// since we're reusing the same instances in some cases
+        //// we want to be able to update the model once whatever we're viewing
+        //// changes to a new request
         var model = await _editor.GetModel();
         var value = await model.GetValue(EndOfLinePreference.TextDefined, false);
         if (Data == null || !Data.Equals(value))
         {
             Log.LogInformation("Parameters changed for code editor, updating value");
-            await model.SetValue(Data ?? string.Empty);
+            try
+            {
+                    await model.SetValue(Data);
+            }
+            catch (Exception ex)
+            {
+                Log.LogError(ex, "Failed to set model value for editor");
+            }
         }
     }
 }

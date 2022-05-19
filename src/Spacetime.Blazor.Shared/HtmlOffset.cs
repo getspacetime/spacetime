@@ -1,4 +1,4 @@
-﻿namespace Spacetime.Helpers
+﻿namespace Spacetime.Blazor.Shared
 {
     public class HtmlOffset
     {

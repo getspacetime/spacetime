@@ -1,0 +1,26 @@
+﻿@page "/"
+@using Spacetime.Blazor.gRPC
+@using Spacetime.Blazor.gRPC.Components
+@using MudBlazor
+@using Spacetime.Blazor.Shared
+
+<PageTitle>gRPC Client</PageTitle>
+
+<GrpcRequest Request="@Data" />
+
+@code
+{
+    public string Data { get; set; } = "data";
+
+    private string BoundValue
+    {
+        get => Request;
+        set => RequestChanged.InvokeAsync(value);
+    }
+
+    [Parameter]
+    public string Request { get; set; }
+
+    [Parameter]
+    public EventCallback<string> RequestChanged { get; set; }
+}

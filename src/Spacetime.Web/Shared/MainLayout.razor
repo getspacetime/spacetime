@@ -1,0 +1,14 @@
+﻿@using Spacetime.Blazor.Shared.Themes
+@using MudBlazor
+@inherits LayoutComponentBase
+
+<CascadingValue Value="Theme">
+    <div style="height: 600px" class="d-flex">
+    @Body
+    </div>
+</CascadingValue>
+
+@code
+{
+    public MudTheme Theme { get; set; } = new DefaultTheme().Theme;
+}

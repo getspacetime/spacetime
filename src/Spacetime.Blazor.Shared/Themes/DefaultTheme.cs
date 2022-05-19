@@ -1,22 +1,10 @@
-﻿using Fluxor;
-using MudBlazor;
-using Spacetime.Store.Settings;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MudBlazor;
 
-namespace Spacetime.Themes
+namespace Spacetime.Blazor.Shared.Themes
 {
     public class DefaultTheme
     {
-        private readonly IState<SettingState> _settings;
-        public DefaultTheme(IState<SettingState> settings)
-        {
-            _settings = settings;
-        }
-
+        public bool DarkMode { get; set; }
         private static readonly MudTheme _theme = new()
         {
             PaletteDark = new Palette
@@ -54,6 +42,6 @@ namespace Spacetime.Themes
         public MudTheme Theme => _theme;
 
         // calling this swatch bc I hate the word palette
-        public Palette Swatch => _settings.Value.Settings.DarkMode ? _theme.PaletteDark : _theme.Palette;
+        public Palette Swatch => DarkMode ? _theme.PaletteDark : _theme.Palette;
     }
 }
