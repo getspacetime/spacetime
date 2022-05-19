@@ -23,10 +23,17 @@ namespace Spacetime.Core.gRPC.Dynamic
             var services = _client.Files.SelectMany(p => p.Services.Select(s => s));
             foreach (var service in services)
             {
-                var methods = service.Methods.Select(p => new GrpcMethodDefinition {Name = p.FullName}).ToList();
+                var methods = service.Methods.Select(p => new GrpcMethodDefinition
+                {
+                    Name = p.Name,
+                    IsClientStreaming = p.IsClientStreaming,
+                    IsServerStreaming = p.IsServerStreaming,
+                    FullName = p.FullName
+                }).ToList();
                 var item = new GrpcServiceDefinition
                 {
                     Name = service.Name,
+                    FullName = service.FullName,
                     Methods = methods
                 };
 

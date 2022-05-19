@@ -20,15 +20,12 @@ public class LiteDbProtobufService : LiteDbService, IProtobufService
     {
         using var db = WithDatabase();
         var col = db.WithCollection();
-        foreach (var svc in services)
-        {
-            col.Upsert(svc);
-        }
+        col.Insert(services);
 
         return Task.CompletedTask;
     }
 
-    public Task Remove(int serviceId)
+    public Task Remove(Guid serviceId)
     {
         using var db = WithDatabase();
         var col = db.WithCollection();

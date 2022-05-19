@@ -12,4 +12,24 @@ public static class GrpcReducers
             Services = action.Services
         };
     }
+
+    [ReducerMethod]
+    public static GrpcState SaveServices(GrpcState state, SaveServicesAction action)
+    {
+        return new GrpcState
+        {
+            IsSaving = true,
+            Services = state.Services
+        };
+    }
+
+    [ReducerMethod]
+    public static GrpcState SaveServicesComplete(GrpcState state, SaveServicesCompleteAction action)
+    {
+        return new GrpcState
+        {
+            IsSaving = false,
+            Services = state.Services
+        };
+    }
 }

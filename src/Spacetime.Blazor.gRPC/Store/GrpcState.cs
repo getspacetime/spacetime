@@ -12,12 +12,13 @@ namespace Spacetime.Blazor.gRPC.Store
     [FeatureState]
     public class GrpcState
     {
-        public List<GrpcServiceDefinition> Services { get; set; }
+        public bool IsSaving { get; set; }
+        public List<GrpcServiceDefinition> Services { get; set; } = new();
     }
 
     public class FetchServicesSuccessAction
     {
-        public List<GrpcServiceDefinition> Services { get; set; }
+        public List<GrpcServiceDefinition> Services { get; set; } = new();
     }
 
     public class FetchServicesAction
@@ -27,11 +28,23 @@ namespace Spacetime.Blazor.gRPC.Store
 
     public class SaveServicesAction
     {
-        public List<GrpcServiceDefinition> Services { get; set; }
+        public List<GrpcServiceDefinition> Services { get; set; } = new();
+    }
+
+    public class SaveServicesSuccessAction
+    {
+    }
+
+    public class SaveServicesFailedAction
+    {
+    }
+
+    public class SaveServicesCompleteAction
+    {
     }
 
     public class RemoveServiceAction
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
     }
 }

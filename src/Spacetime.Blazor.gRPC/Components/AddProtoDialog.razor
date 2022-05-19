@@ -1,10 +1,13 @@
-﻿@using Spacetime.Core.gRPC;
+﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
+
+@using Spacetime.Core.gRPC;
 @using Spacetime.Core.gRPC.Interfaces
 @using Fluxor
 @using Spacetime.Blazor.gRPC.Store
 
 @inject IGrpcExplorer GrpcExplorer
 @inject IDispatcher Dispatcher
+@inject IState<GrpcState> State
 
 <MudDialog>
     <DialogContent>
@@ -16,7 +19,8 @@
                               Variant="Variant.Outlined" />
                 <div class="my-2">
                     <MudButton OnClick="ValidateGrpc"
-                               Color="Color.Success">
+                               Color="Color.Success"
+                               Disabled="State.Value.IsSaving">
                         Get Service Metadata
                     </MudButton>
                     
@@ -51,6 +55,10 @@
                 {
                     <MudText Typo="Typo.body2">To explore services and methods, add the URL of your service that supports gRPC reflection.</MudText>
                 }
+                @if (!string.IsNullOrWhiteSpace(Error))
+                {
+                    <MudAlert Severity="Severity.Error">@Error</MudAlert>
+                }
             </MudItem>
         </MudGrid>
 
@@ -69,7 +77,7 @@
     public string? ProtoFile { get; set; }
     public string? ImportPath { get; set; }
     public string? URL { get; set; }
-
+    public string Error { get; set; }
     public GrpcExploreResult? GrpcExploreResult { get; set; }
     private List<FlattenedService> FlattenedServiceMap { get; set; } = new List<FlattenedService>();
 
@@ -82,20 +90,27 @@
             return;
         }
 
-        GrpcExploreResult = await GrpcExplorer.Explore(URL);
-
-        foreach (var svc in GrpcExploreResult.Services)
+        try
         {
-            foreach (var method in svc.Methods)
+            GrpcExploreResult = await GrpcExplorer.Explore(URL);
+
+            foreach (var svc in GrpcExploreResult.Services)
             {
-                FlattenedServiceMap.Add(new FlattenedService { ServiceName = svc.Name, MethodName = method.Name });
+                foreach (var method in svc.Methods)
+                {
+                    FlattenedServiceMap.Add(new FlattenedService {ServiceName = svc.Name, MethodName = method.Name});
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            Error = ex.Message;
         }
     }
 
     private void SaveProto()
     {
-        if (GrpcExploreResult == null)
+        if (GrpcExploreResult == null || State.Value.IsSaving)
         {
             return;
         }
@@ -105,7 +120,7 @@
 
     private bool CanSave()
     {
-        return GrpcExploreResult != null && GrpcExploreResult.Services.Count > 0;
+        return !State.Value.IsSaving && GrpcExploreResult != null && GrpcExploreResult.Services.Count > 0;
     }
 
     private class FlattenedService

@@ -44,11 +44,35 @@ public class GrpcEffects
     [EffectMethod]
     public async Task HandleSaveServiceAction(SaveServicesAction action, IDispatcher dispatcher)
     {
-        await _svc.Save(action.Services);
+        try
+        {
+            await _svc.Save(action.Services);
 
+            dispatcher.Dispatch(new SaveServicesSuccessAction());
+        }
+        catch (Exception ex)
+        {
+            _log.LogError(ex, "Failed to save services");
+            dispatcher.Dispatch(new SaveServicesFailedAction());
+        }
+        finally
+        {
+            dispatcher.Dispatch(new SaveServicesCompleteAction());
+        }
+    }
+
+    [EffectMethod]
+    public async Task HandleSaveServiceSuccessAction(SaveServicesSuccessAction action, IDispatcher dispatcher)
+    {
         _snackbar.Add("Saved services", Severity.Success);
 
         // reload services
         dispatcher.Dispatch(new FetchServicesAction());
+    }
+
+    [EffectMethod]
+    public async Task HandleSaveServiceFailedAction(SaveServicesFailedAction action, IDispatcher dispatcher)
+    {
+        _snackbar.Add("Failed to save services", Severity.Error);
     }
 }

@@ -52,6 +52,13 @@
     </MudItem>
 </MudGrid>
 @code {
+    /*
+     * todos
+     * 1. Look for local running docker containers and offer to use these for server reflection
+     * 2. clicking second req in service method list doesn't work
+     * 3. auto set url to be whatever the user used for server reflection
+     * 4. save state of grpc services (url, body)
+     */
     private SpacetimeResponse Response { get; set; } = new SpacetimeResponse();
     public string Request { get; set; }
     public string URL { get; set; } = "https://localhost:7186";
@@ -72,25 +79,10 @@
     {
         var valid = true;
 
-        if (string.IsNullOrWhiteSpace(Request))
-        {
-            Snackbar.Add("Request body is required.", Severity.Error);
-            valid = false;
-        }
-        
         if (Method == null || string.IsNullOrWhiteSpace(Method.Name))
         {
             Snackbar.Add("Select a gRPC Method", Severity.Error);
             valid = false;
-        }
-        else
-        {
-            var split = Method.Name.Split(".", StringSplitOptions.RemoveEmptyEntries);
-            if (split.Count() != 3)
-            {
-                Snackbar.Add($"Select a method for service {Service?.Name}", Severity.Error);
-                valid = false;
-            }
         }
 
         return valid;
@@ -105,10 +97,7 @@
 
         // todo: validate json
         Debug.Assert(Method != null);
-        var split = Method.Name.Split(".", StringSplitOptions.RemoveEmptyEntries);
-        var service = $"{split[0]}.{split[1]}";
-        var method = split[2];
-        var grpcResponse = await GrpcExplorer.Invoke(URL, service, method, Request);
+        var grpcResponse = await GrpcExplorer.Invoke(URL, Service.FullName, Method.Name, Request);
         Response = new SpacetimeResponse
             {
                 ElapsedMs = grpcResponse.ElapsedMs,

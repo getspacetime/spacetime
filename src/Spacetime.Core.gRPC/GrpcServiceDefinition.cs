@@ -1,9 +1,13 @@
-﻿namespace Spacetime.Core.gRPC
+﻿using Google.Protobuf.Reflection;
+
+namespace Spacetime.Core.gRPC
 {
     public class GrpcServiceDefinition
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public List<GrpcMethodDefinition> Methods { get; set; } = new ();
+        public string FullName { get; set; }
+        public List<GrpcMethodDefinition> Methods { get; set; } = new();
+
     }
 }

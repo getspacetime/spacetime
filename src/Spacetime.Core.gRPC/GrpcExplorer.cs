@@ -63,6 +63,16 @@ namespace Spacetime.Core.gRPC
             // named ServerReflection - remove this from the list to avoid clutter
             result.Services = result.Services
                 .Where(p => !p.Name.Equals("ServerReflection", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            result.Services.ForEach(svc =>
+            {
+                svc.Id = Guid.NewGuid();
+
+                svc.Methods.ForEach(method =>
+                {
+                    method.Id = Guid.NewGuid();
+                });
+            });
             
             return result;
         }
