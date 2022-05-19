@@ -27,6 +27,13 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="$(TargetFramework.Contains('-windows')) and '$(Configuration)' == 'Release'">
+		<GenerateAppxPackageOnBuild>true</GenerateAppxPackageOnBuild>
+		<AppxPackageSigningEnabled>true</AppxPackageSigningEnabled>
+		<PackageCertificateThumbprint>5F118C857FEE1C1F04AB6EA73133C9FCEA73BA56</PackageCertificateThumbprint>
+		<PackageCertificatePassword>$(CERTIFICATE_PASSWORD)</PackageCertificatePassword>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<!-- App Icon -->
 		<!--<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />-->

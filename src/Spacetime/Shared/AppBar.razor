@@ -35,8 +35,5 @@
         {
             Dispatcher.Dispatch(new SaveSettingsAction(settings));
         }
-
-        // todo: move to flux
-        await SettingsService.SaveSettings(settings);
     }
 }

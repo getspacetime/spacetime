@@ -9,11 +9,11 @@
   <Identity
     Name="4E06626E-0B14-40DD-8051-BC0A5F5992FB"
     Publisher="CN=Spacetime"
-    Version="1.0.0.2" />
+    Version="1.0.0.3" />
 
   <Properties>
     <DisplayName>Spacetime</DisplayName>
-    <PublisherDisplayName>Spacetime Software</PublisherDisplayName>
+    <PublisherDisplayName>Spacetime Software, LLC</PublisherDisplayName>
     <Logo>appiconStoreLogo.png</Logo>
   </Properties>
 
@@ -31,7 +31,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="SpaceGETtime"
+        DisplayName="Spacetime API Client"
         Description="Spacetime"
         BackgroundColor="transparent"
         Square150x150Logo="appiconMediumTile.png"
