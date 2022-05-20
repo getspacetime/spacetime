@@ -4,13 +4,9 @@ VisualStudioVersion = 17.0.31611.283
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime", "Spacetime\Spacetime.csproj", "{A0652C85-FC89-46DB-AD5F-8F44EE90BA4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.Tests", "Spacetime.Core.Tests\Spacetime.Core.Tests.csproj", "{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core", "Spacetime.Core\Spacetime.Core.csproj", "{723C26F4-2ECB-47D7-B783-E4055C42615E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.gRPC", "Spacetime.Core.gRPC\Spacetime.Core.gRPC.csproj", "{59E4197B-63DA-4190-988D-25810A2E91E2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Core.gRPC.Tests", "Spacetime.Core.gRPC.Tests\Spacetime.Core.gRPC.Tests.csproj", "{311C6B8D-BC1B-4B6E-A146-EED7B02A4EDB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spacetime.Settings", "Spacetime.Settings\Spacetime.Settings.csproj", "{951694A3-7F0A-41A8-8713-42A256E25452}"
 EndProject
@@ -34,10 +30,6 @@ Global
 		{A0652C85-FC89-46DB-AD5F-8F44EE90BA4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0652C85-FC89-46DB-AD5F-8F44EE90BA4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A0652C85-FC89-46DB-AD5F-8F44EE90BA4D}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD7290DA-827A-4A05-8A2A-13BD7E5F06C7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{723C26F4-2ECB-47D7-B783-E4055C42615E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{723C26F4-2ECB-47D7-B783-E4055C42615E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{723C26F4-2ECB-47D7-B783-E4055C42615E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -46,10 +38,6 @@ Global
 		{59E4197B-63DA-4190-988D-25810A2E91E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59E4197B-63DA-4190-988D-25810A2E91E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59E4197B-63DA-4190-988D-25810A2E91E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{311C6B8D-BC1B-4B6E-A146-EED7B02A4EDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{311C6B8D-BC1B-4B6E-A146-EED7B02A4EDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{311C6B8D-BC1B-4B6E-A146-EED7B02A4EDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{311C6B8D-BC1B-4B6E-A146-EED7B02A4EDB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{951694A3-7F0A-41A8-8713-42A256E25452}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{951694A3-7F0A-41A8-8713-42A256E25452}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{951694A3-7F0A-41A8-8713-42A256E25452}.Release|Any CPU.ActiveCfg = Release|Any CPU
