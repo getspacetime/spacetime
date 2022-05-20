@@ -1,4 +1,5 @@
 ﻿using DynamicGrpc;
+using Grpc.Core;
 
 namespace Spacetime.Core.gRPC.Dynamic
 {
@@ -15,6 +16,12 @@ namespace Spacetime.Core.gRPC.Dynamic
             IDictionary<string, object> request)
         {
             return await _client.AsyncUnaryCall(serviceName, methodName, request, null, null);
+        }
+
+        public IAsyncEnumerable<IDictionary<string, object>> AsyncDynamicCall(string serviceName, string methodName,
+            IAsyncEnumerable<IDictionary<string, object>> input, string? host = null, CallOptions? options = null)
+        {
+            return _client.AsyncDynamicCall(serviceName, methodName, input, host, options);
         }
 
         public Task<GrpcExploreResult> Explore()
