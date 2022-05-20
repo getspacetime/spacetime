@@ -12,12 +12,4 @@ namespace Spacetime.Core.gRPC
         public string ResponseBody { get; set; }
         public long ElapsedMs { get; set; }
     }
-
-    public enum GrpcStatus
-    {
-        NotSet,
-        Ok,
-        Error,
-        Active
-    }
 }

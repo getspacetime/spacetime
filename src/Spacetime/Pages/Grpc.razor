@@ -1,4 +1,6 @@
 ﻿@page "/grpc/{serviceId:guid?}/{methodId:guid?}"
+@using GrpcRequest = Spacetime.Core.gRPC.GrpcRequest
+@using global::Grpc.Core
 @inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @inject IDialogService DialogService
@@ -67,7 +69,7 @@
                     </MudPaper>
                 </MudDrawer>
                 <div class="d-flex flex-column mud-height-full pl-4">
-                    <GrpcClient Service="@CurrentService" Method="@CurrentMethod" />
+                    <GrpcClient Service="@CurrentService" Method="@CurrentMethod" Request="@CurrentRequest" />
                 </div>
             </MudDrawerContainer>
         </MudPaper>
@@ -91,6 +93,7 @@
     public string Search { get; set; }
     public GrpcServiceDefinition? CurrentService { get; set; }
     public GrpcMethodDefinition? CurrentMethod { get; set; }
+    public GrpcRequest? CurrentRequest { get; set; }
 
     protected override void OnInitialized()
     {
@@ -103,6 +106,9 @@
     {
         CurrentService = ServiceId != null ? State.Value.Services?.FirstOrDefault(p => p.Id == ServiceId.Value) : State.Value.Services?.FirstOrDefault();
         CurrentMethod = MethodId != null ? CurrentService?.Methods.FirstOrDefault(p => p.Id == MethodId) : CurrentService?.Methods.FirstOrDefault();
+        CurrentRequest = CurrentService != null && CurrentMethod != null 
+            ? (State.Value.Requests?.FirstOrDefault(p => p.ServiceDefinitionId == ServiceId && p.MethodDefinitionId == MethodId) ?? new())
+            : new();
     }
 
     public async Task OpenAddProtobuf()

@@ -42,3 +42,21 @@ public static class LiteDbExtensions
         return db.GetCollection<GrpcServiceDefinition>("serviceDefinitions");
     }
 }
+
+public class GrpcRequestService : LiteDbService
+{
+    public async Task<List<GrpcRequest>> GetRequests()
+    {
+        using var db = WithDatabase();
+        var col = db.GetCollection<GrpcRequest>();
+        return col.FindAll().ToList();
+    }
+
+    public async Task SaveRequest(GrpcRequest request)
+    {
+        using var db = WithDatabase();
+        var col = db.GetCollection<GrpcRequest>();
+
+        col.Upsert(request);
+    }
+}

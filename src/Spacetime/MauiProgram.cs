@@ -74,6 +74,7 @@ public static class MauiProgram
         builder.RegisterType<GrpcExplorer>().As<IGrpcExplorer>();
         builder.RegisterType<DynamicGrpcFactory>().As<IDynamicGrpcFactory>();
         builder.RegisterType<LiteDbProtobufService>().As<IProtobufService>();
+        builder.RegisterType<GrpcRequestService>();
 
         builder.RegisterType<FormatterFactory>().As<IFormatterFactory>();
         builder.RegisterType<EmptyFormatter>().Keyed<IFormatter>(FormatterType.Default);

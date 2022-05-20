@@ -1,13 +1,13 @@
 ﻿@inherits Fluxor.Blazor.Web.Components.FluxorComponent
 
 @using Fluxor
-@using Spacetime.Blazor.gRPC.Store
 @using System.Diagnostics
 @inject IProtobufService ProtobufService
 @inject IDialogService DialogService
 @inject IGrpcExplorer GrpcExplorer
 @inject ISnackbar Snackbar
 @inject IDispatcher Dispatcher
+@inject GrpcRequestService GrpcRequestService
 
 <MudGrid Class="d-flex flex-grow-1">
     <MudItem xs="12" Class="d-flex flex-column">
@@ -28,7 +28,7 @@
             <MudItem xs="3">
                 <MudTextField Margin="Margin.Dense"
                               Class="my-4"
-                              @bind-Value="URL"
+                              @bind-Value="Request.URL"
                               Label="Host"
                               Placeholder="http://localhost:8080"
                               Variant="Variant.Outlined"
@@ -36,17 +36,17 @@
             </MudItem>
             <MudItem xs="3">
                 <div class="flex flex-row my-4">
-                    <MudChip Color="Color.Default">@Response?.Status</MudChip>
-                    <MudChip Color="Color.Default">@(Response?.ElapsedMs)ms</MudChip>
+                    <MudChip Color="Color.Default">@Request.Response?.Status</MudChip>
+                    <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
                 </div>
             </MudItem>
         </MudGrid>
         <MudGrid Class="d-flex flex-grow-1">
             <MudItem sm="12" md="6" Class="d-flex">
-                <GrpcRequest @bind-Request="Request" />
+                <GrpcRequest @bind-Request="Request.Body" />
             </MudItem>
             <MudItem sm="12" md="6" Class="d-flex">
-                <GrpcResponse @bind-Response="Response" />
+                <GrpcResponse @bind-Response="Request.Response" />
             </MudItem>
         </MudGrid>
     </MudItem>
@@ -59,15 +59,15 @@
      * 3. auto set url to be whatever the user used for server reflection
      * 4. save state of grpc services (url, body)
      */
-    private SpacetimeResponse Response { get; set; } = new SpacetimeResponse();
-    public string Request { get; set; }
-    public string URL { get; set; } = "https://localhost:7186";
     
     [Parameter]
     public GrpcServiceDefinition? Service { get; set; }
     
     [Parameter]
     public GrpcMethodDefinition? Method { get; set; }
+
+    [Parameter]
+    public Spacetime.Core.gRPC.GrpcRequest Request { get; set; }
 
     public void OpenAddProtobuf()
     {
@@ -95,14 +95,21 @@
             return;
         }
 
+        Request.MethodDefinitionId = Method.Id;
+        Request.ServiceDefinitionId = Service.Id;
+
+        Dispatcher.Dispatch(new SaveGrpcRequestAction { Request = Request });
+
         // todo: validate json
         Debug.Assert(Method != null);
-        var grpcResponse = await GrpcExplorer.Invoke(URL, Service.FullName, Method.Name, Request);
-        Response = new SpacetimeResponse
+        var grpcResponse = await GrpcExplorer.Invoke(Request.URL, Service.FullName, Method.Name, Request.Body);
+        Request.Response = new SpacetimeResponse
             {
                 ElapsedMs = grpcResponse.ElapsedMs,
                 ResponseBody = grpcResponse.ResponseBody,
                 Status = (SpacetimeStatus)grpcResponse.Status
             };
+
+        Dispatcher.Dispatch(new SaveGrpcRequestAction { Request = Request });
     }
 }
