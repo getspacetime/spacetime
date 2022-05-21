@@ -1,7 +1,5 @@
 [![Build](https://github.com/getspacetime/spacetime/actions/workflows/build.yaml/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/build.yaml)
 [![MacOS](https://github.com/getspacetime/spacetime/actions/workflows/mac.yml/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/mac.yml)
-[![MacOS](https://github.com/getspacetime/spacetime/workflows/mac/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/mac.yml)
-<!-- [![windows](https://github.com/getspacetime/spacetime/workflows/windows/badge.svg?branch=main)](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml) -->
 
 <div align="center">
   <a href="https://github.com/getspacetime/spacetime">
