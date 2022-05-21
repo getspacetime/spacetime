@@ -1,5 +1,6 @@
 [![Build](https://github.com/getspacetime/spacetime/actions/workflows/build.yaml/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/build.yaml)
 [![MacOS](https://github.com/getspacetime/spacetime/actions/workflows/mac.yml/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/mac.yml)
+[![Windows](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/windows.yml)
 
 <div align="center">
   <a href="https://github.com/getspacetime/spacetime">
