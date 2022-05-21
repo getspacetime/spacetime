@@ -1,7 +1,9 @@
+  name: Windows
+  
   on: 
     schedule:
       - cron: '0 0 * * *'
-  name: windows
+    workflow_dispatch:
   jobs:      
     build-windows:
       runs-on: windows-2022
@@ -10,23 +12,15 @@
         - name: Checkout
           uses: actions/checkout@v2
 
-        # - name: Setup .NET 6
-        #   uses: actions/setup-dotnet@v1
-        #   with:
-        #     dotnet-version: 6.0.x
-        #     include-prerelease: true
+        - name: Setup .NET 6
+          uses: actions/setup-dotnet@v1
+          with:
+            dotnet-version: 6.0.x
+            include-prerelease: true
         
-        - name: Install .NET 6.0.300-preview.22204.3
-          shell: pwsh
-          run: |
-             C:\msys64\usr\bin\wget.exe https://dot.net/v1/dotnet-install.ps1 -OutFile C:\dotnet-install.ps1
-             C:\dotnet-install.ps1 -Version 6.0.300-preview.22204.3
-             dotnet --info
-             Write-Host "##vso[task.prependpath]C:\\Users\\VssAdministrator\\AppData\\Local\\Microsoft\\dotnet"
-
         - name: Install MAUI Workloads
           run: |
-            dotnet workload install maui --ignore-failed-sources
+            dotnet workload install maui --ignore-failed-sources --include-previews
 
         - name: Restore Dependencies
           run: dotnet restore src/Spacetime/Spacetime.csproj
