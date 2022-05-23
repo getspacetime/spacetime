@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text.Json.Nodes;
 using Grpc.Net.Client;
 using Microsoft.Extensions.Logging;
+using Spacetime.Core.Formatters;
 using Spacetime.Core.gRPC.Dynamic;
 using Spacetime.Core.gRPC.Interfaces;
 
@@ -10,13 +11,15 @@ namespace Spacetime.Core.gRPC
 {
     public class GrpcExplorer : IGrpcExplorer
     {
+        private readonly JsonFormatter _formatter;
         private readonly ILogger<GrpcExplorer> _log;
         private readonly IDynamicGrpcFactory _factory;
 
-        public GrpcExplorer(ILogger<GrpcExplorer> log, IDynamicGrpcFactory factory)
+        public GrpcExplorer(ILogger<GrpcExplorer> log, IDynamicGrpcFactory factory, JsonFormatter formatter)
         {
             _log = log;
             _factory = factory;
+            _formatter = formatter;
         }
 
         public async Task<GrpcResponse> Invoke(string host, string service, string method, string json)
@@ -39,6 +42,11 @@ namespace Spacetime.Core.gRPC
                     jsonResponse = ToJson(result)!.ToJsonString();
                 }
                 stopwatch.Stop();
+
+                if (!string.IsNullOrWhiteSpace(jsonResponse))
+                {
+                    jsonResponse = _formatter.Format(jsonResponse);
+                }
 
                 response.Status = GrpcStatus.Ok;
                 response.ResponseBody = jsonResponse;
@@ -124,6 +132,8 @@ namespace Spacetime.Core.gRPC
                     }
 
                     return jsonArray;
+                case KeyValuePair<object, object> pair:
+                    return JsonValue.Create(pair);
                 default: // don't know what to do here
                     return null;
             }
