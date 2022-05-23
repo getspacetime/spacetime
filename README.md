@@ -62,14 +62,6 @@
 <img width="1595" alt="rest api client" src="https://user-images.githubusercontent.com/1738479/169888145-1d991141-4d78-46b9-8477-3e800c2b2e41.png">
 <img width="1601" alt="grpc client" src="https://user-images.githubusercontent.com/1738479/169887937-54576e10-c628-4cee-98b1-602cc97cd851.png">
 
-
-A fully featured* cross-platform, cross-transport API Client, wormholes excluded. 
-
-Spacetime is proudly built with .NET MAUI Blazor.
-
-*not quite fully featured yet*
-
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 ### Built With
@@ -104,15 +96,16 @@ Note: hot reloading does not yet work, but it should be fixed soon.
 
 Use the [MSIX Installer](https://github.com/spacetimedotnet/spacetime/releases)
 
-#### Mac
-Clone the repository and run the `dotnet` command in the Spacetime project folder. **Note**: don't forget to run `npm run build` inside the `wwwroot` folder.
+#### Mac Source
+Clone the repository and run the `dotnet` command in the Spacetime project folder. 
 
 ```
 dotnet build -t:Run -f net6.0-maccatalyst
 ```
 
-**Installer*
-[TBD](https://github.com/spacetimedotnet/spacetime/issues/5)
+#### Mac Binary
+
+Download the [zip file](https://github.com/spacetimedotnet/spacetime/releases) and extract the `.app` 
 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
