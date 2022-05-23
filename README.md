@@ -55,6 +55,7 @@
 
 - [x] REST
 - [x] gRPC (_we support server reflection! stop reloading protobuf files!_)
+- [ ] Synchronization (_coming soon, for free!_)
 - [ ] WebSockets
 - [ ] Kafka
 
