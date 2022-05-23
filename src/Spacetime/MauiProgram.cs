@@ -76,6 +76,7 @@ public static class MauiProgram
         builder.RegisterType<LiteDbProtobufService>().As<IProtobufService>();
         builder.RegisterType<GrpcRequestService>();
 
+        builder.RegisterType<JsonFormatter>();
         builder.RegisterType<FormatterFactory>().As<IFormatterFactory>();
         builder.RegisterType<EmptyFormatter>().Keyed<IFormatter>(FormatterType.Default);
         builder.RegisterType<JsonFormatter>().Keyed<IFormatter>(FormatterType.Json);

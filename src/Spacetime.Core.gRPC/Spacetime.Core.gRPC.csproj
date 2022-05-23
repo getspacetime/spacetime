@@ -26,6 +26,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Spacetime.Core.Shared\Spacetime.Core.Shared.csproj" />
+	  <ProjectReference Include="..\Spacetime.Core\Spacetime.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
