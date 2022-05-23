@@ -53,6 +53,11 @@
 
 ## About The Project
 
+- [x] REST
+- [x] gRPC (_we support server reflection! stop reloading protobuf files!_)
+- [ ] WebSockets
+- [ ] Kafka
+
 <img width="1595" alt="rest api client" src="https://user-images.githubusercontent.com/1738479/169888145-1d991141-4d78-46b9-8477-3e800c2b2e41.png">
 <img width="1601" alt="grpc client" src="https://user-images.githubusercontent.com/1738479/169887937-54576e10-c628-4cee-98b1-602cc97cd851.png">
 
