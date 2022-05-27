@@ -8,6 +8,7 @@
 
 <Fluxor.Blazor.Web.StoreInitializer />
 
+<div class="@(SettingState.Value.Settings.DarkMode ? "dark" : "")">
 <Router AppAssembly="@GetType().Assembly">
     <Found Context="routeData">
         <CascadingValue Name="DarkMode" Value="@SettingState.Value.Settings.DarkMode">
@@ -20,7 +21,7 @@
         </LayoutView>
     </NotFound>
 </Router>
-
+</div>
 
 <MudThemeProvider IsDarkMode="@SettingState.Value.Settings.DarkMode" Theme="Theme.Theme" />
 <MudDialogProvider />
