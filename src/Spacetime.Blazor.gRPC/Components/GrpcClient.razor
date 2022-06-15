@@ -9,23 +9,23 @@
 @inject IDispatcher Dispatcher
 @inject GrpcRequestService GrpcRequestService
 
-<MudGrid Class="d-flex flex-grow-1">
-    <MudItem xs="12" Class="d-flex flex-column">
-        <MudGrid Class="d-flex">
-            <MudItem xs="3">
+<div class="grid grid-cols-2 gap-4 h-5/6 mx-2">
+    <div class="flex flex-col gap-2 border rounded dark:border-gray-800 border-gray-100 shadow-md p-1 xs:col-span-2 sm:col-span-2 lg:col-span-1">
+        <div class="flex gap-4">
+            <div>
                 <MudTextField Margin="Margin.Dense"
                               Label="Service"
                               Value="Service?.Name"
                               Placeholder="Service"
                               Variant="Variant.Outlined"
-                              Class="my-4"/>
+                              Class="my-4" />
                 <MudTextField Margin="Margin.Dense"
                               Label="Method"
                               Value="Method?.Name"
                               Placeholder="Method"
-                              Variant="Variant.Outlined"/>
-            </MudItem>
-            <MudItem xs="3">
+                              Variant="Variant.Outlined" />
+            </div>
+            <div>
                 <MudTextField Margin="Margin.Dense"
                               Class="my-4"
                               @bind-Value="Request.URL"
@@ -33,34 +33,29 @@
                               Placeholder="http://localhost:8080"
                               Variant="Variant.Outlined"
                               Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Send" OnAdornmentClick="Execute" />
-            </MudItem>
-            <MudItem xs="3">
-                <div class="flex flex-row my-4">
-                    <MudChip Color="Color.Default">@Request.Response?.Status</MudChip>
-                    <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
-                </div>
-            </MudItem>
-        </MudGrid>
-        <MudGrid Class="d-flex flex-grow-1">
-            <MudItem sm="12" md="6" Class="d-flex">
-                <GrpcRequest @bind-Request="Request.Body" />
-            </MudItem>
-            <MudItem sm="12" md="6" Class="d-flex">
-                <GrpcResponse @bind-Response="Request.Response" />
-            </MudItem>
-        </MudGrid>
-    </MudItem>
-</MudGrid>
+            </div>
+        </div>
+        <GrpcRequest @bind-Request="Request.Body" />
+    </div>
+    <div class="flex flex-col gap-2 border rounded dark:border-gray-800 border-gray-100 shadow-md p-1 sm:col-span-2 lg:col-span-1">
+        <div class="flex flex-row my-4">
+            <MudChip Color="Color.Default">@Request.Response?.Status</MudChip>
+            <MudChip Color="Color.Default">@(Request.Response?.ElapsedMs)ms</MudChip>
+        </div>
+        <GrpcResponse @bind-Response="Request.Response"/>
+    </div>
+</div>
+
 @code {
     /*
      * todos
      * 1. Look for local running docker containers and offer to use these for server reflection
      * 2. auto set url to be whatever the user used for server reflection
      */
-    
+
     [Parameter]
     public GrpcServiceDefinition? Service { get; set; }
-    
+
     [Parameter]
     public GrpcMethodDefinition? Method { get; set; }
 

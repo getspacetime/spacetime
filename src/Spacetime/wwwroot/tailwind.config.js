@@ -1,5 +1,6 @@
 ﻿module.exports = {
-    content: ["*.{html,js}", "../Pages/*.razor", "../Shared/**/*.razor"],
+    darkMode: 'class',
+    content: ["*.{html,js}", "../Pages/*.razor", "../Shared/**/*.razor", "../../Spacetime.Blazor.*/Components/**/*.razor"],
     theme: {
         extend: {},
     },

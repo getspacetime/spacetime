@@ -1,8 +1,5 @@
-﻿<MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" Class="d-flex flex-grow-1" PanelClass="d-flex flex-grow-1">
-    <MudTabPanel Text="Request" Class="flex">
-        <Code @bind-Data="@BoundValue" Name="GrpcRequestEditor" />
-    </MudTabPanel>
-</MudTabs>
+﻿<Code @bind-Data="@BoundValue" Name="GrpcRequestEditor" />
+
 
 @code {
     private string BoundValue
