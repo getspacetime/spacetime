@@ -32,8 +32,7 @@ namespace Spacetime.Core.gRPC
                 using var channel = GrpcChannel.ForAddress(host);
                 var client = await _factory.FromServerReflection(channel);
 
-                var data = ParseJson(json);
-                var input = ParseInput(data);
+                var input = CreateDictionaryFromJson(json);
 
                 stopwatch = Stopwatch.StartNew();
                 var jsonResponse = string.Empty;
@@ -64,36 +63,46 @@ namespace Spacetime.Core.gRPC
             return response;
         }
 
+        private static List<IDictionary<string, object>> CreateDictionaryFromJson(string json)
+        {
+            var data = ParseJson(json);
+            var input = ParseInput(data);
+
+            return input;
+        }
+
         // thanks & credit to: https://github.com/xoofx/grpc-curl
         private static List<IDictionary<string, object>> ParseInput(object data)
         {
             // Parse Input
             var input = new List<IDictionary<string, object>>();
 
-            if (data is IEnumerable<object> it)
+            switch (data)
             {
-                int index = 0;
-                foreach (var item in it)
+                case IEnumerable<object> it:
                 {
+                    var index = 0;
+                    foreach (var item in it)
+                    {
 
-                    if (item is IDictionary<string, object> dict)
-                    {
-                        input.Add(dict);
+                        if (item is IDictionary<string, object> dict)
+                        {
+                            input.Add(dict);
+                        }
+                        else
+                        {
+                            throw new ApplicationException($"Invalid type `{item?.GetType()?.FullName}` from the input array at index [{index}]. Expecting an object.");
+                        }
+                        index++;
                     }
-                    else
-                    {
-                        throw new ApplicationException($"Invalid type `{item?.GetType()?.FullName}` from the input array at index [{index}]. Expecting an object.");
-                    }
-                    index++;
+
+                    break;
                 }
-            }
-            else if (data is IDictionary<string, object> dict)
-            {
-                input.Add(dict);
-            }
-            else
-            {
-                throw new ApplicationException($"Invalid type `{data?.GetType()?.FullName}` from the input. Expecting an object.");
+                case IDictionary<string, object> dict:
+                    input.Add(dict);
+                    break;
+                default:
+                    throw new ApplicationException($"Invalid type `{data?.GetType()?.FullName}` from the input. Expecting an object.");
             }
 
             return input;
