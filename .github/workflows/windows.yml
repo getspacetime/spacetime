@@ -24,7 +24,7 @@
         run: dotnet restore src/Spacetime/Spacetime.csproj
 
       - name: Build Spacetime
-        run: dotnet build src/Spacetime/Spacetime.csproj -f:net7.0 -c Release
+        run: dotnet build src/Spacetime/Spacetime.csproj -f:net7.0-windows -c Release
 
       # - name: Upload Windows Artifact
       #   uses: actions/upload-artifact@v2.3.1
