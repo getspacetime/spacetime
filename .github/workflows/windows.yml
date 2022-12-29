@@ -19,7 +19,7 @@
 
       - name: Install MAUI Workload
         run: |
-          dotnet workload install maui-windows
+          dotnet workload install maui
       - name: Restore Dependencies
         run: dotnet restore src/Spacetime/Spacetime.csproj
 
