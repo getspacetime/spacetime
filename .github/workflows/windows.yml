@@ -9,24 +9,22 @@
       runs-on: windows-2022
       name: Windows Build
       steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        - name: Setup .NET 6
-          uses: actions/setup-dotnet@v1
-          with:
-            dotnet-version: 6.0.x
-            include-prerelease: true
-        
-        - name: Install MAUI Workloads
-          run: |
-            dotnet workload install maui --ignore-failed-sources --include-previews
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.x
 
-        - name: Restore Dependencies
-          run: dotnet restore src/Spacetime/Spacetime.csproj
+      - name: Install MAUI Workload
+        run: |
+          dotnet workload install maui-windows
+      - name: Restore Dependencies
+        run: dotnet restore src/Spacetime/Spacetime.csproj
 
-        - name: Build Spacetime
-          run: dotnet build src/Spacetime/Spacetime.csproj -c Release
+      - name: Build Spacetime
+        run: dotnet build src/Spacetime/Spacetime.csproj -f:net7.0 -c Release
 
       # - name: Upload Windows Artifact
       #   uses: actions/upload-artifact@v2.3.1
