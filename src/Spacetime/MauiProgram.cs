@@ -1,7 +1,5 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Markup;
 using Spacetime.Core;
 using Spacetime.Core.gRPC;
 using Spacetime.Core.Services;
@@ -28,8 +26,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit()
-            .UseMauiCommunityToolkitMarkup()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

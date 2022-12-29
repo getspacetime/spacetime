@@ -12,14 +12,14 @@ namespace Spacetime.Store.Settings
         }
 
         [EffectMethod(typeof(FetchSettingsAction))]
-        public async Task HandleFetchSettingsAction(IDispatcher dispatcher)
+        public async Task HandleFetchSettingsAction(Fluxor.IDispatcher dispatcher)
         {
             var settings = await _service.GetSettings();
             dispatcher.Dispatch(new FetchSettingsSuccessAction(settings));
         }
 
         [EffectMethod]
-        public async Task HandleSaveSettingsAction(SaveSettingsAction action, IDispatcher dispatcher)
+        public async Task HandleSaveSettingsAction(SaveSettingsAction action, Fluxor.IDispatcher dispatcher)
         {
             await _service.SaveSettings(action.Settings);
 
