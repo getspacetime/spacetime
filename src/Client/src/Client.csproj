@@ -5,5 +5,34 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Windows'))">
+		<TailwindInstallUrl>https://github.com/tailwindlabs/tailwindcss/releases/download/v3.3.3/tailwindcss-windows-x64.exe</TailwindInstallUrl>
+		<TailwindCliName>tailwindcss.exe</TailwindCliName>
+	</PropertyGroup>
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+		<TailwindInstallUrl>https://github.com/tailwindlabs/tailwindcss/releases/download/v3.3.3/tailwindcss-linux-x64</TailwindInstallUrl>
+		<TailwindCliName>tailwindcss</TailwindCliName>
+	</PropertyGroup>
+	<PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+		<TailwindInstallUrl>https://github.com/tailwindlabs/tailwindcss/releases/download/v3.3.3/tailwindcss-macos-x64</TailwindInstallUrl>
+		<TailwindCliName>tailwindcss</TailwindCliName>
+	</PropertyGroup>
 
+<ItemGroup>
+	<ProjectReference Include="..\..\Spacetime.Core.Shared\Spacetime.Core.Shared.csproj" />
+	<ProjectReference Include="..\..\..\..\..\BlazorMonaco\BlazorMonaco\BlazorMonaco.csproj" />
+</ItemGroup>
+
+<ItemGroup>
+  <!-- <PackageReference Include="BlazorMonaco" Version="3.1.0" /> -->
+</ItemGroup>
+
+  <Target Name="InstallTailwind" AfterTargets="AfterBuild">
+		<Message Importance="high" Text="Installing Tailwind CLI..." />
+		<DownloadFile SkipUnchangedFiles="true" SourceUrl="$(TailwindInstallUrl)" DestinationFileName="$(TailwindCliName)" DestinationFolder="$(MSBuildProjectDirectory)" />
+	</Target>
+	<Target Name="Tailwind" AfterTargets="AfterBuild" DependsOnTargets="InstallTailwind">
+		<Message Importance="high" Text="Building css with Tailwind..." />
+		<Exec Command=".\tailwindcss -i .\app.css -o .\wwwroot\css\site.css" />
+	</Target>
 </Project>
