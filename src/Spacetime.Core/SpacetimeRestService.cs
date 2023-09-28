@@ -13,11 +13,6 @@ namespace Spacetime.Core
         private readonly HttpClient _client;
         private readonly UrlBuilder _urlBuilder;
         private readonly ResponseOptions _defaultResponseOptions = new ();
-        private readonly Dictionary<string, HttpMethod> _methods = new ()
-        {
-            {"GET", HttpMethod.Get },
-            {"POST", HttpMethod.Post }
-        };
 
         private readonly IFormatterFactory _formatter;
 
@@ -97,7 +92,7 @@ namespace Spacetime.Core
 
                 // will fail if we add more methods without updating map
                 // maybe just switch to storing HttpMethod or another enum later
-                Method = _methods[request.Method],
+                Method = SupportedHttpMethods.AllMethods[request.Method]
             };
 
             if (!string.IsNullOrWhiteSpace(request.RequestBody))
