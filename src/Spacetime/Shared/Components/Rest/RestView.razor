@@ -32,8 +32,10 @@
                     Icon="@(DrawerOpen ? Icons.Filled.ChevronLeft : Icons.Filled.ChevronRight)"
                     OnClick="OnDrawerToggle"/>
                 <MudSelect T="string" Margin="Margin.Dense" T="string" Value="Request.Method" Variant="Variant.Outlined" ValueChanged="OnMethodChange" Class="w-24">
-                    <MudSelectItem Value="@("GET")"/>
-                    <MudSelectItem Value="@("POST")"/>
+                    @foreach (var httpMethodName in SupportedHttpMethods.AllMethods.Keys)
+                    {
+                        <MudSelectItem Value="@httpMethodName"/>
+                    }
                 </MudSelect>
                 <MudTextField Class="w-5/6"
                               Margin="Margin.Dense"
