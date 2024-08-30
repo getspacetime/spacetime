@@ -1,3 +1,5 @@
+# Archived. This API Client will be included as part of the [PureBlazor](https://pureblazor.com) platform.
+
 [![Build](https://github.com/getspacetime/spacetime/actions/workflows/build.yaml/badge.svg)](https://github.com/getspacetime/spacetime/actions/workflows/build.yaml)
 <sup>[Discord](https://discord.gg/PeBbYy6WKq)</sup>
 
